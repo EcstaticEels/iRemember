@@ -1,0 +1,13 @@
+#gitignore#
+
+# Mac Artifact Files
+.DS_Store
+
+# Logs
+*.log
+
+# Compiled Files
+bundle/
+
+# Dependencies
+node_modules/
