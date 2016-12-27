@@ -16,8 +16,9 @@ var controller = require('./controller.js');
 //Routes
 var path = require('path');
 app.get('/', function (req, res) {
-  res.sendFile(path.join(__dirname, '..', 'webClient/webIndex.html'))
-})
+  res.sendFile(path.join(__dirname, '..', 'web/webIndex.html'))
+}
+)
 
 app.listen(3000, function () {
   console.log('iRemember is running on port 3000!')

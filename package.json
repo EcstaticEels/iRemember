@@ -41,6 +41,7 @@
     "react-bootstrap": "^0.30.7",
     "react-dom": "^15.4.1",
     "request": "^2.79.0",
-    "sequelize": "^3.27.0"
+    "sequelize": "^3.27.0",
+    "xmlhttprequest": "^1.8.0"
   }
 }
