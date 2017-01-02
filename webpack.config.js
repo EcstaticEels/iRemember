@@ -6,7 +6,7 @@ const config = {
         web: "./web/webApp.js"
     },
     output: {
-        path: path.resolve(__dirname, 'bundle'),
+        path: path.resolve(__dirname, 'public/bundle'),
         filename: "[name].bundle.js"
     },
     module: {
