@@ -1,32 +1,29 @@
 //Database
 const Sequelize = require('sequelize');
-
 const sequelizeDb = new Sequelize('iremember', 'root', '', {
   host: 'localhost',
-  dialect: 'postgres'
+  dialect: 'mysql'
 });
 
 //Sequelize Schemas
 const Caregiver = sequelizeDb.define('caregiver', {
   name: {
     type: Sequelize.STRING,
-    allowNull: false
-  },
-  password: {
-    type: Sequelize.STRING,
-    allowNull: false
+    allowNull: false,
+    unique: true
   },
   photo: Sequelize.STRING,
-  personGroupId: Sequelize.STRING
+  personGroupID: Sequelize.STRING
 });
 
 const Patient = sequelizeDb.define('patient', {
   name: {
     type: Sequelize.STRING,
-    allowNull: false
+    allowNull: false,
+    unique: true
   },
   photo: Sequelize.STRING,
-  personGroupId: Sequelize.STRING
+  personGroupID: Sequelize.STRING
 });
 
 const Reminder = sequelizeDb.define('reminder', {
@@ -41,7 +38,8 @@ const Reminder = sequelizeDb.define('reminder', {
 const Face = sequelizeDb.define('face', {
   name: {
     type: Sequelize.STRING,
-    allowNull: false
+    allowNull: false,
+    unique: true
   },
   personId: {
     type: Sequelize.STRING
@@ -63,7 +61,9 @@ Face.belongsTo(Patient);
 Face.belongsTo(Caregiver);
 FacePhoto.belongsTo(Face);
 
-sequelizeDb.sync({force: true});
+sequelizeDb.sync();
+
+
 
 module.exports = {
   Caregiver,
