@@ -137,25 +137,25 @@ module.exports = {
   },
   addReminder: (req, res) => {
     console.log(req.body)
-    // let caregiverId = 1; //should be req.body.caregiverId
-    // db.Caregiver.findOne({
-    //   where: {
-    //     id: caregiverId
-    //   }
-    // })
-    // .then(caregiver => {
-    //   db.Reminder.create({ //photo?
-    //     date: '2016-12-10T13:00', //should be req.body.time
-    //     type: 'medication', //should be req.body.type
-    //     note: 'Take 2 Aleve pills (blue pill with A logo)', //req.body.note
-    //     recurring: true, //req.body.recurring
-    //     caregiverId: caregiverId,
-    //     patientId: caregiver.get('patientId')
-    //   })
-    //   .then(reminder => {
-    //     res.status(201).send('Successfully added reminder');
-    //   });
-    // });
+    let caregiverId = req.body.id; 
+    db.Caregiver.findOne({
+      where: {
+        id: caregiverId
+      }
+    })
+    .then(caregiver => {
+      db.Reminder.create({ //photo?
+        date: req.body.time,
+        type: req.body.type,
+        note: req.body.note,
+        recurring: req.body.recurring, 
+        caregiverId: caregiverId,
+        patientId: caregiver.get('patientId')
+      })
+      .then(reminder => {
+        res.status(201).send(JSON.stringify(reminder));
+      });
+    });
   },
   retrieveReminders: (req, res) => {
     let caregiverId = 1; //should be req.body.caregiverId
@@ -165,7 +165,7 @@ module.exports = {
       }
     })
     .then(reminders => {
-      res.status(200).send(JSON.stringify(reminders));
+      res.status(200).send(JSON.stringify({reminders: reminders}));
     });
   }
 }
