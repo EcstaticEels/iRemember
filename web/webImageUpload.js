@@ -3,12 +3,13 @@ import React from 'react';
 var ImageUpload = (props) => (
   <div className="image-upload">
       <input type="text" className="imgName"/><br/>
-      <input type="file" className="img" value={props.img} multiple="multiple" onChange={props.getInput}/><br/>
+      <input type="file" className="img" multiple="multiple" onChange={props.getInput}/><br/>
+      <div>{
+        props.editMode ? <img src={props.img} height="100" width="100"/> : null
+      }</div>
   </div>
 );
 
 module.exports = ImageUpload;
-
-// action="/web/identify" enctype="multipart/form-data" method="POST"
 
 
