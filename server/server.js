@@ -12,11 +12,10 @@ const morgan = require('morgan');
 app.use(bodyParser.urlencoded({ extended: true}));
 app.use(bodyParser.json());
 app.use(morgan('dev'));
-// require('dotenv').config(); //retrieves api keys
+require('dotenv').config(); //retrieves api keys
 
 //Express static
 app.use(express.static(path.join(__dirname, '..', 'public')));
-// app.use(express.static('/bundle', path.join(__dirname, 'public/bundle')))
 
 //Controllers
 const webControllers = require('./webControllers.js');

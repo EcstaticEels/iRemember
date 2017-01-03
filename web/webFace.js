@@ -41,13 +41,9 @@ class Face extends React.Component {
   getInput(event) {
     var key = event.target.getAttribute('class');
     var value = event.target.value;
-    console.log('hi lisa');
-    // var obj = {};
-    // obj[key] = value;
-    // this.setState({
-    //   note: value
-    // });
-    // console.log('why empty?', obj, this.state[key])
+    this.setState({
+      note: value
+    });
   }
 
   editModeOn() {
@@ -74,7 +70,7 @@ class Face extends React.Component {
     this.showForm();
   }
 
-  submitForm() {
+  submitForm(event) {
     var that = this;
     var form = {};
     form.time = this.state.time;
@@ -99,6 +95,8 @@ class Face extends React.Component {
         console.log('error', err);
       }
     })
+
+    event.preventDefault();
 
   }
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import $ from 'jquery';
 
 import ReminderList from './webReminderList.js';
 import ReminderCurrent from './webReminderCurrent.js';
@@ -20,16 +21,30 @@ class Reminder extends React.Component {
     };
   }
 
+  componentDidMount() {
+    $.ajax({
+      method: 'GET',
+      url: '/web/reminders' + '?caregiverId=1',
+      success: function(res) {
+        console.log('success', res);
+        this.setState({list: JSON.parse(res).reminders});
+      }.bind(this),
+      error: function(err) {
+        console.log('error', err);
+      }
+    })
+  }
+
   showForm() {
     this.setState({
       showForm: true
-    })
+    });
   }
 
   hideForm() {
     this.setState({
       showForm: false
-    })
+    });
   }
 
   updateCurrent(current) {
@@ -41,11 +56,9 @@ class Reminder extends React.Component {
   getInput(event) {
     var key = event.target.getAttribute('class');
     var value = event.target.value;
-    console.log('value', value)
     var obj = {};
     obj[key] = value;
     this.setState(obj);
-    console.log('why empty?', obj, this.state[key])
   }
 
   editModeOn() {
@@ -72,7 +85,8 @@ class Reminder extends React.Component {
     this.showForm();
   }
 
-  submitForm() {
+  submitForm(event) {
+    event.preventDefault();
     var that = this;
     var form = {};
     form.id = this.props.id;
@@ -86,16 +100,15 @@ class Reminder extends React.Component {
     $.ajax({
       method: 'POST',
       url: '/web/reminders',
-      data: form,
+      data: JSON.stringify(form),
       contentType: 'application/json',
-      dataType: 'JSON',
-      success: function (res) {
+      success: function(res) {
         console.log('success', res);
         that.editModeOff();
         that.hideForm();
-        that.updateCurrent(res);
+        that.updateCurrent(JSON.parse(res));
       },
-      error: function (err) {
+      error: function(err) {
         console.log('error', err);
       }
     })
