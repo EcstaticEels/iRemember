@@ -41,7 +41,7 @@ class Reminder extends React.Component {
   getInput(event) {
     var key = event.target.getAttribute('class');
     var value = event.target.value;
-    console.log('value', value)
+    console.log('hi', value)
     var obj = {};
     obj[key] = value;
     this.setState(obj);

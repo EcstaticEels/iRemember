@@ -8,15 +8,13 @@ class Face extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      list: [{time: "2017-01-04T12:59", recurring: "false", type: undefined, img: "http://pngimg.com/upload/pills_PNG16521.png", note: "Take pill"}, {time: "2017-01-04T01:00", recurring: "false", type: "medication", img: "http://pngimg.com/upload/pills_PNG16521.png", note: "dksfl"}],
-      current: {time: "2017-01-04T12:59", recurring: "true", type: 'appointment', img: "http://pngimg.com/upload/pills_PNG16521.png", note: "Take pill"},
+      list: [],
+      current: {},
       showForm: false,
       editModeOn: false,
-      time: '',
-      type: 'medication',
-      recurring: "false",
-      img: "http://pngimg.com/upload/pills_PNG16521.png",
-      note: ''
+      name: '',
+      photos: ["http://pngimg.com/upload/pills_PNG16521.png"]
+      description: ''
     };
   }
 
@@ -29,7 +27,7 @@ class Face extends React.Component {
   hideForm() {
     this.setState({
       showForm: false
-    })
+    }
   }
 
   updateCurrent(current) {
@@ -66,7 +64,7 @@ class Face extends React.Component {
       recurring: current.recurring,
       type: current.type,
       img: current.img,
-      note: current.note
+      description: current.description
     })
     this.showForm();
   }
@@ -74,11 +72,13 @@ class Face extends React.Component {
   submitForm() {
     var that = this;
     var form = {};
+    form.id = this.props.id;
+    form.name = this.props.name;
     form.time = this.state.time;
     form.recurring = JSON.parse(this.state.recurring);
     form.type = this.state.type;
     form.img = this.state.img;
-    form.note = this.state.note;
+    form.description = this.state.description;
     
     $.ajax({
       method: 'POST',
@@ -116,7 +116,7 @@ class Face extends React.Component {
               type={this.state.type}
               recurring={this.state.recurring} 
               img={this.state.img} 
-              note={this.state.note}/> 
+              description={this.state.description}/> 
             : <FaceCurrent current={this.state.current} edit={this.edit.bind(this)}/>
         }</div>
       </div>
