@@ -16,7 +16,7 @@ class App extends React.Component {
     return (
       <div className="app-body">
         <Nav/>
-        <Face/>
+        <Reminder />
       </div>
     )
   }
