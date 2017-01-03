@@ -11,3 +11,6 @@ bundle/
 
 # Dependencies
 node_modules/
+
+# Env Variables
+.env

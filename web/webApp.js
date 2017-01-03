@@ -27,7 +27,6 @@ class App extends React.Component {
 ReactDOM.render((
   <Router history={browserHistory}>
     <Route path="/" component={App}/>
-    {/* might need indexroute */}
       <Route path="/reminders" component={webReminder}/>
       <Route path="/face" component={webFace}/>
   </Router>

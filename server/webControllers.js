@@ -33,18 +33,9 @@ const uploadPhoto = function(req, cb) {
   });
 };
 
-// reminder = {
-//   date: "Mon Jan 02 2017 16:54:51 GMT-0800 (PST)",
-//   type: "medication",
-//   note: "Take 1 aleve pill (blue pill with 'A' logo)",
-//   recurring: true
-// }
-
-// {time: "2017-01-04T12:59", recurring: "false", type: undefined, img: "C:\fakepath\6506.pdf", note: "Take pill"}
-
-
 module.exports = {
   addFace: (req, res) => {
+    console.log(req.body);
     let caregiverId = 1; //should be req.body.caregiverId
     uploadPhoto(req, (urlArray) => {
       console.log(urlArray);
@@ -77,8 +68,8 @@ module.exports = {
             personId: createdPerson.personId
           })
           .then(face => {
-            const sendFace = (photoUrl) {
-              return new Promise(resolve, reject) => {
+            const sendFace = (photoUrl) => {
+              return new Promise((resolve, reject) => {
                 request.post({
                   headers: microsoftHeaders,
                   url: `https://api.projectoxford.ai/face/v1.0/persongroups/${personGroupId}/persons/${createdPerson.personId}`,
@@ -89,7 +80,7 @@ module.exports = {
                   }
                   resolve(body);
                 });
-              }
+              });
             }
             let promisifiedSendFaces = urlArray.map(sendFace);
             Promise.all(promisifiedSendFaces)
@@ -99,17 +90,17 @@ module.exports = {
                 db.FacePhoto.create({
                   photo: url,
                   faceId: face.get('id')
-                })
-              })
+                });
+              });
               res.status(201).send('Person and faces added');
             });
           });
         });
       });
-    })
-
+    });
   },
   retrieveFaces: (req, res) => {
+    console.log(req.body)
     let caregiverId = 1; //should be req.body.caregiverId
     db.Face.findAll({
       where: {
@@ -117,8 +108,8 @@ module.exports = {
       }
     })
     .then((faces) => {
-      const findFace = (face) {
-        return new Promise(resolve, reject) => {
+      const findFace = (face) => {
+        return new Promise( (resolve, reject) => {
           db.FacePhoto.findAll({
             where: {
               faceId: face.id
@@ -135,7 +126,7 @@ module.exports = {
             }
             resolve(faceObj);
           });
-        }
+        });
       }
       let promisifiedFindFaces = faces.map(findFace);
       Promise.all(promisifiedFindFaces)
@@ -152,8 +143,8 @@ module.exports = {
       }
     })
     .then(caregiver => {
-      db.Reminder.create({
-        date: '2016-12-10T13:00', //should be req.body.date
+      db.Reminder.create({ //photo?
+        date: '2016-12-10T13:00', //should be req.body.time
         type: 'medication', //should be req.body.type
         note: 'Take 2 Aleve pills (blue pill with A logo)', //req.body.note
         recurring: true, //req.body.recurring
@@ -172,7 +163,7 @@ module.exports = {
         caregiverId: caregiverId
       }
     })
-    .then((reminders) => {
+    .then(reminders => {
       res.status(200).send(JSON.stringify(reminders));
     });
   }
