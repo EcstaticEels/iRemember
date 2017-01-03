@@ -1,32 +1,40 @@
 //Basic server
-var express = require('express');
-var app = express();
-
+const express = require('express');
+const app = express();
+const path = require('path');
 
 //Database
-var db = require('../data/db.js');
+const db = require('../database/db.js');
 
 //Middleware
-var bodyParser = require('body-parser');
-app.use(bodyParser.urlencoded({ extended: true}))
-app.use(bodyParser.json())
+const bodyParser = require('body-parser');
+const morgan = require('morgan');
+app.use(bodyParser.urlencoded({ extended: true}));
+app.use(bodyParser.json());
+app.use(morgan('dev'));
 
-//Controller
-var controller = require('./controller.js');
+//Express static
+app.use(express.static(path.join(__dirname, '..', 'public')));
+
+//Controllers
+const webControllers = require('./webControllers.js');
+const mobileControllers = require('./mobileControllers.js');
 
 //Routes
-var path = require('path');
-app.use(express.static(path.join(__dirname, '..', 'public')))
 app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname, '..', 'public/webIndex.html'))
-})
-
-//Reminders
-
-//Facial recognition
-app.post('/web/face/add', controller.add);
-app.post('/mobile/face/find', controller.find);
+});
+//Web
+app.post('/web/identify', webControllers.addFace);
+app.get('/web/identify', webControllers.retrieveFaces);
+app.post('/web/reminders', webControllers.addReminder);
+app.get('/web/reminders', webControllers.retrieveReminders);
+//Mobile
+app.post('/mobile/identify', mobileControllers.identifyFace);
+app.get('/mobile/reminders', mobileControllers.retrieveReminders);
 
 app.listen(3000, function () {
   console.log('iRemember is running on port 3000!')
 });
+
+
