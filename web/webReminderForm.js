@@ -2,24 +2,22 @@ import React from 'react';
 
 import ImageUpload from './webImageUpload.js';
 
-var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-
 var ReminderList = (props) => (
   <div className="reminder-form">
     <h5>New Reminder</h5>
     <form>
     <label>Picture:
-    <ImageUpload getInput={props.getInput}/>
+    <ImageUpload img={props.img} getInput={props.getInput}/>
     </label>
     <br/>
     <label>
       Time:
-      <input className="time" type="datetime-local" onChange={props.getInput}/>
+      <input className="time" type="datetime-local" value={props.time} onChange={props.getInput}/>
     </label>
     <br/>
     <label>
       Type:
-      <select className="type" onChange={props.getInput}>
+      <select className="type" value={props.type} onChange={props.getInput}>
         <option value='medication'>Medication</option>
         <option value='appointment'>Appointment</option>
         <option value='others'>Others</option>
@@ -46,7 +44,7 @@ var ReminderList = (props) => (
     <br/>
     <label>Notes:</label>
     <br/>
-    <input type="text" className="note" placeholder="Notes" onKeyUp={props.getInput}/>
+    <input type="text" value={props.note} className="note" placeholder="Notes" onKeyUp={props.getInput}/>
     <br/>
     <input type="submit" value="Submit" onClick={props.submitForm}/>
     </form>
