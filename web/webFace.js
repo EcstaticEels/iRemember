@@ -39,10 +39,13 @@ class Face extends React.Component {
   getInput(event) {
     var key = event.target.getAttribute('class');
     var value = event.target.value;
-    var obj = {};
-    obj[key] = value;
-    this.setState(obj);
-    console.log('why empty?', obj, this.state[key])
+    console.log('hi lisa');
+    // var obj = {};
+    // obj[key] = value;
+    // this.setState({
+    //   note: value
+    // });
+    // console.log('why empty?', obj, this.state[key])
   }
 
   editModeOn() {
