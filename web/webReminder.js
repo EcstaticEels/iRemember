@@ -9,10 +9,12 @@ class Reminder extends React.Component {
     super(props);
     this.state = {
       list: [{time: "2017-01-04T12:59", recurring: "false", type: undefined, img: "http://pngimg.com/upload/pills_PNG16521.png", note: "Take pill"}, {time: "2017-01-04T01:00", recurring: "false", type: "medication", img: "http://pngimg.com/upload/pills_PNG16521.png", note: "dksfl"}],
-      current: {time: "2017-01-04T12:59", recurring: "false", type: undefined, img: "http://pngimg.com/upload/pills_PNG16521.png", note: "Take pill"},
+      current: {time: "2017-01-04T12:59", recurring: "true", type: 'appointment', img: "http://pngimg.com/upload/pills_PNG16521.png", note: "Take pill"},
       showForm: false,
+      editModeOn: false,
       time: '',
       type: 'medication',
+      recurring: "false",
       img: "http://pngimg.com/upload/pills_PNG16521.png",
       note: ''
     };
@@ -42,10 +44,23 @@ class Reminder extends React.Component {
     var obj = {};
     obj[key] = value;
     this.setState(obj);
-    console.log(this.state[key])
+    console.log('why empty?', obj, this.state[key])
   }
 
-  edit(current){
+  editModeOn() {
+    this.setState({
+      editMode: true
+    })
+  }
+
+  editModeOff() {
+    this.setState({
+      editMode: false
+    })
+  }
+
+  edit(current) {
+    this.editModeOn();
     this.setState({
       time: current.time,
       recurring: current.recurring,
@@ -60,7 +75,7 @@ class Reminder extends React.Component {
     var that = this;
     var form = {};
     form.time = this.state.time;
-    form.recurring = this.state.recurring;
+    form.recurring = JSON.parse(this.state.recurring);
     form.type = this.state.type;
     form.img = this.state.img;
     form.note = this.state.note;
@@ -73,6 +88,7 @@ class Reminder extends React.Component {
       dataType: 'JSON',
       success: function (res) {
         console.log('success', res);
+        that.editModeOff();
         that.hideForm();
         that.updateCurrent(res);
       },
@@ -92,7 +108,15 @@ class Reminder extends React.Component {
         <ReminderList list={this.state.list} getInput={this.getInput.bind(this)} updateCurrent={this.updateCurrent.bind(this)}/>
         <div>{
           this.state.showForm? 
-            <ReminderForm getInput={this.getInput.bind(this)} submitForm={this.submitForm.bind(this)} time={this.state.time} type={this.state.type} img={this.state.img} note={this.state.note}/> 
+            <ReminderForm 
+              getInput={this.getInput.bind(this)} 
+              submitForm={this.submitForm.bind(this)}
+              editMode={this.state.editMode}
+              time={this.state.time}
+              type={this.state.type}
+              recurring={this.state.recurring} 
+              img={this.state.img} 
+              note={this.state.note}/> 
             : <ReminderCurrent current={this.state.current} edit={this.edit.bind(this)}/>
         }</div>
       </div>

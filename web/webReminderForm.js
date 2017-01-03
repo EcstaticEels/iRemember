@@ -7,7 +7,7 @@ var ReminderList = (props) => (
     <h5>New Reminder</h5>
     <form>
     <label>Picture:
-    <ImageUpload img={props.img} getInput={props.getInput}/>
+    <ImageUpload img={props.img} getInput={props.getInput} editMode={props.editMode}/>
     </label>
     <br/>
     <label>
@@ -17,7 +17,7 @@ var ReminderList = (props) => (
     <br/>
     <label>
       Type:
-      <select className="type" value={props.type} onChange={props.getInput}>
+      <select className="type" value={props.type} onChange={props.getInput} required>
         <option value='medication'>Medication</option>
         <option value='appointment'>Appointment</option>
         <option value='others'>Others</option>
@@ -27,11 +27,23 @@ var ReminderList = (props) => (
     <label>
       Recurring:
       <label>
-        <input name="recurring" className="recurring" type="radio" value={false} onChange={props.getInput}/>
+        <input 
+          name="recurring"
+          className="recurring"
+          type="radio"
+          value={false}
+          onChange={props.getInput}
+          checked={props.recurring === "false"? true: false}/>
         Once
       </label>
       <label>
-        <input name="recurring" className="recurring" type="radio" value={true} onChange={props.getInput}/>
+        <input 
+          name="recurring"
+          className="recurring"
+          type="radio"
+          value={true}
+          onChange={props.getInput}
+          checked={props.recurring === "true"? true: false}/>
         Recurring
       </label>
     </label>

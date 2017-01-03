@@ -15,10 +15,8 @@ class App extends React.Component {
   render() {
     return (
       <div className="app-body">
-        <h1>Hi</h1>
         <Nav/>
-        <Reminder/>
-        {/*Another nav (tabs)*/}
+        <Face/>
       </div>
     )
   }
