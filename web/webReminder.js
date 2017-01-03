@@ -7,9 +7,7 @@ class Reminder extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      month: "Select Month",
-      day: "What day",
-      year: "What year"
+      type: 'medication'
     };
   }
 
@@ -22,11 +20,34 @@ class Reminder extends React.Component {
     console.log(this.state[key])
   }
 
+  submitForm() {
+    var form = {};
+    form.time = this.state.time;
+    form.recurring = this.state.recurring;
+    form.type = this.state.type;
+    form.img = this.state.img;
+    form.note = this.state.note;
+    
+    $.ajax({
+      method: 'POST',
+      url: '/web/reminders',
+      data: form,
+      contentType: 'application/json',
+      dataType: 'JSON',
+      success: function (res) {
+        console.log('success', res);
+      },
+      error: function (err) {
+        console.log('error', err);
+      }
+    })
+
+  }
+
   render() {
     return (
       <div className="reminder">
-        
-        <ReminderForm month={this.state.month} getInput={this.getInput.bind(this)}/>
+        <ReminderForm month={this.state.month} getInput={this.getInput.bind(this)} submitForm={this.submitForm.bind(this)}/>
         {/*Another nav (tabs)*/}
       </div>
     )
