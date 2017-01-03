@@ -41,6 +41,7 @@ class Reminder extends React.Component {
   getInput(event) {
     var key = event.target.getAttribute('class');
     var value = event.target.value;
+    console.log('value', value)
     var obj = {};
     obj[key] = value;
     this.setState(obj);
@@ -74,6 +75,8 @@ class Reminder extends React.Component {
   submitForm() {
     var that = this;
     var form = {};
+    form.id = this.props.id;
+    form.name = this.props.name;
     form.time = this.state.time;
     form.recurring = JSON.parse(this.state.recurring);
     form.type = this.state.type;
