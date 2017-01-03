@@ -56,7 +56,7 @@ var ReminderList = (props) => (
     <br/>
     <label>Notes:</label>
     <br/>
-    <input type="text" value={props.note} className="note" placeholder="Notes" onKeyUp={props.getInput}/>
+    <input type="text" value={props.note} className="note" placeholder="Notes" onChange={props.getInput}/>
     <br/>
     <input type="submit" value="Submit" onClick={props.submitForm}/>
     </form>
