@@ -10,13 +10,16 @@ import Reminder from './webReminder.js';
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      id: 1,
+      name: 'Bob'
+    };
   }
   render() {
     return (
       <div className="app-body">
         <Nav/>
-        <Face/>
+        <Reminder id={this.state.id} name={this.state.name}/>
       </div>
     )
   }
