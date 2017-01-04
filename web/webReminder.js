@@ -15,7 +15,7 @@ class Reminder extends React.Component {
       editMode: false,
       date: '',
       type: 'medication',
-      recurring: "false",
+      recurring: false,
       img: "http://pngimg.com/upload/pills_PNG16521.png",
       note: ''
     };
@@ -73,20 +73,14 @@ class Reminder extends React.Component {
     this.setState(obj);
   }
 
-  editModeOn() {
+  editModeSwitch(bool) {
     this.setState({
-      editMode: true
-    })
-  }
-
-  editModeOff() {
-    this.setState({
-      editMode: false
+      editMode: bool
     })
   }
 
   edit(current) {
-    this.editModeOn();
+    this.editModeSwitch(true);
     this.setState({
       date: current.date,
       recurring: current.recurring,
@@ -110,7 +104,7 @@ class Reminder extends React.Component {
     form.img = this.state.img;
     form.note = this.state.note;
     if (this.state.editMode) {
-      form.reminderId = this.reminderId;
+      form.reminderId = this.state.reminderId;
     }    
     $.ajax({
       method: this.state.editMode ? 'PUT': 'POST',
@@ -119,7 +113,7 @@ class Reminder extends React.Component {
       contentType: 'application/json',
       success: function(res) {
         console.log('success', res);
-        that.editModeOff();
+        that.editModeSwitch(false);
         that.hideForm();
         that.updateCurrent(JSON.parse(res));
       },
