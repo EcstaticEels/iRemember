@@ -75,11 +75,6 @@ class Face extends React.Component {
     this.showForm();
   }
 
-  closeLightbox() {
-    this.setState({
-      lightbox: false
-    })
-  }
 
   submitForm() {
     var that = this;
@@ -106,6 +101,8 @@ class Face extends React.Component {
         console.log('error', err);
       }
     })
+
+    event.preventDefault();
 
   }
 
