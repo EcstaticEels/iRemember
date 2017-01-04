@@ -1,4 +1,5 @@
 import React from 'react';
+import $ from 'jquery';
 
 import ReminderList from './webReminderList.js';
 import ReminderCurrent from './webReminderCurrent.js';
@@ -41,11 +42,9 @@ class Reminder extends React.Component {
   getInput(event) {
     var key = event.target.getAttribute('class');
     var value = event.target.value;
-    console.log('value', value)
     var obj = {};
     obj[key] = value;
     this.setState(obj);
-    console.log('why empty?', obj, this.state[key])
   }
 
   editModeOn() {
