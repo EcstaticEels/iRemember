@@ -12,7 +12,7 @@ class Face extends React.Component {
       list: [{subjectName:"test", photos:["http://pngimg.com/upload/pills_PNG16521.png", "http://pngimg.com/upload/pills_PNG16521.png", "http://pngimg.com/upload/pills_PNG16521.png"], description:"testfiles"}, {subjectName:"test1", photos:["http://pngimg.com/upload/pills_PNG16521.png", "http://pngimg.com/upload/pills_PNG16521.png"], description:"testfiles1"}],
       current: {subjectName:"test", photos:["http://pngimg.com/upload/pills_PNG16521.png", "http://pngimg.com/upload/pills_PNG16521.png", "http://pngimg.com/upload/pills_PNG16521.png"], description:"testfiles"},
       showForm: false,
-      editModeOn: false,
+      editMode: false,
       subjectName: '',
       photos: ["http://pngimg.com/upload/pills_PNG16521.png"],
       description: ''
@@ -52,20 +52,14 @@ class Face extends React.Component {
     console.log(e.target.files)
   }
 
-  editModeOn() {
+  editModeSwitch(bool) {
     this.setState({
-      editMode: true
-    })
-  }
-
-  editModeOff() {
-    this.setState({
-      editMode: false
+      editMode: bool
     })
   }
 
   edit(current) {
-    this.editModeOn();
+    this.editModeSwitch(true);
     this.setState({
       subjectName: current.subjectName,
       photos: current.photos,
@@ -83,7 +77,7 @@ class Face extends React.Component {
     form.subjectName = this.state.subjectName;
     form.photos = this.state.photos;
     form.description = this.state.description;
-    console.log(JSON.stringify(form.photos))
+    
     $.ajax({
       method: 'POST',
       url: '/web/face',
@@ -92,7 +86,7 @@ class Face extends React.Component {
       dataType: 'JSON',
       success: function (res) {
         console.log('success', res);
-        that.editModeOff();
+        that.editModeSwitch(false);
         that.hideForm();
         that.updateCurrent(res);
       },
@@ -125,7 +119,7 @@ class Face extends React.Component {
               subjectName={this.state.subjectName}
               photos={this.state.photos} 
               description={this.state.description}/> 
-            : <FaceCurrent 
+            : <FaceCurrent
                 current={this.state.current}
                 edit={this.edit.bind(this)}/>
         }</div>
