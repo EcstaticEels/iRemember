@@ -12,7 +12,7 @@ var ReminderList = (props) => (
     <br/>
     <label>
       Time:
-      <input className="time" type="datetime-local" value={props.time} onChange={props.getInput}/>
+      <input className="date" type="datetime-local" value={props.date} onChange={props.getInput}/>
     </label>
     <br/>
     <label>
@@ -32,8 +32,8 @@ var ReminderList = (props) => (
           className="recurring"
           type="radio"
           value={false}
-          onChange={props.getInput}
-          checked={props.recurring === "false"? true: false}/>
+          onChange={props.getBoolean}
+          checked={props.recurring? false: true}/>
         Once
       </label>
       <label>
@@ -42,16 +42,13 @@ var ReminderList = (props) => (
           className="recurring"
           type="radio"
           value={true}
-          onChange={props.getInput}
-          checked={props.recurring === "true"? true: false}/>
+          onChange={props.getBoolean}
+          checked={props.recurring? true: false}/>
         Recurring
       </label>
     </label>
     <br/>
     <audio controls>
-      <source src="horse.ogg" type="audio/ogg"/>
-      <source src="horse.mp3" type="audio/mpeg"/>
-      Your browser does not support the audio element.
     </audio>
     <br/>
     <label>Notes:</label>
