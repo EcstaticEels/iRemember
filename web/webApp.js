@@ -29,7 +29,10 @@ class App extends React.Component {
       <div className="app-body">
         <Nav/>
         <Tab changeView={this.changeView.bind(this)}/>
-        {this.props.children}
+        {this.props.children && React.cloneElement(this.props.children, {
+          id: this.state.id,
+          name: this.state.name
+        })}
       </div>
     )
   }
