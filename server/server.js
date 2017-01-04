@@ -30,6 +30,7 @@ app.post('/web/identify', webControllers.addFace);
 app.get('/web/identify', webControllers.retrieveFaces);
 app.post('/web/reminders', webControllers.addReminder);
 app.get('/web/reminders', webControllers.retrieveReminders);
+app.put('/web/reminders', webControllers.updateReminder);
 //Mobile
 app.post('/mobile/identify', mobileControllers.identifyFace);
 app.get('/mobile/reminders', mobileControllers.retrieveReminders);

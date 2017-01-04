@@ -8,7 +8,7 @@ var ReminderCurrent = (props) => {
   return (
     <div className="reminder-current">
       <img src={props.current.img} height="200" width="200"/>
-      <div>{props.current.time}</div>
+      <div>{props.current.date}</div>
       <div>{props.current.note}</div>
       <button onClick={edit}>Edit</button>
     </div>

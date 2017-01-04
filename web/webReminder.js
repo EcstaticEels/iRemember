@@ -9,11 +9,11 @@ class Reminder extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      list: [{time: "2017-01-04T12:59", recurring: "false", type: undefined, img: "http://pngimg.com/upload/pills_PNG16521.png", note: "Take pill"}, {time: "2017-01-04T01:00", recurring: "false", type: "medication", img: "http://pngimg.com/upload/pills_PNG16521.png", note: "dksfl"}],
-      current: {time: "2017-01-04T12:59", recurring: "true", type: 'appointment', img: "http://pngimg.com/upload/pills_PNG16521.png", note: "Take pill"},
+      list: [{time: "2017-01-04T12:59", recurring: false, type: undefined, img: "http://pngimg.com/upload/pills_PNG16521.png", note: "Take pill"}, {time: "2017-01-04T01:00", recurring: false, type: "medication", img: "http://pngimg.com/upload/pills_PNG16521.png", note: "dksfl"}],
+      current: {time: "2017-01-04T12:59", recurring: true, type: 'appointment', img: "http://pngimg.com/upload/pills_PNG16521.png", note: "Take pill"},
       showForm: false,
-      editModeOn: false,
-      time: '',
+      editMode: false,
+      date: '',
       type: 'medication',
       recurring: "false",
       img: "http://pngimg.com/upload/pills_PNG16521.png",
@@ -26,8 +26,12 @@ class Reminder extends React.Component {
       method: 'GET',
       url: '/web/reminders' + '?caregiverId=1',
       success: function(res) {
-        console.log('success', res);
-        this.setState({list: JSON.parse(res).reminders});
+        var reminders = JSON.parse(res).reminders;
+        reminders.forEach(function(reminder) {
+          reminder.date = reminder.date.slice(0, 16);
+          return reminder;
+        })
+        this.setState({list: reminders});
       }.bind(this),
       error: function(err) {
         console.log('error', err);
@@ -50,7 +54,7 @@ class Reminder extends React.Component {
   updateCurrent(current) {
     this.setState({
       current: current
-    })
+    });
   }
 
   getInput(event) {
@@ -58,6 +62,14 @@ class Reminder extends React.Component {
     var value = event.target.value;
     var obj = {};
     obj[key] = value;
+    this.setState(obj);
+  }
+
+  getBoolean(event) {
+    var key = event.target.getAttribute('class');
+    var value = event.target.value;
+    var obj = {};
+    obj[key] = JSON.parse(value);
     this.setState(obj);
   }
 
@@ -76,11 +88,12 @@ class Reminder extends React.Component {
   edit(current) {
     this.editModeOn();
     this.setState({
-      time: current.time,
+      date: current.date,
       recurring: current.recurring,
       type: current.type,
       img: current.img,
-      note: current.note
+      note: current.note,
+      reminderId: current.id
     })
     this.showForm();
   }
@@ -91,14 +104,16 @@ class Reminder extends React.Component {
     var form = {};
     form.id = this.props.id;
     form.name = this.props.name;
-    form.time = this.state.time;
-    form.recurring = JSON.parse(this.state.recurring);
+    form.date = this.state.date;
+    form.recurring = this.state.recurring;
     form.type = this.state.type;
     form.img = this.state.img;
     form.note = this.state.note;
-    
+    if (this.state.editMode) {
+      form.reminderId = this.reminderId;
+    }    
     $.ajax({
-      method: 'POST',
+      method: this.state.editMode ? 'PUT': 'POST',
       url: '/web/reminders',
       data: JSON.stringify(form),
       contentType: 'application/json',
@@ -123,17 +138,19 @@ class Reminder extends React.Component {
         }</div>
         <ReminderList list={this.state.list} getInput={this.getInput.bind(this)} updateCurrent={this.updateCurrent.bind(this)}/>
         <div>{
-          this.state.showForm? 
+          this.state.showForm ? 
             <ReminderForm 
               getInput={this.getInput.bind(this)} 
+              getBoolean={this.getBoolean.bind(this)}
               submitForm={this.submitForm.bind(this)}
               editMode={this.state.editMode}
-              time={this.state.time}
+              date={this.state.date}
               type={this.state.type}
               recurring={this.state.recurring} 
               img={this.state.img} 
-              note={this.state.note}/> 
-            : <ReminderCurrent current={this.state.current} edit={this.edit.bind(this)}/>
+              note={this.state.note}
+            /> 
+            : <ReminderCurrent current={this.state.current} edit={this.edit.bind(this)} />
         }</div>
       </div>
     )
