@@ -1,5 +1,6 @@
 import React from 'react';
 import $ from 'jquery';
+// import update from 'immutability-helper';
 
 import FaceList from './webFaceList.js';
 import FaceCurrent from './webFaceCurrent.js';
@@ -18,6 +19,22 @@ class Face extends React.Component {
       photos: ["http://pngimg.com/upload/pills_PNG16521.png"],
       description: ''
     };
+  }
+
+  componentDidMount() {
+    $.ajax({
+      method: 'GET',
+      url: '/web/identify' + '?caregiverId=1',
+      success: function(res) {
+        var faces = JSON.parse(res).faces;
+        this.setState({list: faces}, () => {
+          console.log('resetting face state list', this.state)
+        });
+      }.bind(this),
+      error: function(err) {
+        console.log('error', err);
+      }
+    })
   }
 
   showForm() {
@@ -46,13 +63,6 @@ class Face extends React.Component {
     this.setState(obj);
   }
 
-  getPhotos(e){
-    this.setState({
-      photos: e.target.files
-    })
-    console.log(e.target.files)
-  }
-
   editModeOn() {
     this.setState({
       editMode: true
@@ -75,22 +85,34 @@ class Face extends React.Component {
     this.showForm();
   }
 
+  getPhotos(event){
+    this.setState({
+      photos: event.target.files
+    }, function() {
+      console.log(this.state)
+    });
+  }
 
-  submitForm() {
+  submitForm(event) {
+    event.preventDefault();
     var that = this;
-    var form = {};
-    form.id = this.props.id;
-    form.name = this.props.name;
-    form.subjectName = this.state.subjectName;
-    form.photos = this.state.photos;
-    form.description = this.state.description;
-    console.log(JSON.stringify(form.photos))
+    var formData = new FormData();
+    formData.append('id', this.props.id);
+    formData.append('name', this.props.name);
+    formData.append('subjectName', this.state.subjectName);
+    formData.append('description', this.state.description);
+    for (var key in this.state.photos) {
+      formData.append('file', this.state.photos[key]);
+    }
+    for (var pair of formData.entries()) {
+      console.log(pair[0] + ',' + pair[1])
+    }
     $.ajax({
+      url: '/web/identify',
       method: 'POST',
-      url: '/web/face',
-      data: form,
-      contentType: '',
-      dataType: 'JSON',
+      data: formData,
+      processData: false, // tells jQuery not to process data
+      contentType: false, // tells jQuery not to set contentType
       success: function (res) {
         console.log('success', res);
         that.editModeOff();
@@ -101,9 +123,6 @@ class Face extends React.Component {
         console.log('error', err);
       }
     })
-
-    event.preventDefault();
-
   }
 
   render() {
@@ -127,8 +146,8 @@ class Face extends React.Component {
               photos={this.state.photos} 
               description={this.state.description}/> 
             : <FaceCurrent 
-                lightbox={this.state.lightbox}
-                closeLightbox={this.closeLightbox.bind(this)}
+                // lightbox={this.state.lightbox}
+                // closeLightbox={this.closeLightbox.bind(this)}
                 current={this.state.current}
                 edit={this.edit.bind(this)}/>
         }</div>
