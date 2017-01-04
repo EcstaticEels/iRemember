@@ -11,7 +11,6 @@ class Face extends React.Component {
     this.state = {
       list: [{subjectName:"test", photos:["http://pngimg.com/upload/pills_PNG16521.png", "http://pngimg.com/upload/pills_PNG16521.png", "http://pngimg.com/upload/pills_PNG16521.png"], description:"testfiles"}, {subjectName:"test1", photos:["http://pngimg.com/upload/pills_PNG16521.png", "http://pngimg.com/upload/pills_PNG16521.png"], description:"testfiles1"}],
       current: {subjectName:"test", photos:["http://pngimg.com/upload/pills_PNG16521.png", "http://pngimg.com/upload/pills_PNG16521.png", "http://pngimg.com/upload/pills_PNG16521.png"], description:"testfiles"},
-      lightbox: true,
       showForm: false,
       editModeOn: false,
       subjectName: '',
@@ -127,8 +126,6 @@ class Face extends React.Component {
               photos={this.state.photos} 
               description={this.state.description}/> 
             : <FaceCurrent 
-                lightbox={this.state.lightbox}
-                closeLightbox={this.closeLightbox.bind(this)}
                 current={this.state.current}
                 edit={this.edit.bind(this)}/>
         }</div>
