@@ -1,5 +1,6 @@
 import React from 'react';
-import {Nav, Navbar, Button} from 'react-bootstrap';
+import { Nav, Navbar, Button } from 'react-bootstrap';
+import { IndexLink } from 'react-router';
 
 var WebNav = (props) => {
 
@@ -8,18 +9,12 @@ var WebNav = (props) => {
   }
 
   return (
-    <Navbar fixedTop inverse>
-      <Navbar.Brand>
-        <a href="/">iRemember</a>
-      </Navbar.Brand>
-      <Nav style={{paddingTop: '8px'}} pullRight>
-      <input type="text" name="search" placeholder="Search.."/>
-      <span>  </span>
-      <Button bsStyle="primary">Log In</Button>
-      <span>  </span>
-      <Button bsStyle="primary">Sign Up</Button>
-      </Nav>
-    </Navbar>
+    <ul role="nav">
+      <li><IndexLink to="/" activeClassName="active">Home</IndexLink></li>
+      <input type='submit' value='login'/>
+    </ul>
+
+
   )
 }
 
