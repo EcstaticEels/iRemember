@@ -5,7 +5,7 @@ var ImageUpload = (props) => (
       <input type="text" className="imgName"/><br/>
       <input type="file" className="img" onChange={props.getPhotos} multiple/><br/>
       <div>{
-        props.editMode ? <img src={props.photos[0]} height="100" width="100"/> : null
+        props.editMode ? props.photos.map((photo, ind) => <img src={photo} key={ind} height="100" width="100"/>) : null
       }</div>
   </div>
 );

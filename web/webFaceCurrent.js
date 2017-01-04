@@ -1,7 +1,7 @@
 import React from 'react';
-// import LightboxComponent from 'react-lightbox-component';
 
-// var Lightbox = LightboxComponent.Lightbox
+import Gallery from './webGallery.js';
+
 
 var FaceCurrent = (props) => {
   var edit = () => {
@@ -10,7 +10,8 @@ var FaceCurrent = (props) => {
 
   return (
     <div className="face-current">
-      <img src={props.current.photos[0].photo} height="200" width="200"/>
+
+      <Gallery photos={props.current.photos[0].photo}/>
       <div>{props.current.subjectName}</div>
       <div>{props.current.description}</div>
       <button onClick={edit}>Edit</button>
