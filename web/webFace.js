@@ -1,4 +1,5 @@
 import React from 'react';
+import $ from 'jquery';
 
 import FaceList from './webFaceList.js';
 import FaceCurrent from './webFaceCurrent.js';
@@ -8,12 +9,13 @@ class Face extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      list: [],
-      current: {},
+      list: [{subjectName:"test", photos:["http://pngimg.com/upload/pills_PNG16521.png", "http://pngimg.com/upload/pills_PNG16521.png", "http://pngimg.com/upload/pills_PNG16521.png"], description:"testfiles"}, {subjectName:"test1", photos:["http://pngimg.com/upload/pills_PNG16521.png", "http://pngimg.com/upload/pills_PNG16521.png"], description:"testfiles1"}],
+      current: {subjectName:"test", photos:["http://pngimg.com/upload/pills_PNG16521.png", "http://pngimg.com/upload/pills_PNG16521.png", "http://pngimg.com/upload/pills_PNG16521.png"], description:"testfiles"},
+      lightbox: true,
       showForm: false,
       editModeOn: false,
-      name: '',
-      photos: ["http://pngimg.com/upload/pills_PNG16521.png"]
+      subjectName: '',
+      photos: ["http://pngimg.com/upload/pills_PNG16521.png"],
       description: ''
     };
   }
@@ -27,7 +29,7 @@ class Face extends React.Component {
   hideForm() {
     this.setState({
       showForm: false
-    }
+    })
   }
 
   updateCurrent(current) {
@@ -39,13 +41,16 @@ class Face extends React.Component {
   getInput(event) {
     var key = event.target.getAttribute('class');
     var value = event.target.value;
-    console.log('hi lisa');
-    // var obj = {};
-    // obj[key] = value;
-    // this.setState({
-    //   note: value
-    // });
-    // console.log('why empty?', obj, this.state[key])
+    var obj = {};
+    obj[key] = value;
+    this.setState(obj);
+  }
+
+  getPhotos(e){
+    this.setState({
+      photos: e.target.files
+    })
+    console.log(e.target.files)
   }
 
   editModeOn() {
@@ -63,13 +68,17 @@ class Face extends React.Component {
   edit(current) {
     this.editModeOn();
     this.setState({
-      time: current.time,
-      recurring: current.recurring,
-      type: current.type,
-      img: current.img,
+      subjectName: current.subjectName,
+      photos: current.photos,
       description: current.description
     })
     this.showForm();
+  }
+
+  closeLightbox() {
+    this.setState({
+      lightbox: false
+    })
   }
 
   submitForm() {
@@ -77,17 +86,15 @@ class Face extends React.Component {
     var form = {};
     form.id = this.props.id;
     form.name = this.props.name;
-    form.time = this.state.time;
-    form.recurring = JSON.parse(this.state.recurring);
-    form.type = this.state.type;
-    form.img = this.state.img;
+    form.subjectName = this.state.subjectName;
+    form.photos = this.state.photos;
     form.description = this.state.description;
-    
+    console.log(JSON.stringify(form.photos))
     $.ajax({
       method: 'POST',
-      url: '/web/Faces',
+      url: '/web/face',
       data: form,
-      contentType: 'application/json',
+      contentType: '',
       dataType: 'JSON',
       success: function (res) {
         console.log('success', res);
@@ -108,19 +115,25 @@ class Face extends React.Component {
         <div>{
           this.state.showForm? null : <button type="button" onClick={this.showForm.bind(this)}>Add New Face</button>
         }</div>
-        <FaceList list={this.state.list} getInput={this.getInput.bind(this)} updateCurrent={this.updateCurrent.bind(this)}/>
+        <FaceList 
+          list={this.state.list}
+          getInput={this.getInput.bind(this)}
+          updateCurrent={this.updateCurrent.bind(this)}/>
         <div>{
           this.state.showForm? 
             <FaceForm 
               getInput={this.getInput.bind(this)} 
+              getPhotos={this.getPhotos.bind(this)}
               submitForm={this.submitForm.bind(this)}
               editMode={this.state.editMode}
-              time={this.state.time}
-              type={this.state.type}
-              recurring={this.state.recurring} 
-              img={this.state.img} 
+              subjectName={this.state.subjectName}
+              photos={this.state.photos} 
               description={this.state.description}/> 
-            : <FaceCurrent current={this.state.current} edit={this.edit.bind(this)}/>
+            : <FaceCurrent 
+                lightbox={this.state.lightbox}
+                closeLightbox={this.closeLightbox.bind(this)}
+                current={this.state.current}
+                edit={this.edit.bind(this)}/>
         }</div>
       </div>
     )
