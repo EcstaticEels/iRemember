@@ -21,10 +21,6 @@ app.use(express.static(path.join(__dirname, '..', 'public')));
 const webControllers = require('./webControllers.js');
 const mobileControllers = require('./mobileControllers.js');
 
-app.get('/', function (req, res) {
-  res.sendFile(path.join(__dirname, '..', 'public/webIndex.html'))
-});
-
 //Web
 app.post('/web/identify', webControllers.addFace);
 app.get('/web/identify', webControllers.retrieveFaces);
@@ -34,6 +30,11 @@ app.put('/web/reminders', webControllers.updateReminder);
 //Mobile
 app.post('/mobile/identify', mobileControllers.identifyFace);
 app.get('/mobile/reminders', mobileControllers.retrieveReminders);
+
+//Configure express to serve index.html at every other route that comes to server
+app.get('*', function (req, res) {
+  res.sendFile(path.join(__dirname, '..', 'public/webIndex.html'))
+});
 
 app.listen(3000, function () {
   console.log('iRemember is running on port 3000!')
