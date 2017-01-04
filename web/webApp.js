@@ -19,6 +19,7 @@ class App extends React.Component {
     return (
       <div className="app-body">
         <Nav/>
+        <Reminder />
         <Face id={this.state.id} name={this.state.name}/>
       </div>
     )
