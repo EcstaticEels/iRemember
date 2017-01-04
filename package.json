@@ -47,6 +47,7 @@
     "react-slick": "^0.14.5",
     "request": "^2.79.0",
     "sequelize": "^3.27.0",
-    "slick-carousel": "^1.6.0"
+    "slick-carousel": "^1.6.0",
+    "url": "^0.11.0"
   }
 }

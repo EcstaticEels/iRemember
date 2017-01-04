@@ -1,4 +1,5 @@
 import React from 'react';
+import Moment from 'moment';
 
 var ReminderEntry = (props) => {
   
@@ -9,7 +10,7 @@ var ReminderEntry = (props) => {
   return (
     <div className="reminder-entry" onClick={changeCurrent}>
       <img src={props.data.img} height="100" width="100"/>
-      <div>{props.data.time}</div>
+      <div>{Moment(props.data.date).calendar().toString()}</div>
       <div>{props.data.note}</div>
     </div>
   )
