@@ -13,5 +13,6 @@ export default createRouter(() => ({
   reminders: () => RemindersScreen,
   photos: () => PhotosScreen,
   rootNavigation: () => RootNavigation,
-  reminder: () => ReminderInfoScreen  
+  reminder: () => ReminderInfoScreen,
+  person: () => PersonInfoScreen,  
 }));
