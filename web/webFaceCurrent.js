@@ -1,5 +1,7 @@
 import React from 'react';
+
 import Gallery from './webGallery.js';
+
 
 var FaceCurrent = (props) => {
   var edit = () => {
@@ -8,6 +10,7 @@ var FaceCurrent = (props) => {
 
   return (
     <div className="face-current">
+
       <Gallery photos={props.current.photos}/>
       <div>{props.current.subjectName}</div>
       <div>{props.current.description}</div>
