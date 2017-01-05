@@ -22,8 +22,6 @@ var dataSource = new ListView.DataSource({rowHasChanged: function (r1, r2) {
   return r1 !== r2
 }})
 
-var sample = [{task: 'Laundry', date: 'Today', time: '9:00 P.M', note: 'Dont forget to take it out!'}, {task: 'Hair', date: 'Tomorrow', time: '4:45 P.M', note: 'Get yo hair did guuuurl'}]
-
 export default class RemindersScreen extends React.Component {
 
   constructor (props) {
@@ -31,7 +29,7 @@ export default class RemindersScreen extends React.Component {
     this.state = {
       upcomingReminders: [],
       completedReminders: [],
-      dataSource: dataSource.cloneWithRows(sample),
+      dataSource: dataSource.cloneWithRows([]),
     }
   }
 
@@ -73,7 +71,7 @@ export default class RemindersScreen extends React.Component {
             <TouchableHighlight onPress={() => this._goToReminder(reminder)}>
               <View style={styles.reminderView}> 
                 <Image style={styles.reminderImage} source={{uri: 'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQrqidYU7IoDmubY_c9zU9pBGhfVBcJRvcaK6ghytIcCKrK-IAngQ'}} /> 
-                <Text style={styles.reminderText}>{reminder.task}</Text>
+                <Text style={styles.reminderText}>{reminder.note}</Text>
               </View>
             </TouchableHighlight> 
           }
