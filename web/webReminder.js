@@ -15,7 +15,7 @@ class Reminder extends React.Component {
       editMode: false,
       date: '',
       type: '',
-      recurring: '',
+      recurring: false,
       note: ''
     };
   }
@@ -93,14 +93,10 @@ class Reminder extends React.Component {
 
   delete() {
     var that = this;
-    var data = this.state.current;
-    data.id = this.props.id;
-    data.name = this.props.name;
-
     $.ajax({
       method: 'DELETE',
       url: '/web/reminders',
-      data: JSON.stringify(data),
+      data: JSON.stringify({reminderId: this.state.current.id}),
       contentType: 'application/json',
       success: function(res) {
         console.log('success', res);
