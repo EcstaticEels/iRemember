@@ -20,10 +20,6 @@ import { MonoText } from '../components/StyledText';
 
 import weatherIcons from '../assets/images/weatherIcons.js';
 
-
-
-
-
 export default class HomeScreen extends React.Component {
   constructor (props) {
     super (props);
@@ -250,7 +246,6 @@ export default class HomeScreen extends React.Component {
       }
 
     }.bind(this))
-
   }
 
   render() {
