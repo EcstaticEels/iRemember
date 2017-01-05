@@ -1,21 +1,24 @@
 import React from 'react';
-import { Nav, Navbar, Button } from 'react-bootstrap';
+import { Nav, Navbar, NavItem, Button, Grid, Row, Col, NavDropdown, MenuItem } from 'react-bootstrap';
 import { IndexLink } from 'react-router';
+import { LinkContainer, IndexLinkContainer } from 'react-router-bootstrap';
 
 var WebNav = (props) => {
-
   var onFilterClick = (e) => {
     props.handleStateChange(e)
   }
-
   return (
-    <ul role="nav">
-      <li><IndexLink to="/" activeClassName="active">Home</IndexLink></li>
-      <input type='submit' value='login'/>
-    </ul>
-
-
-  )
+    <Navbar>
+      <Navbar.Header>
+        <Navbar.Brand>
+          <a href="/">Home</a>
+        </Navbar.Brand>
+      </Navbar.Header>
+      <Nav pullRight>
+        <NavItem href="#">Sign In</NavItem>
+      </Nav>
+    </Navbar>
+  );
 }
 
 /*<Nav activeKey='allTime' bsStyle='pills' onSelect={onFilterClick}>
@@ -30,6 +33,7 @@ var WebNav = (props) => {
       <NavItem title='red' eventKey='red'>Red</NavItem>
       <NavItem title='green' eventKey='green'>Green</NavItem>
       </Nav>*/
+
 
 
 

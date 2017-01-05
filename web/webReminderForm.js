@@ -6,10 +6,6 @@ var ReminderList = (props) => (
   <div className="reminder-form">
     <h5>New Reminder</h5>
     <form>
-    <label>Picture:
-    <ImageUpload img={props.img} getInput={props.getInput} editMode={props.editMode}/>
-    </label>
-    <br/>
     <label>
       Time:
       <input className="date" type="datetime-local" value={props.date} onChange={props.getInput}/>
@@ -61,3 +57,8 @@ var ReminderList = (props) => (
 );
 
 module.exports = ReminderList;
+
+    /*<label>Picture:
+    <ImageUpload img={props.img} getInput={props.getInput} editMode={props.editMode}/>
+    </label>
+    <br/>*/

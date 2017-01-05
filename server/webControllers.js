@@ -54,8 +54,8 @@ module.exports = {
           headers: microsoftHeaders,
           url: `https://api.projectoxford.ai/face/v1.0/persongroups/${personGroupId}/persons`,
           body: JSON.stringify({
-            "name": fields.subjectName[0],//should be req.body.faceName
-            "userData": fields.description[0] //should be req.body.description
+            "name": fields.subjectName[0],
+            "userData": fields.description[0] 
           })
         }, (err, response, body) => {
           if (err) {
@@ -97,10 +97,65 @@ module.exports = {
                         console.log(err);
                       }
                       res.status(201).send('Person and face successfully added, train API call made');
-                    })
+                    });
                   }
-                })
+                });
               });
+            });
+          });
+        });
+      });
+    });
+  },
+  updateFace: (req, res) => {
+    uploadPhoto(req, (urlArray, fields) => {
+      console.log(urlArray);
+      let faceId = fields.faceId[0];
+      db.Caregiver.findOne({
+        where: {
+          id: Number(fields.id[0])
+        }
+      })
+      .then(caregiver => {
+        let personGroupId = caregiver.get('personGroupID');
+        db.Face.findOne({
+          where: {
+            id: faceId
+          }
+        })
+        .then(face => {
+          db.Face.update(
+            { name: fields.subjectName[0],
+              description: fields.description[0], 
+              photo: '',//should be req.body...?
+              audio: ''//should be req.body.audio
+            },
+            { where: {id: face.get('id')}}
+          )
+          .then(() => {
+            request.post({
+              headers: microsoftHeaders,
+              url: `https://api.projectoxford.ai/face/v1.0/persongroups/${personGroupId}/persons/${face.personId}/persistedFaces`,
+              body: JSON.stringify({"url": urlArray[0]})
+            }, (err, response, body) => {
+                if (err) {
+                  console.log(err);
+                }
+                db.FacePhoto.create({
+                  photo: urlArray[0],
+                  faceId: face.get('id')
+                })
+                .then(() => {
+                  request.post({
+                    headers: microsoftHeaders,
+                    url: `https://api.projectoxford.ai/face/v1.0/persongroups/${personGroupId}/train`,
+                  }, (err, response, body) => {
+                    if (err) {
+                      console.log(err);
+                    }
+                    res.status(201).send('Person and face successfully added, train API call made');
+                  });
+                });
             });
           });
         });
@@ -139,7 +194,7 @@ module.exports = {
       Promise.all(promisifiedFindFaces)
       .then(faceObjArray => {
         res.status(200).send(JSON.stringify({faces: faceObjArray}));
-      })
+      });
     });
   },
   addReminder: (req, res) => {
@@ -192,6 +247,6 @@ module.exports = {
     db.Reminder.destroy({ where: {id: reminderId}})
     .then(updatedReminder => {
       res.status(200).send('deleted');
-    })
+    });
   }
 }

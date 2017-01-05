@@ -23,6 +23,7 @@ const mobileControllers = require('./mobileControllers.js');
 
 //Web
 app.post('/web/identify', webControllers.addFace);
+app.put('/web/identify', webControllers.updateFace);
 app.get('/web/identify', webControllers.retrieveFaces);
 app.post('/web/reminders', webControllers.addReminder);
 app.get('/web/reminders', webControllers.retrieveReminders);
@@ -46,5 +47,6 @@ app.listen(3000, function () {
   //   personGroupID: 'EcstaticEels'
   // }).save()
 });
+
 
 
