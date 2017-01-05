@@ -1,0 +1,19 @@
+.gallery-photo {
+  height: auto;
+}
+
+.container {
+  width: 98%;
+}
+
+.tabNav {
+  margin-bottom: 30px;
+}
+
+.btn-addNew {
+  margin: 10px 5px;
+}
+
+.btn-edit {
+  margin-top: 15px;
+}
