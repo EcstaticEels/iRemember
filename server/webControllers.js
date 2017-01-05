@@ -22,12 +22,17 @@ cloudinary.config({
 const uploadPhoto = function(req, cb) {
   const form = new multiparty.Form();
   form.parse(req, function(err, fields, files) {
+    if (err) {
+      console.log(err);
+    }
     const urlArray = [];
-    files.upload.forEach(function(file) {
+    console.log('files', files);
+    console.log('fields', fields)
+    files.file.forEach(function(file) {
       cloudinary.uploader.upload(file.path, function(result) { 
         urlArray.push(result.url);
-        if (urlArray.length === files.upload.length) {
-          cb(urlArray);
+        if (urlArray.length === files.file.length) {
+          cb(urlArray, fields);
         }
       });
     });
@@ -36,106 +41,106 @@ const uploadPhoto = function(req, cb) {
 
 module.exports = {
   addFace: (req, res) => {
-    console.log(req.body);
-    // let caregiverId = 1; //should be req.body.caregiverId
-    // uploadPhoto(req, urlArray => {
-    //   console.log(urlArray);
-    //   db.Caregiver.findOne({
-    //     where: {
-    //       id: caregiverId
-    //     }
-    //   })
-    //   .then(caregiver => {
-    //     let personGroupId = caregiver.get('personGroupID');
-    //     request.post({
-    //       headers: microsoftHeaders,
-    //       url: `https://api.projectoxford.ai/face/v1.0/persongroups/${personGroupId}/persons`,
-    //       body: JSON.stringify({
-    //         "name": 'Bob Dolan',//should be req.body.faceName
-    //         "userData": 'Next-door neighbor, waters lawn every Tuesday and Thursday',//should be req.body.description
-    //       })
-    //     }, (err, response, body) => {
-    //       if (err) {
-    //         console.log(err);
-    //       }
-    //       let createdPerson = JSON.parse(body);
-    //       db.Face.create({
-    //         name: 'Bob Dolan', //should be req.body.faceName
-    //         description: 'Next-door neighbor, waters lawn every Tuesday and Thursday', //should be req.body.description
-    //         photo: '',//should be req.body...?
-    //         audio: '',//should be req.body.audio
-    //         caregiverId: caregiver.get('id'),
-    //         patientId: caregiver.get('patientId'),
-    //         personId: createdPerson.personId
-    //       })
-    //       .then(face => {
-    //         const sendFace = photoUrl => {
-    //           return new Promise((resolve, reject) => {
-    //             request.post({
-    //               headers: microsoftHeaders,
-    //               url: `https://api.projectoxford.ai/face/v1.0/persongroups/${personGroupId}/persons/${createdPerson.personId}`,
-    //               body: JSON.stringify({"url": photoUrl})
-    //             }, (err, response, body) => {
-    //               if (err) {
-    //                 console.log(err);
-    //               }
-    //               resolve(body);
-    //             });
-    //           });
-    //         }
-    //         let promisifiedSendFaces = urlArray.map(sendFace);
-    //         Promise.all(promisifiedSendFaces)
-    //         .then(results => {
-    //           console.log(results);
-    //           urlArray.forEach(url => {
-    //             db.FacePhoto.create({
-    //               photo: url,
-    //               faceId: face.get('id')
-    //             });
-    //           });
-    //           res.status(201).send('Person and faces added');
-    //         });
-    //       });
-    //     });
-    //   });
-    // });
+    uploadPhoto(req, (urlArray, fields) => {
+      console.log(urlArray);
+      db.Caregiver.findOne({
+        where: {
+          id: Number(fields.id[0])
+        }
+      })
+      .then(caregiver => {
+        let personGroupId = caregiver.get('personGroupID');
+        request.post({
+          headers: microsoftHeaders,
+          url: `https://api.projectoxford.ai/face/v1.0/persongroups/${personGroupId}/persons`,
+          body: JSON.stringify({
+            "name": fields.subjectName[0],//should be req.body.faceName
+            "userData": fields.description[0] //should be req.body.description
+          })
+        }, (err, response, body) => {
+          if (err) {
+            console.log(err);
+          }
+          let createdPerson = JSON.parse(body);
+          db.Face.create({
+            name: fields.subjectName[0], 
+            description: fields.description[0], 
+            photo: '',//should be req.body...?
+            audio: '',//should be req.body.audio
+            caregiverId: caregiver.get('id'),
+            patientId: caregiver.get('patientId'),
+            personId: createdPerson.personId
+          })
+          .then(face => {
+            var result = [];
+            urlArray.forEach(url => {
+              request.post({
+                headers: microsoftHeaders,
+                url: `https://api.projectoxford.ai/face/v1.0/persongroups/${personGroupId}/persons/${createdPerson.personId}/persistedFaces`,
+                body: JSON.stringify({"url": url})
+              }, (err, response, body) => {
+                if (err) {
+                  console.log(err);
+                }
+                result.push(body);
+                db.FacePhoto.create({
+                  photo: url,
+                  faceId: face.get('id')
+                })
+                .then(() => {
+                  if (urlArray.length === result.length) {
+                    request.post({
+                      headers: microsoftHeaders,
+                      url: `https://api.projectoxford.ai/face/v1.0/persongroups/${personGroupId}/train`,
+                    }, (err, response, body) => {
+                      if (err) {
+                        console.log(err);
+                      }
+                      res.status(201).send('Person and face successfully added, train API call made');
+                    })
+                  }
+                })
+              });
+            });
+          });
+        });
+      });
+    });
   },
   retrieveFaces: (req, res) => {
-    console.log(req.body)
-    console.log(req.url)
-    // var caregiverId = Number(urlModule.parse(req.url).query.slice(12));
-    // db.Face.findAll({
-    //   where: {
-    //     caregiverId: caregiverId
-    //   }
-    // })
-    // .then(faces => {
-    //   const findFace = face => {
-    //     return new Promise( (resolve, reject) => {
-    //       db.FacePhoto.findAll({
-    //         where: {
-    //           faceId: face.id
-    //         }
-    //       })
-    //       .then(facePhotos => {
-    //         const faceObj = {
-    //           dbId: face.id,
-    //           name: face.name, 
-    //           description: face.description,
-    //           photo: face.photo,
-    //           audio: face.audio,
-    //           photos: facePhotos
-    //         }
-    //         resolve(faceObj);
-    //       });
-    //     });
-    //   }
-    //   let promisifiedFindFaces = faces.map(findFace);
-    //   Promise.all(promisifiedFindFaces)
-    //   .then(faceObjArray => {
-    //     res.status(200).send(JSON.stringify(faceObjArray));
-    //   })
-    // });
+    var caregiverId = Number(urlModule.parse(req.url).query.slice(12));
+    db.Face.findAll({
+      where: {
+        caregiverId: caregiverId
+      }
+    })
+    .then(faces => {
+      const findFace = face => {
+        return new Promise( (resolve, reject) => {
+          db.FacePhoto.findAll({
+            where: {
+              faceId: face.id
+            }
+          })
+          .then(facePhotos => {
+            const faceObj = {
+              dbId: face.id,
+              subjectName: face.name, 
+              description: face.description,
+              photo: face.photo,
+              audio: face.audio,
+              photos: facePhotos
+            }
+            resolve(faceObj);
+          });
+        });
+      }
+      let promisifiedFindFaces = faces.map(findFace);
+      Promise.all(promisifiedFindFaces)
+      .then(faceObjArray => {
+        res.status(200).send(JSON.stringify({faces: faceObjArray}));
+      })
+    });
   },
   addReminder: (req, res) => {
     let caregiverId = req.body.id; 

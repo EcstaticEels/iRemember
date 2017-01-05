@@ -8,7 +8,7 @@ var FaceEntry = (props) => {
 
   return (
     <div className="face-entry" onClick={changeCurrent}>
-      <img src={props.data.photos[0]} height="100" width="100"/>
+      <img src={props.data.photos[0].photo} height="100" width="100"/>
       <div>{props.data.subjectName}</div>
     </div>
   )
