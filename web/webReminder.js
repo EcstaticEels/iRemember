@@ -14,9 +14,8 @@ class Reminder extends React.Component {
       showForm: false,
       editMode: false,
       date: '',
-      type: 'medication',
-      recurring: false,
-      img: "http://pngimg.com/upload/pills_PNG16521.png",
+      type: '',
+      recurring: '',
       note: ''
     };
   }
@@ -86,7 +85,6 @@ class Reminder extends React.Component {
       date: current.date,
       recurring: current.recurring,
       type: current.type,
-      img: current.img,
       note: current.note,
       reminderId: current.id
     })
@@ -123,7 +121,6 @@ class Reminder extends React.Component {
     form.date = this.state.date;
     form.recurring = this.state.recurring;
     form.type = this.state.type;
-    form.img = this.state.img;
     form.note = this.state.note;
     if (this.state.editMode) {
       form.reminderId = this.state.reminderId;

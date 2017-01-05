@@ -5,34 +5,26 @@ var Gallery = (props) => {
 
   var settings = {
   centerMode: true,
-  centerPadding: '60px',
-  slidesToShow: 3,
-  responsive: [
-    {
-      breakpoint: 768,
-      settings: {
-        arrows: false,
-        centerMode: true,
-        centerPadding: '40px',
-        slidesToShow: 3
-      }
-    },
-    {
-      breakpoint: 480,
-      settings: {
-        arrows: false,
-        centerMode: true,
-        centerPadding: '40px',
-        slidesToShow: 1
-      }
-    }
-  ]
+  centerPadding: '500px',
+  slidesToShow: 1,
+  arrows: true,
+  adaptiveHeight: true,
+  fade: true,
+  focusOnSelect: true,
+  touchMove: true,
+  arrows: true,
+  speed: 500,
+  dots: true
 };
 
   return (
-    <Slider {...settings}>{
-      props.photos.map((photo, ind) => <img className="slider-img" src={photo}/>)
-    }</Slider>
+    <div>
+      <button type="button" class="slick-prev">Previous</button>
+      <Slider {...settings}>{
+        props.photos.map((photoObj, ind) => <img className="slider-img" src={photoObj.photo} key={ind}/>)
+      }</Slider>
+      <button type="button" class="slick-next">Next</button>
+    </div>
   );
 };
 
