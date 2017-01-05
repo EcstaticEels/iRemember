@@ -19,22 +19,33 @@ class Face extends React.Component {
     };
   }
 
-  showForm() {
-    this.setState({
-      showForm: true
-    })
+  componentDidMount() {
+    $.ajax({
+      method: 'GET',
+      url: '/web/identify' + '?caregiverId=1',
+      success: function(res) {
+        var faces = JSON.parse(res).faces;
+        this.setState({list: faces}, () => {
+          console.log('resetting face state list', this.state)
+        });
+      }.bind(this),
+      error: function(err) {
+        console.log('error', err);
+      }
+    });
   }
 
-  hideForm() {
+  displayForm(bool) {
     this.setState({
-      showForm: false
-    })
+      showForm: bool
+    });
   }
 
   updateCurrent(current) {
+    console.log(current);
     this.setState({
       current: current
-    })
+    });
   }
 
   getInput(event) {
@@ -45,17 +56,17 @@ class Face extends React.Component {
     this.setState(obj);
   }
 
+
   getPhotos(e){
     this.setState({
       photos: e.target.files
     })
-    console.log(e.target.files)
   }
 
   editModeSwitch(bool) {
     this.setState({
       editMode: bool
-    })
+    });
   }
 
   edit(current) {
@@ -65,52 +76,58 @@ class Face extends React.Component {
       photos: current.photos,
       description: current.description
     })
-    this.showForm();
+    this.displayForm(true);
   }
 
+  getPhotos(event){
+    this.setState({
+      photos: event.target.files
+    }, function() {
+      console.log(this.state)
+    });
+  }
 
-  submitForm() {
+  submitForm(event) {
+    event.preventDefault();
     var that = this;
-    var form = {};
-    form.id = this.props.id;
-    form.name = this.props.name;
-    form.subjectName = this.state.subjectName;
-    form.photos = this.state.photos;
-    form.description = this.state.description;
-    
+    var formData = new FormData();
+    formData.append('id', this.props.id);
+    formData.append('name', this.props.name);
+    formData.append('subjectName', this.state.subjectName);
+    formData.append('description', this.state.description);
+    for (var key in this.state.photos) {
+      formData.append('file', this.state.photos[key]);
+    }
     $.ajax({
+      url: '/web/identify',
       method: 'POST',
-      url: '/web/face',
-      data: form,
-      contentType: '',
-      dataType: 'JSON',
+      data: formData,
+      processData: false, // tells jQuery not to process data
+      contentType: false, // tells jQuery not to set contentType
       success: function (res) {
         console.log('success', res);
         that.editModeSwitch(false);
-        that.hideForm();
+        that.displayForm(false);
         that.updateCurrent(res);
       },
       error: function (err) {
         console.log('error', err);
       }
     })
-
-    event.preventDefault();
-
   }
 
   render() {
     return (
       <div className="face">
         <div>{
-          this.state.showForm? null : <button type="button" onClick={this.showForm.bind(this)}>Add New Face</button>
+          this.state.showForm ? null : <button type="button" onClick={ () => this.displayForm.call(this, true)}>Add New Face</button>
         }</div>
         <FaceList 
           list={this.state.list}
           getInput={this.getInput.bind(this)}
           updateCurrent={this.updateCurrent.bind(this)}/>
         <div>{
-          this.state.showForm? 
+          this.state.showForm ? 
             <FaceForm 
               getInput={this.getInput.bind(this)} 
               getPhotos={this.getPhotos.bind(this)}
@@ -121,7 +138,7 @@ class Face extends React.Component {
               description={this.state.description}/> 
             : <FaceCurrent
                 current={this.state.current}
-                edit={this.edit.bind(this)}/>
+                edit={this.edit.bind(this)} />
         }</div>
       </div>
     )
