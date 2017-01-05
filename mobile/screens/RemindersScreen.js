@@ -14,21 +14,24 @@ import {
   ExponentLinksView,
 } from '@exponent/samples';
 
+import axios from 'axios';
+
 import Router from '../navigation/Router.js'
+
+var dataSource = new ListView.DataSource({rowHasChanged: function (r1, r2) {
+  return r1 !== r2
+}})
+
+var sample = [{task: 'Laundry', date: 'Today', time: '9:00 P.M', note: 'Dont forget to take it out!'}, {task: 'Hair', date: 'Tomorrow', time: '4:45 P.M', note: 'Get yo hair did guuuurl'}]
 
 export default class RemindersScreen extends React.Component {
 
-  constructor () {
-    super ();
-
-    var dataSource = new ListView.DataSource({rowHasChanged: function (r1, r2) {
-      return r1 !== r2
-    }})
-
+  constructor (props) {
+    super(props);
     this.state = {
       upcomingReminders: [],
       completedReminders: [],
-      dataSource: dataSource.cloneWithRows([{task: 'Laundry', date: 'Today', time: '9:00 P.M', note: 'Dont forget to take it out!'}, {task: 'Hair', date: 'Tomorrow', time: '4:45 P.M', note: 'Get yo hair did guuuurl'}]),
+      dataSource: dataSource.cloneWithRows(sample),
     }
   }
 
@@ -36,6 +39,24 @@ export default class RemindersScreen extends React.Component {
     navigationBar: {
       title: 'Reminders',
     },
+  }
+
+  componentDidMount () {
+    var that = this;
+    axios.get('http://10.6.19.25:3000/mobile/reminders', {
+      params: {
+        id: 1
+      }
+    })
+      .then(function (response) {
+        var reminders = response.data.reminders;
+        that.setState({
+          dataSource: dataSource.cloneWithRows(reminders)
+        })
+      })
+      .catch(function (error) {
+        console.log('error', error);
+      });
   }
 
   _goToReminder = (reminder) => {
