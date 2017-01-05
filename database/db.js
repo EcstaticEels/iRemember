@@ -63,8 +63,6 @@ FacePhoto.belongsTo(Face);
 
 sequelizeDb.sync();
 
-
-
 module.exports = {
   Caregiver,
   Patient,

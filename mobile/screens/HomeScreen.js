@@ -250,6 +250,27 @@ export default class HomeScreen extends React.Component {
 
     }.bind(this))
 
+
+    this.test()
+  }
+
+  test() {
+    var data = 'Hi'
+    fetch ('http://localhost:3000/mobile/reminders', {
+      method: 'GET',
+      data: data,
+      body: data,
+      json: data, 
+      headers: new Headers({
+        'Content-Type': 'application/json'
+      })
+    })
+      .then(function (response) {
+        return response.json()
+      })
+      .then(function (responseJSON) {
+        console.log(responseJSON);
+      })
   }
 
   render() {

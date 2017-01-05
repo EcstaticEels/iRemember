@@ -2,7 +2,6 @@ var path = require('path')
 
 const config = {
     entry: {
-        mobile: "./mobile/home.js",
         web: "./web/webApp.js"
     },
     output: {
