@@ -229,25 +229,24 @@ module.exports = {
       res.status(200).send(JSON.stringify({reminders: reminders}));
     });
   },
-  updateReminder: (req, res) => {
-    let caregiverId = req.body.id; 
+  updateReminder: (req, res) => { 
     let reminderId = req.body.reminderId;
-    db.Caregiver.findOne({
-      where: {
-        id: caregiverId
-      }
+    db.Reminder.update(
+      { date: req.body.date,
+      type: req.body.type,
+      note: req.body.note,
+      recurring: req.body.recurring },
+      { where: { id: reminderId}}
+    )
+    .then(updatedReminder => {
+      res.status(200).send(JSON.stringify(updatedReminder));
     })
-    .then(caregiver => {
-      db.Reminder.update(
-        { date: req.body.date,
-        type: req.body.type,
-        note: req.body.note,
-        recurring: req.body.recurring },
-        { where: {caregiverId: caregiver.get('id'), id: reminderId}}
-      )
-      .then(updatedReminder => {
-        res.status(200).send('reminder successfully updated');
-      })
+  },
+  deleteReminder: (req, res) => {
+    let reminderId = req.body.reminderId;
+    db.Reminder.destroy({ where: {id: reminderId}})
+    .then(updatedReminder => {
+      res.status(200).send('deleted');
     });
   }
 }
