@@ -9,13 +9,17 @@ var Tab = (props) => {
   }
 
   return (
-    <Navbar fixedTop inverse>
-      <Nav activeKey='allTime' bsStyle='pills' onSelect={changeTab}>
-        <NavItem title='reminders' eventKey='reminders'><Link to="/reminders">Reminders</Link></NavItem>
-        <NavItem title='face' eventKey='face'><Link to="/face">Face Recognition</Link></NavItem>
-      </Nav>
-    </Navbar>
+    <ul role="nav">
+      <li><Link to="/reminders">Reminders</Link></li>
+      <li><Link to="/face">Face</Link></li>
+    </ul>
   )
 }
 
 module.exports = Tab;
+    // <Navbar fixedTop inverse>
+    //   <Nav activeKey='allTime' bsStyle='pills' onSelect={changeTab}>
+    //     <NavItem title='reminders'  eventKey='reminders'><Link to="/reminders">Reminders</Link></NavItem>
+    //     <NavItem title='face'  eventKey='face'><Link to="/face">Face Recognition</Link></NavItem>
+    //   </Nav>
+    // </Navbar>
