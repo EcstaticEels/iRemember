@@ -1,6 +1,5 @@
 import React from 'react';
 import $ from 'jquery';
-// import update from 'immutability-helper';
 
 import FaceList from './webFaceList.js';
 import FaceCurrent from './webFaceCurrent.js';
@@ -33,25 +32,20 @@ class Face extends React.Component {
       error: function(err) {
         console.log('error', err);
       }
-    })
+    });
   }
 
-  showForm() {
+  displayForm(bool) {
     this.setState({
-      showForm: true
-    })
-  }
-
-  hideForm() {
-    this.setState({
-      showForm: false
-    })
+      showForm: bool
+    });
   }
 
   updateCurrent(current) {
+    console.log(current);
     this.setState({
       current: current
-    })
+    });
   }
 
   getInput(event) {
@@ -67,13 +61,12 @@ class Face extends React.Component {
     this.setState({
       photos: e.target.files
     })
-    console.log(e.target.files)
   }
 
   editModeSwitch(bool) {
     this.setState({
       editMode: bool
-    })
+    });
   }
 
   edit(current) {
@@ -83,7 +76,7 @@ class Face extends React.Component {
       photos: current.photos,
       description: current.description
     })
-    this.showForm();
+    this.displayForm(true);
   }
 
   getPhotos(event){
@@ -97,7 +90,6 @@ class Face extends React.Component {
   submitForm(event) {
     event.preventDefault();
     var that = this;
-
     var formData = new FormData();
     formData.append('id', this.props.id);
     formData.append('name', this.props.name);
@@ -105,9 +97,6 @@ class Face extends React.Component {
     formData.append('description', this.state.description);
     for (var key in this.state.photos) {
       formData.append('file', this.state.photos[key]);
-    }
-    for (var pair of formData.entries()) {
-      console.log(pair[0] + ',' + pair[1])
     }
     $.ajax({
       url: '/web/identify',
@@ -118,7 +107,7 @@ class Face extends React.Component {
       success: function (res) {
         console.log('success', res);
         that.editModeSwitch(false);
-        that.hideForm();
+        that.displayForm(false);
         that.updateCurrent(res);
       },
       error: function (err) {
@@ -131,14 +120,14 @@ class Face extends React.Component {
     return (
       <div className="face">
         <div>{
-          this.state.showForm? null : <button type="button" onClick={this.showForm.bind(this)}>Add New Face</button>
+          this.state.showForm ? null : <button type="button" onClick={ () => this.displayForm.call(this, true)}>Add New Face</button>
         }</div>
         <FaceList 
           list={this.state.list}
           getInput={this.getInput.bind(this)}
           updateCurrent={this.updateCurrent.bind(this)}/>
         <div>{
-          this.state.showForm? 
+          this.state.showForm ? 
             <FaceForm 
               getInput={this.getInput.bind(this)} 
               getPhotos={this.getPhotos.bind(this)}
