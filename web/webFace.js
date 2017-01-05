@@ -44,7 +44,8 @@ class Face extends React.Component {
   updateCurrent(current) {
     console.log(current);
     this.setState({
-      current: current
+      current: current,
+      showForm: false
     });
   }
 
@@ -60,7 +61,7 @@ class Face extends React.Component {
   getPhotos(e){
     this.setState({
       photos: e.target.files
-    })
+    });
   }
 
   editModeSwitch(bool) {
