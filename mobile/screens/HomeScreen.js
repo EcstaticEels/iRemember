@@ -20,6 +20,8 @@ import weatherIcons from '../assets/images/weatherIcons.js';
 
 
 
+
+
 export default class HomeScreen extends React.Component {
   constructor (props) {
     super (props);
@@ -294,17 +296,8 @@ export default class HomeScreen extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    // flexDirection: 'row', 
     flex: 1,
-    // justifyContent: 'flex-start',
-    // flexWrap: 'wrap',
     backgroundColor: '#2c3e50',
-  },
-  developmentModeText: {
-    marginBottom: 20,
-    color: 'rgba(0,0,0,0.4)',
-    fontSize: 15,
-    textAlign: 'center',
   },
   contentContainer: {
     paddingTop: 80,
@@ -325,7 +318,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
     paddingBottom: 30,
-    paddingTop: 20
+    paddingTop: 30
 
   },
   weatherText: {
