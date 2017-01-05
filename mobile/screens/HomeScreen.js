@@ -1,5 +1,7 @@
 import React from 'react';
 
+import axios from 'axios';
+
 import {
   Button,
   Image,
@@ -184,7 +186,6 @@ export default class HomeScreen extends React.Component {
             return response.json()
           })
           .then(function (responseJSON) {
-            console.log(responseJSON);
 
             responseJSON.weather[0].description = responseJSON.weather[0].description.split('');
 
@@ -255,22 +256,48 @@ export default class HomeScreen extends React.Component {
   }
 
   test() {
-    var data = 'Hi'
-    fetch ('http://localhost:3000/mobile/reminders', {
-      method: 'GET',
-      data: data,
-      body: data,
-      json: data, 
-      headers: new Headers({
-        'Content-Type': 'application/json'
-      })
+    axios.post('http://10.6.19.25:3000/mobile/identify', {
+      firstName: 'Fred',
+      lastName: 'Flintstone'
     })
       .then(function (response) {
-        return response.json()
+        console.log(response);
       })
-      .then(function (responseJSON) {
-        console.log(responseJSON);
-      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
+    // axios.get('http://10.6.19.25:3000/mobile/reminders', {
+    //   params: {
+    //     id: 1
+    //   }
+    // })
+    //   .then(function (response) {
+    //     console.log(response);
+    //   })
+    //   .catch(function (error) {
+    //     console.log(error);
+    //   });
+    // console.log('Hiiii')
+    // var data = 'Hi'
+    // fetch ('http://10.6.19.25:3000/mobile/reminders', {
+    //   method: 'GET',
+    //   data: data,
+    //   body: data,
+    //   json: data, 
+    //   headers: new Headers({
+    //     'Content-Type': 'application/json'
+    //   })
+    // })
+    //   .then(function (response) {
+    //     return response.json()
+    //   })
+    //   .then(function (responseJSON) {
+    //     console.log(responseJSON);
+    //   })
+    //   .catch(function (err) {
+    //     console.log(err)
+    //   })
   }
 
   render() {
