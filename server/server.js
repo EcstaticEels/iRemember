@@ -27,6 +27,7 @@ app.get('/web/identify', webControllers.retrieveFaces);
 app.post('/web/reminders', webControllers.addReminder);
 app.get('/web/reminders', webControllers.retrieveReminders);
 app.put('/web/reminders', webControllers.updateReminder);
+app.delete('/web/reminders', webControllers.deleteReminder);
 //Mobile
 app.post('/mobile/identify', mobileControllers.identifyFace);
 app.get('/mobile/reminders', mobileControllers.retrieveReminders);
@@ -38,6 +39,12 @@ app.get('*', function (req, res) {
 
 app.listen(3000, function () {
   console.log('iRemember is running on port 3000!')
+  //Insert into database
+  // db.Caregiver.build({
+  //   name: 'Bob',
+  //   photo: 'https://www.aviary.com/img/photo-landscape.jpg',
+  //   personGroupID: 'EcstaticEels'
+  // }).save()
 });
 
 
