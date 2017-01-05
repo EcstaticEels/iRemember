@@ -1,6 +1,6 @@
 import React from 'react';
 
-import axios from 'axios';
+// import axios from 'axios';
 
 import {
   Button,
@@ -19,10 +19,6 @@ import * as Exponent from 'exponent'
 import { MonoText } from '../components/StyledText';
 
 import weatherIcons from '../assets/images/weatherIcons.js';
-
-
-
-
 
 export default class HomeScreen extends React.Component {
   constructor (props) {
@@ -250,55 +246,41 @@ export default class HomeScreen extends React.Component {
       }
 
     }.bind(this))
-
-
-    this.test()
   }
 
-  test() {
-    axios.post('http://10.6.19.25:3000/mobile/identify', {
-      firstName: 'Fred',
-      lastName: 'Flintstone'
-    })
-      .then(function (response) {
-        console.log(response);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+  // test() {
+  //   axios.post('http://10.6.19.25:3000/mobile/identify', {
+  //     firstName: 'Fred',
+  //     lastName: 'Flintstone'
+  //   })
+  //     .then(function (response) {
+  //       console.log(response);
+  //     })
+  //     .catch(function (error) {
+  //       console.log(error);
+  //     });
 
-    // axios.get('http://10.6.19.25:3000/mobile/reminders', {
-    //   params: {
-    //     id: 1
-    //   }
-    // })
-    //   .then(function (response) {
-    //     console.log(response);
-    //   })
-    //   .catch(function (error) {
-    //     console.log(error);
-    //   });
-    // console.log('Hiiii')
-    // var data = 'Hi'
-    // fetch ('http://10.6.19.25:3000/mobile/reminders', {
-    //   method: 'GET',
-    //   data: data,
-    //   body: data,
-    //   json: data, 
-    //   headers: new Headers({
-    //     'Content-Type': 'application/json'
-    //   })
-    // })
-    //   .then(function (response) {
-    //     return response.json()
-    //   })
-    //   .then(function (responseJSON) {
-    //     console.log(responseJSON);
-    //   })
-    //   .catch(function (err) {
-    //     console.log(err)
-    //   })
-  }
+  //   // console.log('Hiiii')
+  //   // var data = 'Hi'
+  //   // fetch ('http://10.6.19.25:3000/mobile/reminders', {
+  //   //   method: 'GET',
+  //   //   data: data,
+  //   //   body: data,
+  //   //   json: data, 
+  //   //   headers: new Headers({
+  //   //     'Content-Type': 'application/json'
+  //   //   })
+  //   // })
+  //   //   .then(function (response) {
+  //   //     return response.json()
+  //   //   })
+  //   //   .then(function (responseJSON) {
+  //   //     console.log(responseJSON);
+  //   //   })
+  //   //   .catch(function (err) {
+  //   //     console.log(err)
+  //   //   })
+  // }
 
   render() {
     return (
