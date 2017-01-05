@@ -1,6 +1,6 @@
 import React from 'react';
 
-var ImageUpload = (props) => (
+var ImagesUpload = (props) => (
   <div className="image-upload" encType="multipart/form-data">
       <input type="text" className="imgName"/><br/>
       <input type="file" className="img" onChange={props.getPhotos} multiple/><br/>
@@ -10,4 +10,4 @@ var ImageUpload = (props) => (
   </div>
 );
 
-module.exports = ImageUpload;
+module.exports = ImagesUpload;
