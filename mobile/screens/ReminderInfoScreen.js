@@ -22,7 +22,10 @@ export default class ReminderInfoScreen extends React.Component {
 
   render() {
     return (
-      <ScrollView contentContainerstyle={styles.contentContainer} style={styles.container}>
+      <ScrollView 
+        style={styles.container}
+        contentContainerStyle={styles.contentContainer}>
+
         <View style={styles.reminderInfoContainer}>
           <Text style={styles.reminderTitle}>{this.props.route.params.reminder.task}</Text>
         </View>
@@ -31,8 +34,6 @@ export default class ReminderInfoScreen extends React.Component {
         </View>
         <View style={styles.reminderInfoContainer}>
           <Image style={styles.reminderImage} source={{uri: 'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQrqidYU7IoDmubY_c9zU9pBGhfVBcJRvcaK6ghytIcCKrK-IAngQ'}} /> 
-        </View>
-        <View style={styles.reminderInfoContainer}>
         </View>
         <View style={styles.reminderInfoContainer}>
           <Text style={styles.reminderTimeDate}>{this.props.route.params.reminder.date + ' at ' + this.props.route.params.reminder.time}</Text>       
@@ -44,17 +45,18 @@ export default class ReminderInfoScreen extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: '#2c3e50',
   },
   contentContainer: {
-    paddingTop: 80
+    height: 300,
+    flexDirection: 'column',
+    justifyContent: 'space-around',
+    flex: 1
   },
   reminderInfoContainer: {
-    backgroundColor: '#2c3e50',
     flexDirection: 'row',
     justifyContent: 'space-around',
-    paddingBottom: 30
+    alignItems: 'center'
   },
   reminderImage: {
     height: 150,
@@ -69,11 +71,9 @@ const styles = StyleSheet.create({
   reminderNote: {
     color: '#ECECEC',
     fontSize: 20,
-    alignSelf: 'center'
   },
   reminderTimeDate: {
     color: '#ECECEC',
-    alignSelf: 'center',
     fontSize: 30
-  },
+  }
 });

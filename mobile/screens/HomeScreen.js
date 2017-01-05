@@ -1,6 +1,6 @@
 import React from 'react';
 
-import axios from 'axios';
+// import axios from 'axios';
 
 import {
   Button,
@@ -14,7 +14,7 @@ import {
   View,
 } from 'react-native';
 
-import * as Exponent from 'exponent'
+import * as Exponent from 'exponent';
 
 import { MonoText } from '../components/StyledText';
 
@@ -228,14 +228,14 @@ export default class HomeScreen extends React.Component {
               })
             }
 
-            if (responseJSON.weather[0].description === 'few clouds') {
+            if (responseJSON.weather[0].description === 'Few clouds') {
               this.setState({
                 weatherDescription: responseJSON.weather[0].description,
                 weatherIcon: weatherIcons.partiallyCloudy
               })
             }
 
-            if (responseJSON.weather[0].description === 'scattered clouds' || responseJSON.weather[0].description === 'broken clouds' || responseJSON.weather[0].description === 'overcast clouds') {
+            if (responseJSON.weather[0].description === 'Scattered clouds' || responseJSON.weather[0].description === 'Broken clouds' || responseJSON.weather[0].description === 'Overcast clouds') {
               this.setState({
                 weatherDescription: responseJSON.weather[0].description,
                 weatherIcon: weatherIcons.cloudy
@@ -251,58 +251,10 @@ export default class HomeScreen extends React.Component {
 
     }.bind(this))
 
-
-    this.test()
-  }
-
-  test() {
-    axios.post('http://10.6.19.25:3000/mobile/identify', {
-      firstName: 'Fred',
-      lastName: 'Flintstone'
-    })
-      .then(function (response) {
-        console.log(response);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-
-    // axios.get('http://10.6.19.25:3000/mobile/reminders', {
-    //   params: {
-    //     id: 1
-    //   }
-    // })
-    //   .then(function (response) {
-    //     console.log(response);
-    //   })
-    //   .catch(function (error) {
-    //     console.log(error);
-    //   });
-    // console.log('Hiiii')
-    // var data = 'Hi'
-    // fetch ('http://10.6.19.25:3000/mobile/reminders', {
-    //   method: 'GET',
-    //   data: data,
-    //   body: data,
-    //   json: data, 
-    //   headers: new Headers({
-    //     'Content-Type': 'application/json'
-    //   })
-    // })
-    //   .then(function (response) {
-    //     return response.json()
-    //   })
-    //   .then(function (responseJSON) {
-    //     console.log(responseJSON);
-    //   })
-    //   .catch(function (err) {
-    //     console.log(err)
-    //   })
   }
 
   render() {
     return (
-      <View style={styles.container}>
 
         <ScrollView
           style={styles.container}
@@ -324,7 +276,7 @@ export default class HomeScreen extends React.Component {
             </Text>
           </View>
 
-          <View style={styles.weatherContainer}>
+          <View style={styles.homepageContentContainer}>
             <Text style={styles.weatherText}>
               {this.state.weatherDescription}
             </Text>
@@ -333,8 +285,6 @@ export default class HomeScreen extends React.Component {
           </View>
 
         </ScrollView>
-
-      </View>
     );
   }
 }
@@ -344,38 +294,30 @@ export default class HomeScreen extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: '#2c3e50',
   },
   contentContainer: {
-    paddingTop: 80,
+    paddingTop: 40,
+    height: 300,
+    flexDirection: 'column',
+    justifyContent: 'space-around',
+    flex: 1
   },
   homepageContentContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    alignItems: 'center',
-    paddingBottom: 30
+    alignItems: 'center'
   },
   homepageContentIcon: {
-    // flex: 1,
     height: 100,
     width: 100
   },
-  weatherContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    paddingBottom: 30,
-    paddingTop: 30
-
-  },
   weatherText: {
     color: '#ECECEC',
-    // flex: 1,
     fontSize: 24
   },
   timeText: {
-    fontSize: 48, 
+    fontSize: 60, 
     color: '#ECECEC',
   }, 
   dateText: {
