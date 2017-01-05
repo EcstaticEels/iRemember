@@ -17,7 +17,7 @@ class Gallery extends React.Component {
   render() {
     const settings = {
       centerMode: true,
-      centerPadding: '500px',
+      centerPadding: '300px',
       slidesToShow: 1,
       adaptiveHeight: true,
       fade: true,

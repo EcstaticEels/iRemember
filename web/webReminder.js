@@ -1,5 +1,6 @@
 import React from 'react';
 import $ from 'jquery';
+import {Button, Grid, Row, Col} from 'react-bootstrap';
 
 import ReminderList from './webReminderList.js';
 import ReminderCurrent from './webReminderCurrent.js';
@@ -30,7 +31,7 @@ class Reminder extends React.Component {
           reminder.date = reminder.date.slice(0, 16);
           return reminder;
         })
-        this.setState({list: reminders});
+        this.setState({list: reminders, current: reminders[0]});
       }.bind(this),
       error: function(err) {
         console.log('error', err);
@@ -38,21 +39,16 @@ class Reminder extends React.Component {
     })
   }
 
-  showForm() {
+  displayForm(bool) {
     this.setState({
-      showForm: true
-    });
-  }
-
-  hideForm() {
-    this.setState({
-      showForm: false
+      showForm: bool
     });
   }
 
   updateCurrent(current) {
     this.setState({
-      current: current
+      current: current,
+      showForm: false
     });
   }
 
@@ -75,7 +71,7 @@ class Reminder extends React.Component {
   editModeSwitch(bool) {
     this.setState({
       editMode: bool
-    })
+    });
   }
 
   edit(current) {
@@ -86,8 +82,8 @@ class Reminder extends React.Component {
       type: current.type,
       note: current.note,
       reminderId: current.id
-    })
-    this.showForm();
+    });
+    this.displayForm(true);
   }
 
   submitForm(event) {
@@ -111,7 +107,7 @@ class Reminder extends React.Component {
       success: function(res) {
         console.log('success', res);
         that.editModeSwitch(false);
-        that.hideForm();
+        that.displayForm(false);
         that.updateCurrent(JSON.parse(res));
       },
       error: function(err) {
@@ -123,27 +119,38 @@ class Reminder extends React.Component {
 
   render() {
     return (
-      <div className="reminder">
-        <div>{
-          this.state.showForm? null : <button type="button" onClick={this.showForm.bind(this)}>Add New Reminder</button>
-        }</div>
-        <ReminderList list={this.state.list} getInput={this.getInput.bind(this)} updateCurrent={this.updateCurrent.bind(this)}/>
-        <div>{
-          this.state.showForm ? 
-            <ReminderForm 
-              getInput={this.getInput.bind(this)} 
-              getBoolean={this.getBoolean.bind(this)}
-              submitForm={this.submitForm.bind(this)}
-              editMode={this.state.editMode}
-              date={this.state.date}
-              type={this.state.type}
-              recurring={this.state.recurring} 
-              img={this.state.img} 
-              note={this.state.note}
-            /> 
-            : <ReminderCurrent current={this.state.current} edit={this.edit.bind(this)} />
-        }</div>
-      </div>
+      <Grid>
+        <Row className="show-grid">
+          <Col xs={12} md={4}>
+            <div className="reminder">
+              <div>
+                {this.state.showForm? null : 
+                  <Button bsSize="large" className="btn-addNew" bsStyle="primary" onClick={() => this.displayForm.call(this, true)}>Add New Reminder</Button>}
+              </div>
+              <ReminderList list={this.state.list} getInput={this.getInput.bind(this)} updateCurrent={this.updateCurrent.bind(this)}/>
+            </div>
+          </Col>
+          <Col xs={12} md={8}>
+            <div>
+            {
+              this.state.showForm ? 
+                <ReminderForm 
+                  getInput={this.getInput.bind(this)} 
+                  getBoolean={this.getBoolean.bind(this)}
+                  submitForm={this.submitForm.bind(this)}
+                  editMode={this.state.editMode}
+                  date={this.state.date}
+                  type={this.state.type}
+                  recurring={this.state.recurring} 
+                  img={this.state.img} 
+                  note={this.state.note}
+                /> 
+                : <ReminderCurrent current={this.state.current} edit={this.edit.bind(this)} />
+            }
+            </div>
+          </Col>
+        </Row>
+      </Grid>
     )
   }
 }
