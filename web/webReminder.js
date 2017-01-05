@@ -16,7 +16,7 @@ class Reminder extends React.Component {
       editMode: false,
       date: '',
       type: '',
-      recurring: '',
+      recurring: false,
       note: '',
       img: ''
     };
@@ -111,7 +111,8 @@ class Reminder extends React.Component {
     });
   }
 
-  edit(current) {
+  edit() {
+    var current = this.state.current;
     this.editModeSwitch(true);
     this.setState({
       date: current.date,
@@ -122,6 +123,23 @@ class Reminder extends React.Component {
       img: current.img
     });
     this.displayForm(true);
+  }
+
+  delete() {
+    var that = this;
+    $.ajax({
+      method: 'DELETE',
+      url: '/web/reminders',
+      data: JSON.stringify({reminderId: this.state.current.id}),
+      contentType: 'application/json',
+      success: function(res) {
+        console.log('success', res);
+        that.updateCurrent(that.state.list[0]);
+      },
+      error: function(err) {
+        console.log('error', err);
+      }
+    })
   }
 
   submitForm(event) {
@@ -185,7 +203,7 @@ class Reminder extends React.Component {
                   img={this.state.img} 
                   note={this.state.note}
                 /> 
-                : <ReminderCurrent current={this.state.current} edit={this.edit.bind(this)} />
+                : <ReminderCurrent current={this.state.current} edit={this.edit.bind(this)} delete={this.delete.bind(this)} />
             }
             </div>
           </Col>
