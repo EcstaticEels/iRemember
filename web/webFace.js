@@ -1,5 +1,6 @@
 import React from 'react';
 import $ from 'jquery';
+import {Button, Row, Col, Grid} from 'react-bootstrap';
 
 import FaceList from './webFaceList.js';
 import FaceCurrent from './webFaceCurrent.js';
@@ -25,7 +26,7 @@ class Face extends React.Component {
       url: '/web/identify' + '?caregiverId=1',
       success: function(res) {
         var faces = JSON.parse(res).faces;
-        this.setState({list: faces}, () => {
+        this.setState({list: faces, current: faces[0]}, () => {
           console.log('resetting face state list', this.state)
         });
       }.bind(this),
@@ -42,7 +43,6 @@ class Face extends React.Component {
   }
 
   updateCurrent(current) {
-    console.log(current);
     this.setState({
       current: current,
       showForm: false
@@ -119,29 +119,42 @@ class Face extends React.Component {
 
   render() {
     return (
-      <div className="face">
-        <div>{
-          this.state.showForm ? null : <button type="button" onClick={ () => this.displayForm.call(this, true)}>Add New Face</button>
-        }</div>
-        <FaceList 
-          list={this.state.list}
-          getInput={this.getInput.bind(this)}
-          updateCurrent={this.updateCurrent.bind(this)}/>
-        <div>{
-          this.state.showForm ? 
-            <FaceForm 
-              getInput={this.getInput.bind(this)} 
-              getPhotos={this.getPhotos.bind(this)}
-              submitForm={this.submitForm.bind(this)}
-              editMode={this.state.editMode}
-              subjectName={this.state.subjectName}
-              photos={this.state.photos} 
-              description={this.state.description}/> 
-            : <FaceCurrent
-                current={this.state.current}
-                edit={this.edit.bind(this)} />
-        }</div>
-      </div>
+    <Grid>
+      <Row className="show-grid">
+        <Col xs={12} md={4}>
+          <div className="face">
+            <div>
+            {
+              this.state.showForm ? null :  
+                <Button bsSize="large" className="btn-addNew" bsStyle="primary" onClick={ () => this.displayForm.call(this, true)}>Add New Face</Button>
+            }
+            </div>
+            <FaceList 
+              list={this.state.list}
+              getInput={this.getInput.bind(this)}
+              updateCurrent={this.updateCurrent.bind(this)}/>
+          </div>
+        </Col>
+        <Col xs={12} md={8}>
+          <div>
+          {
+            this.state.showForm ? 
+              <FaceForm 
+                getInput={this.getInput.bind(this)} 
+                getPhotos={this.getPhotos.bind(this)}
+                submitForm={this.submitForm.bind(this)}
+                editMode={this.state.editMode}
+                subjectName={this.state.subjectName}
+                photos={this.state.photos} 
+                description={this.state.description}/> 
+              : <FaceCurrent
+                  current={this.state.current}
+                  edit={this.edit.bind(this)} />
+          }
+          </div>
+        </Col>
+      </Row>
+    </Grid>
     )
   }
 }
