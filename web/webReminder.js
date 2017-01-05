@@ -17,11 +17,22 @@ class Reminder extends React.Component {
       date: '',
       type: '',
       recurring: '',
-      note: ''
+      note: '',
+      img: ''
     };
   }
 
-  componentDidMount() {
+  getReminders(func) {
+    var mapIcons = (type) => {
+      if (type === 'medication') {
+        return '/pill_logo1.jpg';
+      } else if (type === 'appointment') {
+        return '/appointment_logo3.jpg';
+      } else {
+        return '/reminder_logo.jpg';
+      }
+    }
+
     $.ajax({
       method: 'GET',
       url: '/web/reminders' + '?caregiverId=1',
@@ -29,14 +40,24 @@ class Reminder extends React.Component {
         var reminders = JSON.parse(res).reminders;
         reminders.forEach(function(reminder) {
           reminder.date = reminder.date.slice(0, 16);
+          reminder.img = mapIcons(reminder.type);
           return reminder;
-        })
-        this.setState({list: reminders, current: reminders[0]});
+        });
+        func(reminders);
       }.bind(this),
       error: function(err) {
         console.log('error', err);
       }
-    })
+    });
+  }
+
+  componentDidMount() {
+    this.getReminders((reminders) => {
+      this.setState({
+        list: reminders,
+        current: reminders[0]
+      })
+    });
   }
 
   displayForm(bool) {
@@ -49,6 +70,22 @@ class Reminder extends React.Component {
     this.setState({
       current: current,
       showForm: false
+    });
+  }
+
+  handleUpdate() {
+    var updatedId = this.state.current.id;
+    var current;
+    this.getReminders((reminders) => {
+      for (var i = 0; i < reminders.length; i++) {
+        if (reminders[i].id === updatedId) {
+          current = reminders[i];
+        }
+      }
+      this.setState({
+        list: reminders,
+        current: current
+      });
     });
   }
 
@@ -81,7 +118,8 @@ class Reminder extends React.Component {
       recurring: current.recurring,
       type: current.type,
       note: current.note,
-      reminderId: current.id
+      reminderId: current.id,
+      img: current.img
     });
     this.displayForm(true);
   }
@@ -105,10 +143,12 @@ class Reminder extends React.Component {
       data: JSON.stringify(form),
       contentType: 'application/json',
       success: function(res) {
-        console.log('success', res);
+        if (that.state.editMode) {
+          that.handleUpdate();
+        }
         that.editModeSwitch(false);
         that.displayForm(false);
-        that.updateCurrent(JSON.parse(res));
+        that.componentDidMount();
       },
       error: function(err) {
         console.log('error', err);

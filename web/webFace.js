@@ -16,23 +16,30 @@ class Face extends React.Component {
       editMode: false,
       subjectName: '',
       photos: ["http://pngimg.com/upload/pills_PNG16521.png"],
-      description: ''
+      description: '',
+      updatePhotos: ''
     };
   }
 
-  componentDidMount() {
+  getFaces(func) {
     $.ajax({
       method: 'GET',
       url: '/web/identify' + '?caregiverId=1',
       success: function(res) {
         var faces = JSON.parse(res).faces;
-        this.setState({list: faces, current: faces[0]}, () => {
-          console.log('resetting face state list', this.state)
-        });
+        func(faces);
       }.bind(this),
       error: function(err) {
         console.log('error', err);
       }
+    });
+  }
+
+  componentDidMount() {
+    this.getFaces((faces) => {
+      this.setState({list: faces, current: faces[0]}, () => {
+        console.log('face list on state', this.state)
+      });
     });
   }
 
@@ -57,13 +64,6 @@ class Face extends React.Component {
     this.setState(obj);
   }
 
-
-  getPhotos(e){
-    this.setState({
-      photos: e.target.files
-    });
-  }
-
   editModeSwitch(bool) {
     this.setState({
       editMode: bool
@@ -82,9 +82,25 @@ class Face extends React.Component {
 
   getPhotos(event){
     this.setState({
-      photos: event.target.files
+      updatePhotos: event.target.files
     }, function() {
       console.log(this.state)
+    });
+  }
+
+  handleUpdate() {
+    var updatedId = this.state.current.dbId;
+    var current;
+    this.getFaces(faces => {
+      for (var i = 0; i < faces.length; i++) {
+        if (faces[i].dbId === updatedId) {
+          current = faces[i];
+        }
+      }
+      this.setState({
+        list: faces,
+        current: current
+      });
     });
   }
 
@@ -96,25 +112,32 @@ class Face extends React.Component {
     formData.append('name', this.props.name);
     formData.append('subjectName', this.state.subjectName);
     formData.append('description', this.state.description);
-    for (var key in this.state.photos) {
-      formData.append('file', this.state.photos[key]);
+    if (this.state.editMode) {
+      formData.append('faceId', this.state.current.dbId);
+    } 
+    for (var key in this.state.updatePhotos) {
+      formData.append('file', this.state.updatePhotos[key]);
     }
+
     $.ajax({
       url: '/web/identify',
-      method: 'POST',
+      method: this.state.editMode ? 'PUT' : 'POST',
       data: formData,
       processData: false, // tells jQuery not to process data
       contentType: false, // tells jQuery not to set contentType
       success: function (res) {
         console.log('success', res);
+        if (that.state.editMode) {
+          that.handleUpdate();
+        }
         that.editModeSwitch(false);
         that.displayForm(false);
-        that.updateCurrent(res);
+        that.componentDidMount();
       },
       error: function (err) {
         console.log('error', err);
       }
-    })
+    });
   }
 
   render() {
