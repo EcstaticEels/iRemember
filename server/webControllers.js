@@ -175,7 +175,8 @@ module.exports = {
           db.FacePhoto.findAll({
             where: {
               faceId: face.id
-            }
+            },
+            order: [['updatedAt', 'DESC']]
           })
           .then(facePhotos => {
             const faceObj = {
@@ -223,7 +224,8 @@ module.exports = {
     db.Reminder.findAll({
       where: {
         caregiverId: caregiverId
-      }
+      }, 
+      order: [['date']]
     })
     .then(reminders => {
       res.status(200).send(JSON.stringify({reminders: reminders}));
