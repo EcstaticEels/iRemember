@@ -42,10 +42,15 @@ app.listen(3000, function () {
   console.log('iRemember is running on port 3000!')
   //Insert into database
   // db.Caregiver.build({
-  //   name: 'Bob',
-  //   photo: 'https://www.aviary.com/img/photo-landscape.jpg',
-  //   personGroupID: 'EcstaticEels'
+  //   name: 'Sara Bolan',
+  //   photo: '',
+  //   personGroupID: 'EcstaticEels1'
   // }).save()
+  // db.Patient.build({
+  //   name: 'John Watt',
+  //   photo: '',
+  //   personGroupID: 'EcstaticEels1'
+  // }).save();
 });
 
 
