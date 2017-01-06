@@ -6,6 +6,9 @@ var path = require('path');
 //Database
 const db = require('../database/db.js');
 
+//Port Number
+const port = process.env.mode === 'DEPLOY' ? 80 : 3000;
+
 //Middleware
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
@@ -38,7 +41,7 @@ app.get('*', function (req, res) {
   res.sendFile(path.join(__dirname, '..', 'public/webIndex.html'))
 });
 
-app.listen(3000, function () {
+app.listen(port, function () {
   console.log('iRemember is running on port 3000!')
   //Insert into database
   // db.Caregiver.build({
