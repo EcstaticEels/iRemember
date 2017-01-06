@@ -10,12 +10,12 @@ class Face extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      list: [{subjectName:"test", photos:["http://pngimg.com/upload/pills_PNG16521.png", "http://pngimg.com/upload/pills_PNG16521.png", "http://pngimg.com/upload/pills_PNG16521.png"], description:"testfiles"}, {subjectName:"test1", photos:["http://pngimg.com/upload/pills_PNG16521.png", "http://pngimg.com/upload/pills_PNG16521.png"], description:"testfiles1"}],
-      current: {subjectName:"test", photos:["http://pngimg.com/upload/pills_PNG16521.png", "http://pngimg.com/upload/pills_PNG16521.png", "http://pngimg.com/upload/pills_PNG16521.png"], description:"testfiles"},
+      list: [{subjectName:"", photos:[""], description:""}],
+      current: {subjectName:"", photos:[""], description:""},
       showForm: false,
       editMode: false,
       subjectName: '',
-      photos: ["http://pngimg.com/upload/pills_PNG16521.png"],
+      photos: [""],
       description: '',
       updatePhotos: ''
     };
@@ -37,9 +37,11 @@ class Face extends React.Component {
 
   componentDidMount() {
     this.getFaces((faces) => {
-      this.setState({list: faces, current: faces[0]}, () => {
-        console.log('face list on state', this.state)
-      });
+      if (faces.length > 0) {
+        this.setState({list: faces, current: faces[0]}, () => {
+          console.log('face list on state', this.state)
+        });
+      }
     });
   }
 

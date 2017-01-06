@@ -10,8 +10,8 @@ class Reminder extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      list: [{time: "2017-01-04T12:59", recurring: false, type: undefined, img: "http://pngimg.com/upload/pills_PNG16521.png", note: "Take pill"}, {time: "2017-01-04T01:00", recurring: false, type: "medication", img: "http://pngimg.com/upload/pills_PNG16521.png", note: "dksfl"}],
-      current: {time: "2017-01-04T12:59", recurring: true, type: 'appointment', img: "http://pngimg.com/upload/pills_PNG16521.png", note: "Take pill"},
+      list: [{time: "", recurring: false, type: undefined, img: "", note: ""}],
+      current: {time: "", recurring: false, type: '', img: "", note: ""},
       showForm: false,
       editMode: false,
       date: '',
@@ -53,10 +53,12 @@ class Reminder extends React.Component {
 
   componentDidMount() {
     this.getReminders((reminders) => {
-      this.setState({
-        list: reminders,
-        current: reminders[0]
-      })
+      if (reminders.length > 0) {
+        this.setState({
+          list: reminders,
+          current: reminders[0]
+        })
+      }
     });
   }
 
