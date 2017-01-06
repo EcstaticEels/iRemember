@@ -10,15 +10,16 @@ class Reminder extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      list: [{time: "", recurring: false, type: undefined, img: "", note: ""}],
-      current: {time: "", recurring: false, type: '', img: "", note: ""},
+      list: [{time: "", recurring: false, type: undefined, note: "", audio: ''}],
+      current: {time: "", recurring: false, type: '', audio: "", note: ""},
       showForm: false,
       editMode: false,
       date: '',
       type: '',
       recurring: false,
       note: '',
-      img: ''
+      img: '',
+      updateAudio: ''
     };
   }
 
@@ -57,6 +58,8 @@ class Reminder extends React.Component {
         this.setState({
           list: reminders,
           current: reminders[0]
+        }, () => {
+          console.log(this.state)
         })
       }
     });
@@ -88,6 +91,14 @@ class Reminder extends React.Component {
         list: reminders,
         current: current
       });
+    });
+  }
+
+  getAudio(event){
+    this.setState({
+      updateAudio: event.target.files
+    }, function() {
+      console.log(this.state)
     });
   }
 
@@ -136,7 +147,7 @@ class Reminder extends React.Component {
       contentType: 'application/json',
       success: function(res) {
         console.log('success', res);
-        that.updateCurrent(that.state.list[0]);
+        that.componentDidMount();
       },
       error: function(err) {
         console.log('error', err);
@@ -147,28 +158,54 @@ class Reminder extends React.Component {
   submitForm(event) {
     event.preventDefault();
     var that = this;
-    var form = {};
-    form.id = this.props.id;
-    form.name = this.props.name;
-    form.date = this.state.date;
-    form.recurring = this.state.recurring;
-    form.type = this.state.type;
-    form.note = this.state.note;
+    var formData = new FormData();
+    formData.append('id', this.props.id);
+    formData.append('name', this.props.name);
+    formData.append('date', this.state.date);
+    formData.append('recurring', this.state.recurring);
+    formData.append('type', this.state.type);
+    formData.append('note', this.state.note);
     if (this.state.editMode) {
-      form.reminderId = this.state.reminderId;
-    }    
+      formData.append('reminderId', this.state.reminderId);
+    }
+    for (var key in this.state.updateAudio) {
+      formData.append('file', this.state.updateAudio[key]);
+    }
+
+    // var form = {};
+    // form.id = this.props.id;
+    // form.name = thi\this.state.recurring;
+    // form.type = this.state.type;
+    // form.note = this.state.note;
+    // if (this.state.editMode) {
+    //   form.reminderId = this.state.reminderId;
+    // }    
     $.ajax({
       method: this.state.editMode ? 'PUT': 'POST',
       url: '/web/reminders',
-      data: JSON.stringify(form),
-      contentType: 'application/json',
+      data: formData,
+      processData: false,
+      contentType: false,
       success: function(res) {
         if (that.state.editMode) {
           that.handleUpdate();
+        } else {
+          var createdId = JSON.parse(res).id;
+          var current;
+          that.getReminders((reminders) => {
+            for (var i = 0; i < reminders.length; i++) {
+              if (reminders[i].id === createdId) {
+                current = reminders[i];
+              }
+            }
+            that.setState({
+              list: reminders,
+              current: current
+            });
+          });
         }
         that.editModeSwitch(false);
         that.displayForm(false);
-        that.componentDidMount();
       },
       error: function(err) {
         console.log('error', err);
@@ -197,6 +234,7 @@ class Reminder extends React.Component {
                 <ReminderForm 
                   getInput={this.getInput.bind(this)} 
                   getBoolean={this.getBoolean.bind(this)}
+                  getAudio={this.getAudio.bind(this)}
                   submitForm={this.submitForm.bind(this)}
                   editMode={this.state.editMode}
                   date={this.state.date}

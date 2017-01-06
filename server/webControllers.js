@@ -20,8 +20,8 @@ cloudinary.config({
 
 //Helper function to upload photos to cloudinary
 const uploadPhoto = function(req, cb) {
-  const form = new multiparty.Form();
-  form.parse(req, function(err, fields, files) {
+  const faceForm = new multiparty.Form();
+  faceForm.parse(req, function(err, fields, files) {
     if (err) {
       console.log(err);
     }
@@ -34,6 +34,35 @@ const uploadPhoto = function(req, cb) {
         if (urlArray.length === files.file.length) {
           cb(urlArray, fields);
         }
+      });
+    });
+  });
+};
+
+const uploadAudio = function(req, cb) {
+  const reminderForm = new multiparty.Form();
+  reminderForm.parse(req, function(err, fields, files) {
+    if (err) {
+      console.log(err);
+    }
+    const urlArray = [];
+    console.log('files', files);
+    console.log('fields', fields)
+    files.file.forEach(function(file) {
+      // cloudinary.uploader.upload(file.path, function(result) { 
+      //   urlArray.push(result.url);
+      //   if (urlArray.length === files.file.length) {
+      //     cb(urlArray, fields);
+      //   }
+      // });
+      cloudinary.v2.uploader.upload(file.path,
+        { resource_type: 'raw' },
+        function(error, result) {
+          if (error) {
+            console.log(error);
+          }
+          console.log(result); 
+          cb(result.url, fields);        
       });
     });
   });
@@ -199,23 +228,37 @@ module.exports = {
     });
   },
   addReminder: (req, res) => {
-    let caregiverId = req.body.id; 
-    db.Caregiver.findOne({
-      where: {
-        id: caregiverId
-      }
-    })
-    .then(caregiver => {
-      db.Reminder.create({ 
-        date: req.body.date,
-        type: req.body.type,
-        note: req.body.note,
-        recurring: req.body.recurring, 
-        caregiverId: caregiverId,
-        patientId: caregiver.get('patientId')
+    uploadAudio(req, (audioUrl, fields) => {
+      let caregiverId = Number(fields.id[0]); 
+      db.Caregiver.findOne({
+        where: {
+          id: caregiverId
+        }
       })
-      .then(reminder => {
-        res.status(201).send(JSON.stringify(reminder));
+      .then(caregiver => {
+        // db.Reminder.create({ 
+        //   date: req.body.date,
+        //   type: req.body.type,
+        //   note: req.body.note,
+        //   recurring: req.body.recurring, 
+        //   caregiverId: caregiverId,
+        //   patientId: caregiver.get('patientId')
+        // })
+        // .then(reminder => {
+        //   res.status(201).send(JSON.stringify(reminder));
+        // });
+        db.Reminder.create({ 
+          date: fields.id[0],
+          type: fields.type[0],
+          note: fields.note[0],
+          recurring: fields.recurring[0], 
+          caregiverId: caregiverId,
+          audio: audioUrl,
+          patientId: caregiver.get('patientId')
+        })
+        .then(reminder => {
+          res.status(201).send(JSON.stringify(reminder));
+        });
       });
     });
   },
@@ -232,17 +275,35 @@ module.exports = {
     });
   },
   updateReminder: (req, res) => { 
-    let reminderId = req.body.reminderId;
-    db.Reminder.update(
-      { date: req.body.date,
-      type: req.body.type,
-      note: req.body.note,
-      recurring: req.body.recurring },
-      { where: { id: reminderId}}
-    )
-    .then(updatedReminder => {
-      res.status(200).send(JSON.stringify(updatedReminder));
+    uploadAudio(req, (audioUrl, fields) => {
+      let reminderId = fields.reminderId[0];
+      db.Reminder.update(
+        { date: fields.date[0],
+          type: fields.type[0],
+          note: fields.note[0],
+          audio: audioUrl,
+          recurring: fields.recurring[0]}, 
+        {
+          where: {
+            id: reminderId
+          }
+        }
+      )
+      .then(updatedReminder => {
+        res.status(200).send(JSON.stringify(updatedReminder));
+      });
     })
+    // let reminderId = req.body.reminderId;
+    // db.Reminder.update(
+    //   { date: req.body.date,
+    //   type: req.body.type,
+    //   note: req.body.note,
+    //   recurring: req.body.recurring },
+    //   { where: { id: reminderId}}
+    // )
+    // .then(updatedReminder => {
+    //   res.status(200).send(JSON.stringify(updatedReminder));
+    // })
   },
   deleteReminder: (req, res) => {
     let reminderId = req.body.reminderId;
