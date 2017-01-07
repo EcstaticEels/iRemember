@@ -58,7 +58,7 @@ module.exports = {
           //query database for the name of the person group
           console.log(parsedDetectBody)
           var bodyForIdentification = {    
-            "personGroupId":"ecstatic-eels", 
+            "personGroupId":"ecstaticeelsforever", 
             "faceIds":[
                 parsedDetectBody[0].faceId
             ]
