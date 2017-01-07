@@ -1,6 +1,7 @@
 import React from 'react';
 import {Link} from 'react-router';
 import {Nav, Navbar, NavItem, NavDropdown, MenuItem, Button} from 'react-bootstrap';
+import {LinkContainer, IndexLinkContainer} from 'react-router-bootstrap';
 
 var Tab = (props) => {
 
@@ -9,10 +10,14 @@ var Tab = (props) => {
   }
 
   return (
-    <ul role="nav">
-      <li><Link to="/reminders">Reminders</Link></li>
-      <li><Link to="/face">Face</Link></li>
-    </ul>
+    <Nav bsStyle="tabs" className="tabNav">
+      <LinkContainer to="/reminders" className="link">
+        <NavItem>Reminders</NavItem>
+      </LinkContainer>
+      <LinkContainer to="/face" className="link">
+        <NavItem>Face</NavItem>
+      </LinkContainer>
+    </Nav>
   )
 }
 

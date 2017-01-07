@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
 import {Route, Router, browserHistory, IndexRoute} from 'react-router';
+import { Jumbotron, Button} from 'react-bootstrap';
+
 
 import Nav from './webNav.js';
 import Tab from './webTab.js';
