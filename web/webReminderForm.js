@@ -4,7 +4,7 @@ import AudioUpload from './webAudioUpload.js';
 
 var ReminderList = (props) => (
   <div className="reminder-form">
-    <h5>New Reminder</h5>
+    <h4>New Reminder</h4>
     <form>
       <label>
         Time:
@@ -44,18 +44,24 @@ var ReminderList = (props) => (
         </label>
       </label>
       <br/>
+      <label>Current Uploaded Audio Reminder:
+        <br />
+        <audio src={props.audio} controls></audio>
+      </label>
+      <br />
       <label>Upload Audio Message:
         <AudioUpload getAudio={props.getAudio} />
       </label>
+      <br />
       <label>Title:
         <input type="text" value={props.title} className="title" placeholder="Title" onChange={props.getInput} />
       </label>
+      <br />
       <label>Notes:
-        <br/>
         <input type="text" value={props.note} className="note" placeholder="Notes" onChange={props.getInput}/>
-        <br/>
       </label>
-        <input type="submit" value="Submit" onClick={props.submitForm}/>
+      <br />
+      <input type="submit" value="Submit" onClick={props.submitForm}/>
     </form>
   </div>
 );
