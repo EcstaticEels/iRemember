@@ -174,6 +174,7 @@ class Reminder extends React.Component {
     formData.append('type', this.state.type);
     formData.append('note', this.state.note);
     formData.append('title', this.state.title);
+    formData.append('registered', false);
     if (this.state.editMode) {
       formData.append('reminderId', this.state.reminderId);
     }

@@ -32,7 +32,16 @@ const Reminder = sequelizeDb.define('reminder', {
   },
   type: Sequelize.STRING,
   note: Sequelize.STRING,
-  recurring: Sequelize.BOOLEAN, 
+  recurring: Sequelize.BOOLEAN,
+  notificationId: {
+    type: Sequelize.STRING,
+    allowNull: true,
+    unique: true
+  },
+  registered: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false
+  },
   audio: Sequelize.STRING,
   title: Sequelize.STRING
 });

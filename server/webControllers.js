@@ -246,6 +246,7 @@ module.exports = {
           caregiverId: caregiverId,
           audio: audioUrl,
           title: fields.title[0],
+          registered: false,
           patientId: caregiver.get('patientId')
         })
         .then(reminder => {
@@ -274,15 +275,25 @@ module.exports = {
           type: fields.type[0],
           note: fields.note[0],
           audio: audioUrl,
+          registered: false,
           title: fields.title[0],
           recurring: fields.recurring[0]}
         : { date: fields.date[0],
           type: fields.type[0],
           note: fields.note[0],
           title: fields.title[0],
+          registered: false,
           recurring: fields.recurring[0]};
       db.Reminder.update(updateObj, 
         { where: { id: reminderId }})
+          recurring: fields.recurring[0],
+        }, 
+        {
+          where: {
+            id: reminderId
+          }
+        }
+      )
       .then(updatedReminder => {
         res.status(200).send(JSON.stringify(updatedReminder));
       });
