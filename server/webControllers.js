@@ -234,10 +234,13 @@ module.exports = {
   updateReminder: (req, res) => { 
     let reminderId = req.body.reminderId;
     db.Reminder.update(
-      { date: req.body.date,
-      type: req.body.type,
-      note: req.body.note,
-      recurring: req.body.recurring },
+      { 
+        date: req.body.date,
+        type: req.body.type,
+        note: req.body.note,
+        recurring: req.body.recurring,
+        registered: req.body.registered
+      },
       { where: { id: reminderId}}
     )
     .then(updatedReminder => {
