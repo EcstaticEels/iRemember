@@ -69,15 +69,6 @@ app.get('*', function (req, res) {
 app.listen(3000, function () {
   console.log('iRemember is running on port 3000!')
 
-  //Create new person group
-  // axios.put('https://api.projectoxford.ai/face/v1.0/persongroups/EcstaticEelsForever', {
-  //   params : {
-  //     personGroupId: 'EcstaticEelsForever'
-  //   },
-  //   headers: {
-  //     'Ocp-Apim-Subscription-Key': process.env.MICROSOFT_API_KEY
-  //   }
-  // })
   //Insert into database
 
   // db.Caregiver.build({
@@ -91,6 +82,7 @@ app.listen(3000, function () {
   //   photo: '',
   //   personGroupID: 'ecstaticeelsforever'
   // }).save();
+
 });
 
 
