@@ -72,7 +72,8 @@ export default class HomeScreen extends React.Component {
       time: (new Date()).getTime() + 5000,
       // repeat: 'minute'
     }
-    Exponent.Notifications.scheduleLocalNotificationAsync(localNotification, schedulingOptions)
+    // Exponent.Notifications.scheduleLocalNotificationAsync(localNotification, schedulingOptions)
+    Exponent.Notifications.cancelAllScheduledNotificationsAsync()
   }
 
   componentWillMount() {
@@ -275,7 +276,7 @@ export default class HomeScreen extends React.Component {
         <ScrollView
           style={styles.container}
           contentContainerStyle={styles.contentContainer}>
-          
+
           <View style={styles.homepageContentContainer}>
             <Text style={styles.commentText}>
               {'WOULD LIKE TO PUT SOME SORT OF DAYLIGHT / SUNMOON SPECTRUM HERE'}
