@@ -19,6 +19,7 @@ class Reminder extends React.Component {
       recurring: false,
       note: '',
       img: '',
+      title: '',
       updateAudio: ''
     };
   }
@@ -133,7 +134,8 @@ class Reminder extends React.Component {
       type: current.type,
       note: current.note,
       reminderId: current.id,
-      img: current.img
+      img: current.img, 
+      title: current.title
     });
     this.displayForm(true);
   }
@@ -165,6 +167,7 @@ class Reminder extends React.Component {
     formData.append('recurring', this.state.recurring);
     formData.append('type', this.state.type);
     formData.append('note', this.state.note);
+    formData.append('title', this.state.title);
     if (this.state.editMode) {
       formData.append('reminderId', this.state.reminderId);
     }
@@ -239,6 +242,7 @@ class Reminder extends React.Component {
                   editMode={this.state.editMode}
                   date={this.state.date}
                   type={this.state.type}
+                  title={this.state.title}
                   recurring={this.state.recurring} 
                   img={this.state.img} 
                   note={this.state.note}
