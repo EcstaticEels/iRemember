@@ -10,7 +10,7 @@ class Face extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      list: [{subjectName:"", photos:[""], description:""}],
+      list: [],
       current: {subjectName:"", photos:[""], description:""},
       showForm: false,
       editMode: false,

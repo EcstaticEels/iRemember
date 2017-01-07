@@ -10,7 +10,7 @@ class Reminder extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      list: [{time: "", recurring: false, type: undefined, note: "", audio: ''}],
+      list: [],
       current: {time: "", recurring: false, type: '', audio: "", note: "", title: ''},
       showForm: false,
       editMode: false,
