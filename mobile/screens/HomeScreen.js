@@ -103,7 +103,11 @@ export default class HomeScreen extends React.Component {
             reminder.registered = true;
           })
           .then(() => {
-            axios.put('http://10.6.19.25:3000/mobile/pushNotification', reminder)
+            axios.put('http://10.6.19.25:3000/mobile/pushNotification', {
+              reminderId: reminder.reminderId,
+              registered: reminder.registered,
+              notificationId: reminder.notificationId
+            })
               .then(function (response) {
                 console.log(response);
               })

@@ -41,7 +41,9 @@ const Reminder = sequelizeDb.define('reminder', {
   registered: {
     type: Sequelize.BOOLEAN,
     defaultValue: false
-  }
+  },
+  audio: Sequelize.STRING,
+  title: Sequelize.STRING
 });
 
 const Face = sequelizeDb.define('face', {

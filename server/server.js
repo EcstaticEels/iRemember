@@ -12,7 +12,36 @@ const morgan = require('morgan');
 app.use(bodyParser.urlencoded({ extended: true}));
 app.use(bodyParser.json());
 app.use(morgan('dev'));
-// require('dotenv').config(); //retrieves api keys
+
+
+
+const aws = require('aws-sdk')
+const multer = require('multer')
+const multerS3 = require('multer-s3')
+
+const s3 = new aws.S3({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  region: "us-east-1",
+});
+
+// Initialize multers3 with our s3 config and other options
+const upload = multer({
+  storage: multerS3({
+    s3,
+    bucket: process.env.AWS_BUCKET,
+    contentType: multerS3.AUTO_CONTENT_TYPE,
+    metadata(req, file, cb) {
+      cb(null, {fieldName: file.fieldname});
+    },
+    key(req, file, cb) {
+      cb(null,'picture.jpeg');
+    }
+  })
+})
+
+
+
 
 //Express static
 app.use(express.static(path.join(__dirname, '..', 'public')));
@@ -30,7 +59,7 @@ app.get('/web/reminders', webControllers.retrieveReminders);
 app.put('/web/reminders', webControllers.updateReminder);
 app.delete('/web/reminders', webControllers.deleteReminder);
 //Mobile
-app.post('/mobile/identify', mobileControllers.identifyFace);
+app.post('/mobile/identify', upload.single('picture'), mobileControllers.identifyFace);
 app.get('/mobile/reminders', mobileControllers.retrieveReminders);
 app.put('/mobile/reminders', mobileControllers.updateReminder);
 app.post('/mobile/pushNotification', mobileControllers.addPushNotification);
@@ -44,10 +73,15 @@ app.listen(3000, function () {
   console.log('iRemember is running on port 3000!')
   //Insert into database
   // db.Caregiver.build({
-  //   name: 'Bob',
-  //   photo: 'https://www.aviary.com/img/photo-landscape.jpg',
-  //   personGroupID: 'EcstaticEels'
+  //   name: 'Sara Bolan',
+  //   photo: '',
+  //   personGroupID: 'EcstaticEels1'
   // }).save()
+  // db.Patient.build({
+  //   name: 'John Watt',
+  //   photo: '',
+  //   personGroupID: 'EcstaticEels1'
+  // }).save();
 });
 
 
