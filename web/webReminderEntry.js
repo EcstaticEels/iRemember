@@ -17,7 +17,7 @@ var ReminderEntry = (props) => {
           </Col>
           <Col xs={12} md={8}>
             <h4>{Moment(props.data.date).calendar().toString()}</h4>
-            <h4>{props.data.note}</h4>
+            <h4>{props.data.title}</h4>
           </Col>
         </div>
       </Row>
