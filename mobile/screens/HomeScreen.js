@@ -54,26 +54,6 @@ export default class HomeScreen extends React.Component {
   componentDidMount () {
     this.weather();
     this.pushNotification();
-
-    //title (string) -- title text of the notification.
-// body (string) -- body text of the notification.
-// data (optional) (object) -- any data that has been attached with the notification.
-// ios (optional) (object) -- notification configuration specific to iOS.
-// sound (optional) (boolean) -- if true, play a sound. Default: false.
-    var localNotification = {
-      title: 'test notification',
-      body: "This is test notification",
-      data: {cool: 'cool'},
-      ios: {
-        sound: true
-      }
-    }
-    var schedulingOptions = {
-      time: (new Date()).getTime() + 5000,
-      // repeat: 'minute'
-    }
-    // Exponent.Notifications.scheduleLocalNotificationAsync(localNotification, schedulingOptions)
-    Exponent.Notifications.cancelAllScheduledNotificationsAsync()
   }
 
   componentWillMount() {
@@ -97,8 +77,27 @@ export default class HomeScreen extends React.Component {
     // };
   };
 
+  pushNotifications() {
 
-  pushNotification() {
+    Exponent.Notifications.cancelAllScheduledNotificationsAsync()
+    .then()
+    var localNotification = {
+      title: 'test notification',
+      body: "This is test notification",
+      data: {cool: 'cool'},
+      ios: {
+        sound: true
+      }
+    }
+    var schedulingOptions = {
+      time: (new Date()).getTime() + 5000,
+      // repeat: 'minute'
+    }
+    // Exponent.Notifications.scheduleLocalNotificationAsync(localNotification, schedulingOptions)
+    
+  }
+
+  allowPushNotification() {
     Exponent.Permissions.askAsync(Exponent.Permissions.REMOTE_NOTIFICATIONS)
     .then((response) => {
       console.log(response);
