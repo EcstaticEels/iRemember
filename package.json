@@ -28,6 +28,7 @@
     "webpack": "^1.14.0"
   },
   "dependencies": {
+    "axios": "^0.15.3",
     "body-parser": "^1.15.2",
     "cloudinary": "^1.5.0",
     "connect-multiparty": "^2.0.0",
