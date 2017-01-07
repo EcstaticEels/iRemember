@@ -14,7 +14,7 @@ var FaceForm = (props) => {
       </label>
       <br/>
       <label>Picture:
-        <ImagesUpload photos={props.photos} getPhotos={props.getPhotos} editMode={props.editMode}/>
+        <ImagesUpload getPhotos={props.getPhotos}/>
       </label>
       <label>Uploaded Photos:
         <div>
