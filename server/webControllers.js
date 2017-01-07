@@ -282,7 +282,9 @@ module.exports = {
           type: fields.type[0],
           note: fields.note[0],
           audio: audioUrl,
-          recurring: fields.recurring[0]}, 
+          recurring: fields.recurring[0],
+          registered: req.body.registered
+        }, 
         {
           where: {
             id: reminderId
