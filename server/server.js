@@ -63,6 +63,8 @@ app.delete('/web/reminders', webControllers.deleteReminder);
 //Mobile
 app.post('/mobile/identify', upload.single('picture'), mobileControllers.identifyFace);
 app.get('/mobile/reminders', mobileControllers.retrieveReminders);
+app.put('/mobile/reminders', mobileControllers.updateReminder);
+app.post('/mobile/pushNotification', mobileControllers.addPushNotification);
 
 //Configure express to serve index.html at every other route that comes to server
 app.get('*', function (req, res) {
