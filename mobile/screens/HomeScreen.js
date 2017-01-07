@@ -37,8 +37,7 @@ export default class HomeScreen extends React.Component {
         monthDay: '',
         year: '',
         time: '',
-        dayNight: '',
-        notificationData: ''
+        dayNight: ''
       }
     }
   }
@@ -53,6 +52,7 @@ export default class HomeScreen extends React.Component {
 
   componentDidMount () {
     this.weather();
+    this.getReminders();
     this.pushNotification();
   }
 
@@ -77,10 +77,12 @@ export default class HomeScreen extends React.Component {
     // };
   };
 
-  pushNotifications() {
+  pushNotification() {
 
-    Exponent.Notifications.cancelAllScheduledNotificationsAsync()
-    .then()
+    // Exponent.Notifications.cancelAllScheduledNotificationsAsync()
+    // .then(() => {
+
+    // })
     var localNotification = {
       title: 'test notification',
       body: "This is test notification",
@@ -267,6 +269,22 @@ export default class HomeScreen extends React.Component {
       }
 
     }.bind(this));
+  }
+
+  getReminders() {
+    var that = this;
+    axios.get('http://10.6.19.25:3000/mobile/reminders', {
+      params: {
+        id: 1
+      }
+    })
+      .then(function (response) {
+        var reminders = response.data.reminders;
+        that.props.updateReminders(reminders);
+      })
+      .catch(function (error) {
+        console.log('error', error);
+      });
   }
 
   render() {
