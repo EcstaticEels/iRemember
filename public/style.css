@@ -14,6 +14,6 @@
   margin: 10px 5px;
 }
 
-.btn-edit {
+.btn-edit, .btn-delete {
   margin-top: 15px;
 }
