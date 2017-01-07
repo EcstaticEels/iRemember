@@ -11,7 +11,7 @@ class Reminder extends React.Component {
     super(props);
     this.state = {
       list: [{time: "", recurring: false, type: undefined, note: "", audio: ''}],
-      current: {time: "", recurring: false, type: '', audio: "", note: ""},
+      current: {time: "", recurring: false, type: '', audio: "", note: "", title: ''},
       showForm: false,
       editMode: false,
       date: '',
@@ -20,7 +20,8 @@ class Reminder extends React.Component {
       note: '',
       img: '',
       title: '',
-      updateAudio: ''
+      updateAudio: '',
+      audio: ''
     };
   }
 
@@ -76,6 +77,8 @@ class Reminder extends React.Component {
     this.setState({
       current: current,
       showForm: false
+    }, () => {
+      console.log('current is now', current)
     });
   }
 
@@ -108,7 +111,9 @@ class Reminder extends React.Component {
     var value = event.target.value;
     var obj = {};
     obj[key] = value;
-    this.setState(obj);
+    this.setState(obj, () => {
+      console.log(this.state)
+    });
   }
 
   getBoolean(event) {
@@ -135,7 +140,8 @@ class Reminder extends React.Component {
       note: current.note,
       reminderId: current.id,
       img: current.img, 
-      title: current.title
+      title: current.title,
+      audio: current.audio
     });
     this.displayForm(true);
   }
@@ -175,14 +181,6 @@ class Reminder extends React.Component {
       formData.append('file', this.state.updateAudio[key]);
     }
 
-    // var form = {};
-    // form.id = this.props.id;
-    // form.name = thi\this.state.recurring;
-    // form.type = this.state.type;
-    // form.note = this.state.note;
-    // if (this.state.editMode) {
-    //   form.reminderId = this.state.reminderId;
-    // }    
     $.ajax({
       method: this.state.editMode ? 'PUT': 'POST',
       url: '/web/reminders',
@@ -213,8 +211,7 @@ class Reminder extends React.Component {
       error: function(err) {
         console.log('error', err);
       }
-    })
-
+    });
   }
 
   render() {
@@ -246,6 +243,7 @@ class Reminder extends React.Component {
                   recurring={this.state.recurring} 
                   img={this.state.img} 
                   note={this.state.note}
+                  audio={this.state.audio}
                 /> 
                 : <ReminderCurrent current={this.state.current} edit={this.edit.bind(this)} delete={this.delete.bind(this)} />
             }

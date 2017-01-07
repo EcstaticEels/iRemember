@@ -28,14 +28,18 @@ const uploadPhoto = function(req, cb) {
     const urlArray = [];
     console.log('files', files);
     console.log('fields', fields)
-    files.file.forEach(function(file) {
-      cloudinary.uploader.upload(file.path, function(result) { 
-        urlArray.push(result.url);
-        if (urlArray.length === files.file.length) {
-          cb(urlArray, fields);
-        }
+    if (Object.keys(files).length > 0) {
+      files.file.forEach(function(file) {
+        cloudinary.uploader.upload(file.path, function(result) { 
+          urlArray.push(result.url);
+          if (urlArray.length === files.file.length) {
+            cb(urlArray, fields);
+          }
+        });
       });
-    });
+    } else {
+      cb(null, fields);
+    }
   });
 };
 
@@ -47,24 +51,22 @@ const uploadAudio = function(req, cb) {
     }
     const urlArray = [];
     console.log('files', files);
-    console.log('fields', fields)
-    files.file.forEach(function(file) {
-      // cloudinary.uploader.upload(file.path, function(result) { 
-      //   urlArray.push(result.url);
-      //   if (urlArray.length === files.file.length) {
-      //     cb(urlArray, fields);
-      //   }
-      // });
-      cloudinary.v2.uploader.upload(file.path,
-        { resource_type: 'raw' },
-        function(error, result) {
-          if (error) {
-            console.log(error);
-          }
-          console.log(result); 
-          cb(result.url, fields);        
+    console.log('fields', fields);
+    if (Object.keys(files).length > 0) {
+      files.file.forEach(function(file) {
+        cloudinary.v2.uploader.upload(file.path,
+          { resource_type: 'raw' },
+          function(error, result) {
+            if (error) {
+              console.log(error);
+            }
+            console.log(result); 
+            cb(result.url, fields);        
+        });
       });
-    });
+    } else {
+      cb(null, fields);
+    }
   });
 };
 
@@ -236,17 +238,6 @@ module.exports = {
         }
       })
       .then(caregiver => {
-        // db.Reminder.create({ 
-        //   date: req.body.date,
-        //   type: req.body.type,
-        //   note: req.body.note,
-        //   recurring: req.body.recurring, 
-        //   caregiverId: caregiverId,
-        //   patientId: caregiver.get('patientId')
-        // })
-        // .then(reminder => {
-        //   res.status(201).send(JSON.stringify(reminder));
-        // });
         db.Reminder.create({ 
           date: fields.id[0],
           type: fields.type[0],
@@ -254,6 +245,7 @@ module.exports = {
           recurring: fields.recurring[0], 
           caregiverId: caregiverId,
           audio: audioUrl,
+          title: fields.title[0],
           patientId: caregiver.get('patientId')
         })
         .then(reminder => {
@@ -277,33 +269,24 @@ module.exports = {
   updateReminder: (req, res) => { 
     uploadAudio(req, (audioUrl, fields) => {
       let reminderId = fields.reminderId[0];
-      db.Reminder.update(
+      let updateObj = audioUrl ? 
         { date: fields.date[0],
           type: fields.type[0],
           note: fields.note[0],
           audio: audioUrl,
-          recurring: fields.recurring[0]}, 
-        {
-          where: {
-            id: reminderId
-          }
-        }
-      )
+          title: fields.title[0],
+          recurring: fields.recurring[0]}
+        : { date: fields.date[0],
+          type: fields.type[0],
+          note: fields.note[0],
+          title: fields.title[0],
+          recurring: fields.recurring[0]};
+      db.Reminder.update(updateObj, 
+        { where: { id: reminderId }})
       .then(updatedReminder => {
         res.status(200).send(JSON.stringify(updatedReminder));
       });
     })
-    // let reminderId = req.body.reminderId;
-    // db.Reminder.update(
-    //   { date: req.body.date,
-    //   type: req.body.type,
-    //   note: req.body.note,
-    //   recurring: req.body.recurring },
-    //   { where: { id: reminderId}}
-    // )
-    // .then(updatedReminder => {
-    //   res.status(200).send(JSON.stringify(updatedReminder));
-    // })
   },
   deleteReminder: (req, res) => {
     let reminderId = req.body.reminderId;
