@@ -61,6 +61,8 @@ module.exports = {
                 parsedDetectBody[0].faceId
             ]
           };
+
+
           request.post({
             headers: headers,
             url: "https://api.projectoxford.ai/face/v1.0/identify",
@@ -76,6 +78,9 @@ module.exports = {
             } else if (parsedIdentifyBody === 1) {
               //query database for the personId received
               //send response with the person's name and information
+
+              console.log(parsedIdentifyBody);
+              
               res.status(200).send(body);
             } else {
               //if more than one candidate, we can send suggestions of who this person is
