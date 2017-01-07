@@ -1,6 +1,6 @@
 import React from 'react';
 
-// import axios from 'axios';
+import axios from 'axios';
 
 import {
   Button,
@@ -12,6 +12,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  DeviceEventEmitter
 } from 'react-native';
 
 import * as Exponent from 'exponent';
@@ -19,6 +20,8 @@ import * as Exponent from 'exponent';
 import { MonoText } from '../components/StyledText';
 
 import weatherIcons from '../assets/images/weatherIcons.js';
+
+// import registerForPushNotificationsAsync from 'registerForPushNotificationsAsync';
 
 export default class HomeScreen extends React.Component {
   constructor (props) {
@@ -34,7 +37,8 @@ export default class HomeScreen extends React.Component {
         monthDay: '',
         year: '',
         time: '',
-        dayNight: ''
+        dayNight: '',
+        notificationData: ''
       }
     }
   }
@@ -48,88 +52,106 @@ export default class HomeScreen extends React.Component {
   //need to render something prettier
 
   componentDidMount () {
+    this.weather();
+    this.pushNotification();
+
+    //title (string) -- title text of the notification.
+// body (string) -- body text of the notification.
+// data (optional) (object) -- any data that has been attached with the notification.
+// ios (optional) (object) -- notification configuration specific to iOS.
+// sound (optional) (boolean) -- if true, play a sound. Default: false.
+    var localNotification = {
+      title: 'test notification',
+      body: "This is test notification",
+      data: {cool: 'cool'},
+      ios: {
+        sound: true
+      }
+    }
+    var schedulingOptions = {
+      time: (new Date()).getTime() + 5000,
+      // repeat: 'minute'
+    }
+    // Exponent.Notifications.scheduleLocalNotificationAsync(localNotification, schedulingOptions)
+    Exponent.Notifications.cancelAllScheduledNotificationsAsync()
+  }
+
+  componentWillMount() {
+    // registerForPushNotificationsAsync();
+
+    // Handle notifications that are received or selected while the app
+    // is open
+    this._notificationSubscription = DeviceEventEmitter.addListener(
+      'Exponent.Notification', this._handleNotification
+    );
+
+    // Handle notifications that are received or selected while the app
+    // is closed, and selected in order to open the app
+    // if (this.props.exp.notification) {
+    //   this._handleNotification(this.props.exp.notification);
+    // }
+
+    // _handleNotification = (notification) => {
+    //   console.log(notification)
+    //   // this.setState({notificationData: notification})
+    // };
+  };
+
+
+  pushNotification() {
+    Exponent.Permissions.askAsync(Exponent.Permissions.REMOTE_NOTIFICATIONS)
+    .then((response) => {
+      console.log(response);
+      if (response.status === "granted") {
+        Exponent.Notifications.getExponentPushTokenAsync()
+        .then((token) => {
+          axios.post('http://10.6.19.25:3000/mobile/pushNotification', {
+            token:  token,
+            username: 'Bob'
+          })
+            .then(function (response) {
+              console.log(response);
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+
+        })
+      } else {
+        console.log('Permission NOT GRANTED');
+      }
+    });
+  }
+
+  weather() {
 
     var date = new Date();
 
-    var weekDay = date.getDay()
+    var weekday = new Array(7);
+    weekday[0] =  "Sunday";
+    weekday[1] = "Monday";
+    weekday[2] = "Tuesday";
+    weekday[3] = "Wednesday";
+    weekday[4] = "Thursday";
+    weekday[5] = "Friday";
+    weekday[6] = "Saturday";
 
-    if (weekDay === 0) {
-      weekDay = 'Sunday'
-    }
+    var weekDay = weekday[date.getDay()];
 
-    if (weekDay === 1) {
-      weekDay = 'Monday'
-    }
-
-    if (weekDay === 2) {
-      weekDay = 'Tuesday'
-    }
-
-    if (weekDay === 3) {
-      weekDay = 'Wednesday'
-    }
-
-    if (weekDay === 4) {
-      weekDay = 'Thursday'
-    }
-
-    if (weekDay === 5) {
-      weekDay = 'Friday'
-    }
-
-    if (weekDay === 6) {
-      weekDay = 'Saturday'
-    }
-
-    var month = date.getMonth();
-
-    if (month === 0) {
-      month = 'January'
-    }
-
-    if (month === 1) {
-      month = 'February'
-    }
-
-    if (month === 2) {
-      month = 'March'
-    }
-
-    if (month === 3) {
-      month = 'April'
-    }
-
-    if (month === 4) {
-      month = 'May'
-    }
-
-    if (month === 5) {
-      month = 'June'
-    }
-
-    if (month === 6) {
-      month = 'July'
-    }
-
-    if (month === 7) {
-      month = 'August'
-    }
-
-    if (month === 8) {
-      month = 'September'
-    }
-
-    if (month === 9) {
-      month = 'October'
-    }
-
-    if (month === 10) {
-      month = 'November'
-    }
-
-    if (month === 11) {
-      month = 'December'
-    }
+    var monthArr = new Array(12);
+    monthArr[0] = "January";
+    monthArr[1] = "February";
+    monthArr[2] = "March";
+    monthArr[3] = "April";
+    monthArr[4] = "May";
+    monthArr[5] = "June";
+    monthArr[6] = "July";
+    monthArr[7] = "August";
+    monthArr[8] = "September";
+    monthArr[9] = "October";
+    monthArr[10] = "November";
+    monthArr[11] = "December";
+    var month = monthArr[date.getMonth()];
 
     var monthDay = date.getDate();
 
@@ -245,7 +267,7 @@ export default class HomeScreen extends React.Component {
         this.setState({weatherDescription: 'PLEASE ALLOW US TO USE YOUR LOCATION'})
       }
 
-    }.bind(this))
+    }.bind(this));
   }
 
   render() {
@@ -255,11 +277,6 @@ export default class HomeScreen extends React.Component {
           style={styles.container}
           contentContainerStyle={styles.contentContainer}>
 
-          <View style={styles.homepageContentContainer}>
-            <Text style={styles.timeText}>
-              {this.state.dateTime.time}
-            </Text>
-          </View>
           <View style={styles.homepageContentContainer}>
             <Text style={styles.commentText}>
               {'WOULD LIKE TO PUT SOME SORT OF DAYLIGHT / SUNMOON SPECTRUM HERE'}
