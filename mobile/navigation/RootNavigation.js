@@ -14,18 +14,32 @@ import {
 import {
   FontAwesome,
 } from '@exponent/vector-icons';
+import Router from './Router.js'
 
 import Alerts from '../constants/Alerts';
 import Colors from '../constants/Colors';
 import registerForPushNotificationsAsync from '../api/registerForPushNotificationsAsync';
 
 export default class RootNavigation extends React.Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      reminders: []
+    }
+  }
+
   componentDidMount() {
     this._notificationSubscription = this._registerForPushNotifications();
   }
 
   componentWillUnmount() {
     this._notificationSubscription && this._notificationSubscription.remove();
+  }
+
+  updateReminders (reminders) {
+    this.setState({
+      reminders: reminders
+    })
   }
 
   render() {
@@ -36,13 +50,13 @@ export default class RootNavigation extends React.Component {
         <TabNavigationItem
           id="home"
           renderIcon={isSelected => this._renderIcon('home', isSelected)}>
-          <StackNavigation initialRoute="home" />
+          <StackNavigation initialRoute={Router.getRoute('home', {reminders: this.state.reminders, updateReminders:this.updateReminders.bind(this) })}/>
         </TabNavigationItem>
 
         <TabNavigationItem
           id="reminders"
           renderIcon={isSelected => this._renderIcon('bell', isSelected)}>
-          <StackNavigation initialRoute="reminders" />
+          <StackNavigation initialRoute={Router.getRoute('reminders', {reminders: this.state.reminders})} />
         </TabNavigationItem>
 
         <TabNavigationItem
