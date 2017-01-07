@@ -154,6 +154,7 @@ class Reminder extends React.Component {
     form.recurring = this.state.recurring;
     form.type = this.state.type;
     form.note = this.state.note;
+    form.registered = false;
     if (this.state.editMode) {
       form.reminderId = this.state.reminderId;
     }    
