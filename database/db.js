@@ -32,7 +32,9 @@ const Reminder = sequelizeDb.define('reminder', {
   },
   type: Sequelize.STRING,
   note: Sequelize.STRING,
-  recurring: Sequelize.BOOLEAN
+  recurring: Sequelize.BOOLEAN, 
+  audio: Sequelize.STRING,
+  title: Sequelize.STRING
 });
 
 const Face = sequelizeDb.define('face', {
