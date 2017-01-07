@@ -26,7 +26,7 @@ var weatherIcons = {
   rainy: "https://maxcdn.icons8.com/Color/PNG/96/Weather/rain-96.png",
   storm: "https://maxcdn.icons8.com/Color/PNG/96/Weather/downpour-96.png",
   snow: "https://maxcdn.icons8.com/Color/PNG/96/Weather/snow-96.png",
-  mist: "https://maxcdn.icons8.com/Color/PNG/96/Weather/fog_day-96.png"
+  mist: "https://maxcdn.icons8.com/Color/PNG/96/Weather/fog_day-96.png",
 };
 
 export default weatherIcons;
