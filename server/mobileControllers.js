@@ -1,7 +1,20 @@
 const cloudinary = require('cloudinary');
-const multiparty = require('multiparty');
+// const multiparty = require('multiparty');
 const request = require('request');
 const urlModule = require('url');
+var fs = require('fs');
+
+const aws = require('aws-sdk')
+const multer = require('multer')
+const multerS3 = require('multer-s3')
+
+const s3 = new aws.S3({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  region: "us-west-1",
+});
+
+// puts file into req.files.file
 
 const db = require('../database/db.js');
 
@@ -20,35 +33,14 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET 
 });
 
-const uploadPhoto = function(req, cb) {
-  const form = new multiparty.Form();
-  form.parse(req, function(err, fields, files) {
-    if (err) {
-      console.log(err);
-    }
-    const urlArray = [];
-    console.log('files', files);
-    console.log('fields', fields)
-    files.file.forEach(function(file) {
-      cloudinary.uploader.upload(file.path, function(result) { 
-        urlArray.push(result.url);
-        if (urlArray.length === files.file.length) {
-          cb(urlArray, fields);
-        }
-      });
-    });
-  });
-};
-
 module.exports = {
   identifyFace : function(req, res) {
-    uploadPhoto(req, function(urlArray) { 
       const headers = {"Content-Type": "application/json", "Ocp-Apim-Subscription-Key": "f7badff0a4484fd5ab960d007d281e75"};
       const detectParams = {
         "returnFaceId": "true",
         "returnFaceLandmarks": "false"
-      };
-      const bodyForDetection = { "url": urlArray[0]}; //only one url in the urlArray
+      }
+      const bodyForDetection = { "url": 'https://s3-us-west-1.amazonaws.com/hackreactorphoto/picture.jpeg'}; //only one url in the urlArray
       request.post({
         headers: headers, 
         url: "https://api.projectoxford.ai/face/v1.0/detect",
@@ -59,11 +51,12 @@ module.exports = {
           console.log(err);
         }
         const parsedDetectBody = JSON.parse(body);
-        console.log(parsedDetectBody);
+        // console.log(parsedDetectBody);
         if (parsedDetectBody.length === 1) { //if faces are detected...what if multiple faces? need note
           //saying training photos can only have one face in frame
 
           //query database for the name of the person group
+          console.log(parsedDetectBody)
           var bodyForIdentification = {    
             "personGroupId":"ecstatic-eels", 
             "faceIds":[
@@ -79,7 +72,7 @@ module.exports = {
               console.log(err);
             }
             const parsedIdentifyBody = JSON.parse(body);
-            console.log(parsedIdentifyBody);
+            // console.log(parsedIdentifyBody);
             if (parsedIdentifyBody.length === 0) {
               res.status(200).end("We couldn't find this person in the database...")
             } else if (parsedIdentifyBody === 1) {
@@ -95,7 +88,6 @@ module.exports = {
           res.status(200).end('Please take a new photo with the following suggestions...')
         }
       });
-    });
   },
   retrieveReminders: function(req, res) {
     var caregiverId = Number(urlModule.parse(req.url).query.slice(12));
@@ -114,10 +106,6 @@ module.exports = {
     let reminderId = req.body.reminderId;
     db.Reminder.update(
       { 
-        date: req.body.date,
-        type: req.body.type,
-        note: req.body.note,
-        recurring: req.body.recurring,
         registered: req.body.registered,
         notificationId: req.body.notificationId
       },

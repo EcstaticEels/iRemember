@@ -1,5 +1,7 @@
 import React from 'react';
 
+var FileUpload = require('NativeModules').FileUpload;
+
 import {
   ScrollView,
   StyleSheet,
@@ -16,6 +18,11 @@ import axios from 'axios';
 import Router from '../navigation/Router.js';
 
 export default class PhotosScreen extends React.Component {
+
+  constructor (props) {
+    super (props);
+  }
+
   static route = {
     navigationBar: {
       visible: false
@@ -26,12 +33,10 @@ export default class PhotosScreen extends React.Component {
     Exponent.ImagePicker.launchCameraAsync()
     .then((photo) => {
       console.log(photo)
-      axios.post('/mobile/identify', {
-        photo: photo.uri
-      }) 
+      uploadImageAsync(photo.uri)
     })
-    .then((person) => {
-      this._goToPersonInfoPage(person)
+    .then((response) => {
+      // console.log(response)
     })
   }
 
@@ -55,3 +60,39 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
+
+async function uploadImageAsync(uri) {
+  let apiUrl = 'http://10.6.19.201:3000/mobile/identify';
+
+  // Note:
+  // Uncomment this if you want to experiment with local server
+  //
+  // if (Constants.isDevice) {
+  //   apiUrl = `https://your-ngrok-subdomain.ngrok.io/upload`;
+  // } else {
+  //   apiUrl = `http://localhost:3000/upload`
+  // }
+
+  let uriParts = uri.split('.');
+  let fileType = uriParts[uri.length - 1];
+
+  let formData = new FormData();
+  formData.append('picture', {
+    uri: uri,
+    name: 'picture.jpeg',
+    type: 'image/jpeg',
+  });
+
+  let options = {
+    method: 'POST',
+    body: formData,
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'multipart/form-data',
+    },
+  };
+
+  console.log(formData)
+
+  return fetch(apiUrl, options);
+}
