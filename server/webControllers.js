@@ -285,9 +285,6 @@ module.exports = {
           registered: false,
           recurring: fields.recurring[0]};
       db.Reminder.update(updateObj, 
-        { where: { id: reminderId }})
-          recurring: fields.recurring[0],
-        }, 
         {
           where: {
             id: reminderId
