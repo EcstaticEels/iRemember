@@ -15,8 +15,6 @@ app.use(bodyParser.urlencoded({ extended: true}));
 app.use(bodyParser.json());
 app.use(morgan('dev'));
 
-
-
 const aws = require('aws-sdk')
 const multer = require('multer')
 const multerS3 = require('multer-s3')
@@ -40,10 +38,7 @@ const upload = multer({
       cb(null,'picture.jpeg');
     }
   })
-})
-
-
-
+});
 
 //Express static
 app.use(express.static(path.join(__dirname, '..', 'public')));

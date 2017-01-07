@@ -10,9 +10,8 @@ var FaceCurrent = (props) => {
 
   return (
     <div className="face-current">
-      <h1>Current Face</h1>
+      <h1>{props.current.subjectName}</h1>
       <Gallery photos={props.current.photos}/>
-      <div><h3>Name:</h3>{props.current.subjectName}</div>
       <div><h3>Description: </h3>{props.current.description}</div>
       <button onClick={edit}>Edit</button>
     </div>
