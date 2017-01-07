@@ -69,36 +69,36 @@ app.get('*', function (req, res) {
 app.listen(3000, function () {
   console.log('iRemember is running on port 3000!')
 
-  //Create new person group
-  axios.put('https://api.projectoxford.ai/face/v1.0/persongroups/EcstaticEelsForever', {
-    params : {
-      personGroupId: 'EcstaticEelsForever'
-    },
-    headers: {
-      'Ocp-Apim-Subscription-Key': process.env.MICROSOFT_API_KEY
-    }
-  })
-  //Insert into database
-  .then(() => {
-    db.Caregiver.build({
-      name: 'Sara Bolan',
-      photo: '',
-      personGroupID: 'EcstaticEelsForever'
-    }).save()
-  })
-  .catch((err) => {
-    console.log(err)
-  })
-  .then(() => {
-    db.Patient.build({
-      name: 'John Watt',
-      photo: '',
-      personGroupID: 'EcstaticEelsForever'
-    }).save();
-  })
-  .catch((err) => {
-    console.log(err)
-  })
+  // //Create new person group
+  // axios.put('https://api.projectoxford.ai/face/v1.0/persongroups/EcstaticEelsForever', {
+  //   params : {
+  //     personGroupId: 'EcstaticEelsForever'
+  //   },
+  //   headers: {
+  //     'Ocp-Apim-Subscription-Key': process.env.MICROSOFT_API_KEY
+  //   }
+  // })
+  // //Insert into database
+  // .then(() => {
+  //   db.Caregiver.build({
+  //     name: 'Sara Bolan',
+  //     photo: '',
+  //     personGroupID: 'EcstaticEelsForever'
+  //   }).save()
+  // })
+  // .catch((err) => {
+  //   console.log(err)
+  // })
+  // .then(() => {
+  //   db.Patient.build({
+  //     name: 'John Watt',
+  //     photo: '',
+  //     personGroupID: 'EcstaticEelsForever'
+  //   }).save();
+  // })
+  // .catch((err) => {
+  //   console.log(err)
+  // })
 });
 
 
