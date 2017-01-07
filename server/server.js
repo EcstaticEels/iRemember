@@ -3,6 +3,8 @@ const express = require('express');
 const app = express();
 var path = require('path');
 
+var axios = require('axios');
+
 //Database
 const db = require('../database/db.js');
 
@@ -66,17 +68,37 @@ app.get('*', function (req, res) {
 
 app.listen(3000, function () {
   console.log('iRemember is running on port 3000!')
+
+  //Create new person group
+  axios.put('https://api.projectoxford.ai/face/v1.0/persongroups/EcstaticEelsForever', {
+    params : {
+      personGroupId: 'EcstaticEelsForever'
+    },
+    headers: {
+      'Ocp-Apim-Subscription-Key': process.env.MICROSOFT_API_KEY
+    }
+  })
   //Insert into database
-  // db.Caregiver.build({
-  //   name: 'Sara Bolan',
-  //   photo: '',
-  //   personGroupID: 'EcstaticEels1'
-  // }).save()
-  // db.Patient.build({
-  //   name: 'John Watt',
-  //   photo: '',
-  //   personGroupID: 'EcstaticEels1'
-  // }).save();
+  .then(() => {
+    db.Caregiver.build({
+      name: 'Sara Bolan',
+      photo: '',
+      personGroupID: 'EcstaticEelsForever'
+    }).save()
+  })
+  .catch((err) => {
+    console.log(err)
+  })
+  .then(() => {
+    db.Patient.build({
+      name: 'John Watt',
+      photo: '',
+      personGroupID: 'EcstaticEelsForever'
+    }).save();
+  })
+  .catch((err) => {
+    console.log(err)
+  })
 });
 
 

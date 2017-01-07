@@ -129,7 +129,7 @@ export default class HomeScreen extends React.Component {
   allowPushNotification() {
     Exponent.Permissions.askAsync(Exponent.Permissions.REMOTE_NOTIFICATIONS)
     .then((response) => {
-      console.log(response);
+      // console.log(response);
       if (response.status === "granted") {
         Exponent.Notifications.getExponentPushTokenAsync()
         .then((token) => {
@@ -138,15 +138,15 @@ export default class HomeScreen extends React.Component {
             username: 'Bob'
           })
             .then(function (response) {
-              console.log(response);
+              // console.log(response);
             })
             .catch(function (error) {
-              console.log(error);
+              // console.log(error);
             });
 
         })
       } else {
-        console.log('Permission NOT GRANTED');
+        // console.log('Permission NOT GRANTED');
       }
     });
   }
@@ -232,6 +232,7 @@ export default class HomeScreen extends React.Component {
             return response.json()
           })
           .then(function (responseJSON) {
+            console.log(responseJSON.weather[0].main)
 
             responseJSON.weather[0].description = responseJSON.weather[0].description.split('');
 
@@ -267,7 +268,7 @@ export default class HomeScreen extends React.Component {
               })
             }
 
-            if (responseJSON.weather[0].main === 'Atmosphere') {
+            if (responseJSON.weather[0].main === 'Atmosphere' || responseJSON.weather[0].main === 'Mist') {
               this.setState({
                 weatherDescription: responseJSON.weather[0].description,
                 weatherIcon: weatherIcons.mist
@@ -316,16 +317,23 @@ export default class HomeScreen extends React.Component {
         that.pushNotification();
       })
       .catch(function (error) {
-        console.log('error', error);
+      //   console.log('error', error);
       });
   }
 
   render() {
+    console.log(this.state)
     return (
 
         <ScrollView
           style={styles.container}
           contentContainerStyle={styles.contentContainer}>
+
+          <View style={styles.homepageContentContainer}>
+            <Text style={styles.timeText}>
+              {this.state.dateTime.time}
+            </Text>
+          </View>
 
           <View style={styles.homepageContentContainer}>
             <Text style={styles.commentText}>
@@ -352,7 +360,6 @@ export default class HomeScreen extends React.Component {
 }
 
 //WOULD STILL LIKE TO RENDER DIFFERENT COLOR SCHEME BASED ON DAY VS. NIGHT
-//MAYBE REPLACE DEV MODE TEXT WITH TOP BAR OF KEY REMINDERS?
 
 const styles = StyleSheet.create({
   container: {
