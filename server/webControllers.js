@@ -239,7 +239,7 @@ module.exports = {
       })
       .then(caregiver => {
         db.Reminder.create({ 
-          date: fields.id[0],
+          date: fields.date[0],
           type: fields.type[0],
           note: fields.note[0],
           recurring: fields.recurring[0], 

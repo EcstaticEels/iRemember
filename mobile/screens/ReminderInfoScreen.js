@@ -13,6 +13,8 @@ import {
 
 import { Router } from '../navigation/Router.js';
 
+import * as Exponent from 'exponent';
+
 export default class ReminderInfoScreen extends React.Component {
   static route = {
     navigationBar: {
@@ -25,7 +27,7 @@ export default class ReminderInfoScreen extends React.Component {
       <ScrollView 
         style={styles.container}
         contentContainerStyle={styles.contentContainer}>
-
+        <Exponent.Components.Video />
         <View style={styles.reminderInfoContainer}>
           <Text style={styles.reminderTitle}>{this.props.route.params.reminder.task}</Text>
         </View>
