@@ -20,6 +20,9 @@
     "assetExts": ["ttf"]
   },
   "ios": {
+    "permissions": {
+      "remoteNotifications": true
+    },
     "supportsTablet": true
   }
 }

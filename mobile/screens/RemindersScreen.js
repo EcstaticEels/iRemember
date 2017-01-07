@@ -29,7 +29,7 @@ export default class RemindersScreen extends React.Component {
     this.state = {
       upcomingReminders: [],
       completedReminders: [],
-      dataSource: dataSource.cloneWithRows([]),
+      dataSource: dataSource.cloneWithRows(props.reminders),
     }
   }
 
@@ -37,24 +37,6 @@ export default class RemindersScreen extends React.Component {
     navigationBar: {
       title: 'Reminders',
     },
-  }
-
-  componentDidMount () {
-    var that = this;
-    axios.get('http://10.6.19.25:3000/mobile/reminders', {
-      params: {
-        id: 1
-      }
-    })
-      .then(function (response) {
-        var reminders = response.data.reminders;
-        that.setState({
-          dataSource: dataSource.cloneWithRows(reminders)
-        })
-      })
-      .catch(function (error) {
-        console.log('error', error);
-      });
   }
 
   _goToReminder = (reminder) => {
