@@ -103,7 +103,7 @@ export default class HomeScreen extends React.Component {
             reminder.registered = true;
           })
           .then(() => {
-            axios.put('http://10.6.19.25:3000/mobile/pushNotification', {
+            axios.put('http://10.6.21.34:3000/mobile/pushNotification', {
               reminderId: reminder.reminderId,
               registered: reminder.registered,
               notificationId: reminder.notificationId
@@ -133,7 +133,7 @@ export default class HomeScreen extends React.Component {
       if (response.status === "granted") {
         Exponent.Notifications.getExponentPushTokenAsync()
         .then((token) => {
-          axios.post('http://10.6.19.25:3000/mobile/pushNotification', {
+          axios.post('http://10.6.21.34:3000/mobile/pushNotification', {
             token:  token,
             username: 'Bob'
           })
@@ -301,7 +301,7 @@ export default class HomeScreen extends React.Component {
 
   getReminders() {
     var that = this;
-    axios.get('http://10.6.19.25:3000/mobile/reminders', {
+    axios.get('http://10.6.21.34:3000/mobile/reminders', {
       params: {
         id: 1
       }

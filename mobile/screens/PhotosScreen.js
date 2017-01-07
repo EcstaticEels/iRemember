@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
 });
 
 async function uploadImageAsync(uri) {
-  let apiUrl = 'http://10.6.19.201:3000/mobile/identify';
+  let apiUrl = 'http://10.6.21.34/mobile/identify';
 
   // Note:
   // Uncomment this if you want to experiment with local server

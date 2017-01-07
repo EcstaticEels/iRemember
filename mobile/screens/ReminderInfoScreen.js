@@ -13,7 +13,9 @@ import {
 
 import { Router } from '../navigation/Router.js';
 
-import * as Exponent from 'exponent';
+import Exponent, {
+  Components
+} from 'exponent';
 
 export default class ReminderInfoScreen extends React.Component {
   static route = {
@@ -21,16 +23,21 @@ export default class ReminderInfoScreen extends React.Component {
       title: 'Reminders'
     }
   }
+        
 
   render() {
+    var audio = <Text>''</Text>;
+    if (this.props.route.params.reminder.audio) {
+      audio = <Components.Video source={{uri: this.props.route.params.reminder.audio}}/>;
+    }
     return (
       <ScrollView 
         style={styles.container}
         contentContainerStyle={styles.contentContainer}>
-        <Exponent.Components.Video />
         <View style={styles.reminderInfoContainer}>
-          <Text style={styles.reminderTitle}>{this.props.route.params.reminder.task}</Text>
+          <Text style={styles.reminderTitle}>{this.props.route.params.reminder.title}</Text>
         </View>
+        {audio}
         <View style={styles.reminderInfoContainer}>
           <Text style={styles.reminderNote}>{this.props.route.params.reminder.note}</Text>
         </View>
