@@ -21,6 +21,8 @@ import { MonoText } from '../components/StyledText';
 
 import weatherIcons from '../assets/images/weatherIcons.js';
 
+import moment from 'moment'
+
 // import registerForPushNotificationsAsync from 'registerForPushNotificationsAsync';
 
 export default class HomeScreen extends React.Component {
@@ -52,8 +54,7 @@ export default class HomeScreen extends React.Component {
 
   componentDidMount () {
     this.weather();
-    this.getReminders();
-    this.pushNotification();
+    this.getReminders()
   }
 
   componentWillMount() {
@@ -78,24 +79,50 @@ export default class HomeScreen extends React.Component {
   };
 
   pushNotification() {
+    this.state.reminders.map((reminder) => {
+      if (!reminder.registered) {
+        var localNotification = {
+          title: reminder.title,
+          body: reminder.note,
+          ios: {
+            sound: true
+          }
+        }
+        var schedulingOptions = {
+          time: (new Date(reminder.date.slice(-4))).getTime()
+        }
+        if (reminder.recurring) {
+          schedulingOptions.repeat = 'day';
+        }
+        if (reminder.notificationId) {
+          Exponent.Notifications.cancelScheduledNotificationAsync(reminder.notificationId)
+        }
+        Exponent.Notifications.scheduleLocalNotificationAsync(localNotification, schedulingOptions)
+          .then((notificatonId) => {
+            reminder.notification = notificationId;
+            reminder.registered = true;
+          })
+          .then(() => {
+            axios.put('http://10.6.19.25:3000/mobile/pushNotification', {
+              reminderId: reminder.reminderId,
+              registered: reminder.registered,
+              notificationId: reminder.notificationId
+            })
+              .then(function (response) {
+                console.log(response);
+              })
+              .catch(function (error) {
+                console.log(error);
+              });
+          })
 
-    // Exponent.Notifications.cancelAllScheduledNotificationsAsync()
-    // .then(() => {
-
-    // })
-    var localNotification = {
-      title: 'test notification',
-      body: "This is test notification",
-      data: {cool: 'cool'},
-      ios: {
-        sound: true
       }
-    }
-    var schedulingOptions = {
-      time: (new Date()).getTime() + 5000,
-      // repeat: 'minute'
-    }
-    // Exponent.Notifications.scheduleLocalNotificationAsync(localNotification, schedulingOptions)
+
+      
+    })
+    // Exponent.Notifications.cancelAllScheduledNotificationsAsync()
+    
+    
     
   }
 
@@ -278,9 +305,15 @@ export default class HomeScreen extends React.Component {
         id: 1
       }
     })
-      .then(function (response) {
+      .then((response) => {
         var reminders = response.data.reminders;
         that.props.updateReminders(reminders);
+        that.setState({
+          reminders: reminders
+        })
+      })
+      .then(() => {
+        that.pushNotification();
       })
       .catch(function (error) {
         console.log('error', error);
