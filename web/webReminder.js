@@ -1,5 +1,6 @@
 import React from 'react';
 import $ from 'jquery';
+import {Button, Grid, Row, Col} from 'react-bootstrap';
 
 import ReminderList from './webReminderList.js';
 import ReminderCurrent from './webReminderCurrent.js';
@@ -9,18 +10,31 @@ class Reminder extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      list: [{time: "2017-01-04T12:59", recurring: false, type: undefined, img: "http://pngimg.com/upload/pills_PNG16521.png", note: "Take pill"}, {time: "2017-01-04T01:00", recurring: false, type: "medication", img: "http://pngimg.com/upload/pills_PNG16521.png", note: "dksfl"}],
-      current: {time: "2017-01-04T12:59", recurring: true, type: 'appointment', img: "http://pngimg.com/upload/pills_PNG16521.png", note: "Take pill"},
+      list: [{time: "", recurring: false, type: undefined, note: "", audio: ''}],
+      current: {time: "", recurring: false, type: '', audio: "", note: ""},
       showForm: false,
       editMode: false,
       date: '',
       type: '',
       recurring: false,
-      note: ''
+      note: '',
+      img: '',
+      title: '',
+      updateAudio: ''
     };
   }
 
-  componentDidMount() {
+  getReminders(func) {
+    var mapIcons = (type) => {
+      if (type === 'medication') {
+        return '/pill_logo1.jpg';
+      } else if (type === 'appointment') {
+        return '/appointment_logo3.jpg';
+      } else {
+        return '/reminder_logo.jpg';
+      }
+    }
+
     $.ajax({
       method: 'GET',
       url: '/web/reminders' + '?caregiverId=1',
@@ -28,31 +42,64 @@ class Reminder extends React.Component {
         var reminders = JSON.parse(res).reminders;
         reminders.forEach(function(reminder) {
           reminder.date = reminder.date.slice(0, 16);
+          reminder.img = mapIcons(reminder.type);
           return reminder;
-        })
-        this.setState({list: reminders});
+        });
+        func(reminders);
       }.bind(this),
       error: function(err) {
         console.log('error', err);
       }
-    })
-  }
-
-  showForm() {
-    this.setState({
-      showForm: true
     });
   }
 
-  hideForm() {
+  componentDidMount() {
+    this.getReminders((reminders) => {
+      if (reminders.length > 0) {
+        this.setState({
+          list: reminders,
+          current: reminders[0]
+        }, () => {
+          console.log(this.state)
+        })
+      }
+    });
+  }
+
+  displayForm(bool) {
     this.setState({
-      showForm: false
+      showForm: bool
     });
   }
 
   updateCurrent(current) {
     this.setState({
-      current: current
+      current: current,
+      showForm: false
+    });
+  }
+
+  handleUpdate() {
+    var updatedId = this.state.current.id;
+    var current;
+    this.getReminders((reminders) => {
+      for (var i = 0; i < reminders.length; i++) {
+        if (reminders[i].id === updatedId) {
+          current = reminders[i];
+        }
+      }
+      this.setState({
+        list: reminders,
+        current: current
+      });
+    });
+  }
+
+  getAudio(event){
+    this.setState({
+      updateAudio: event.target.files
+    }, function() {
+      console.log(this.state)
     });
   }
 
@@ -75,7 +122,7 @@ class Reminder extends React.Component {
   editModeSwitch(bool) {
     this.setState({
       editMode: bool
-    })
+    });
   }
 
   edit() {
@@ -86,9 +133,11 @@ class Reminder extends React.Component {
       recurring: current.recurring,
       type: current.type,
       note: current.note,
-      reminderId: current.id
-    })
-    this.showForm();
+      reminderId: current.id,
+      img: current.img, 
+      title: current.title
+    });
+    this.displayForm(true);
   }
 
   delete() {
@@ -100,7 +149,7 @@ class Reminder extends React.Component {
       contentType: 'application/json',
       success: function(res) {
         console.log('success', res);
-        that.updateCurrent(that.state.list[0]);
+        that.componentDidMount();
       },
       error: function(err) {
         console.log('error', err);
@@ -111,26 +160,55 @@ class Reminder extends React.Component {
   submitForm(event) {
     event.preventDefault();
     var that = this;
-    var form = {};
-    form.id = this.props.id;
-    form.name = this.props.name;
-    form.date = this.state.date;
-    form.recurring = this.state.recurring;
-    form.type = this.state.type;
-    form.note = this.state.note;
+    var formData = new FormData();
+    formData.append('id', this.props.id);
+    formData.append('name', this.props.name);
+    formData.append('date', this.state.date);
+    formData.append('recurring', this.state.recurring);
+    formData.append('type', this.state.type);
+    formData.append('note', this.state.note);
+    formData.append('title', this.state.title);
     if (this.state.editMode) {
-      form.reminderId = this.state.reminderId;
-    }    
+      formData.append('reminderId', this.state.reminderId);
+    }
+    for (var key in this.state.updateAudio) {
+      formData.append('file', this.state.updateAudio[key]);
+    }
+
+    // var form = {};
+    // form.id = this.props.id;
+    // form.name = thi\this.state.recurring;
+    // form.type = this.state.type;
+    // form.note = this.state.note;
+    // if (this.state.editMode) {
+    //   form.reminderId = this.state.reminderId;
+    // }    
     $.ajax({
       method: this.state.editMode ? 'PUT': 'POST',
       url: '/web/reminders',
-      data: JSON.stringify(form),
-      contentType: 'application/json',
+      data: formData,
+      processData: false,
+      contentType: false,
       success: function(res) {
-        console.log('success', res);
+        if (that.state.editMode) {
+          that.handleUpdate();
+        } else {
+          var createdId = JSON.parse(res).id;
+          var current;
+          that.getReminders((reminders) => {
+            for (var i = 0; i < reminders.length; i++) {
+              if (reminders[i].id === createdId) {
+                current = reminders[i];
+              }
+            }
+            that.setState({
+              list: reminders,
+              current: current
+            });
+          });
+        }
         that.editModeSwitch(false);
-        that.hideForm();
-        that.updateCurrent(JSON.parse(res));
+        that.displayForm(false);
       },
       error: function(err) {
         console.log('error', err);
@@ -141,30 +219,40 @@ class Reminder extends React.Component {
 
   render() {
     return (
-      <div className="reminder">
-        <div>{
-          this.state.showForm? null : <button type="button" onClick={this.showForm.bind(this)}>Add New Reminder</button>
-        }</div>
-        <ReminderList list={this.state.list} getInput={this.getInput.bind(this)} updateCurrent={this.updateCurrent.bind(this)}/>
-        <div>{
-          this.state.showForm ? 
-            <ReminderForm 
-              getInput={this.getInput.bind(this)} 
-              getBoolean={this.getBoolean.bind(this)}
-              submitForm={this.submitForm.bind(this)}
-              editMode={this.state.editMode}
-              date={this.state.date}
-              type={this.state.type}
-              recurring={this.state.recurring} 
-              img={this.state.img} 
-              note={this.state.note}
-            /> 
-            : <ReminderCurrent 
-              current={this.state.current} 
-              edit={this.edit.bind(this)}
-              delete={this.delete.bind(this)}/>
-        }</div>
-      </div>
+      <Grid>
+        <Row className="show-grid">
+          <Col xs={12} md={4}>
+            <div className="reminder">
+              <div>
+                {this.state.showForm? null : 
+                  <Button bsSize="large" className="btn-addNew" bsStyle="primary" onClick={() => this.displayForm.call(this, true)}>Add New Reminder</Button>}
+              </div>
+              <ReminderList list={this.state.list} getInput={this.getInput.bind(this)} updateCurrent={this.updateCurrent.bind(this)}/>
+            </div>
+          </Col>
+          <Col xs={12} md={8}>
+            <div>
+            {
+              this.state.showForm ? 
+                <ReminderForm 
+                  getInput={this.getInput.bind(this)} 
+                  getBoolean={this.getBoolean.bind(this)}
+                  getAudio={this.getAudio.bind(this)}
+                  submitForm={this.submitForm.bind(this)}
+                  editMode={this.state.editMode}
+                  date={this.state.date}
+                  type={this.state.type}
+                  title={this.state.title}
+                  recurring={this.state.recurring} 
+                  img={this.state.img} 
+                  note={this.state.note}
+                /> 
+                : <ReminderCurrent current={this.state.current} edit={this.edit.bind(this)} delete={this.delete.bind(this)} />
+            }
+            </div>
+          </Col>
+        </Row>
+      </Grid>
     )
   }
 }
