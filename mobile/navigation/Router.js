@@ -6,7 +6,8 @@ import HomeScreen from '../screens/HomeScreen';
 import RemindersScreen from '../screens/RemindersScreen';
 import PhotosScreen from '../screens/PhotosScreen';
 import RootNavigation from './RootNavigation';
-import ReminderInfoScreen from '../screens/ReminderInfoScreen'
+import ReminderInfoScreen from '../screens/ReminderInfoScreen';
+import PersonInfoScreen from '../screens/PersonInfoScreen';
 
 export default createRouter(() => ({
   home: () => HomeScreen,
