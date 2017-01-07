@@ -47,12 +47,15 @@ var ReminderList = (props) => (
       <label>Upload Audio Message:
         <AudioUpload getAudio={props.getAudio} />
       </label>
+      <label>Title:
+        <input type="text" value={props.title} className="title" placeholder="Title" onChange={props.getInput} />
+      </label>
       <label>Notes:
         <br/>
         <input type="text" value={props.note} className="note" placeholder="Notes" onChange={props.getInput}/>
         <br/>
-        <input type="submit" value="Submit" onClick={props.submitForm}/>
       </label>
+        <input type="submit" value="Submit" onClick={props.submitForm}/>
     </form>
   </div>
 );
