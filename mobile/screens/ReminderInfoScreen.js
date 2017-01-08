@@ -17,15 +17,17 @@ import Exponent, {
   Components
 } from 'exponent';
 
+import Moment from 'moment'
+
 export default class ReminderInfoScreen extends React.Component {
   static route = {
     navigationBar: {
       title: 'Reminders'
     }
   }
-        
-
+  
   render() {
+    console.log(this.props.route.params.reminder.date + ' at ' + this.props.route.params.reminder.time)
     var audio = <Text>''</Text>;
     if (this.props.route.params.reminder.audio) {
       audio = <Components.Video source={{uri: this.props.route.params.reminder.audio}}/>;
@@ -45,7 +47,7 @@ export default class ReminderInfoScreen extends React.Component {
           <Image style={styles.reminderImage} source={{uri: 'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQrqidYU7IoDmubY_c9zU9pBGhfVBcJRvcaK6ghytIcCKrK-IAngQ'}} /> 
         </View>
         <View style={styles.reminderInfoContainer}>
-          <Text style={styles.reminderTimeDate}>{this.props.route.params.reminder.date + ' at ' + this.props.route.params.reminder.time}</Text>       
+          <Text style={styles.reminderTimeDate}>{Moment(this.props.route.params.reminder.date).calendar().toString()}</Text>       
         </View>
       </ScrollView>
     );
