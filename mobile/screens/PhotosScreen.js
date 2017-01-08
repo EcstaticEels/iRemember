@@ -21,6 +21,7 @@ export default class PhotosScreen extends React.Component {
 
   constructor (props) {
     super (props);
+    this._goToPersonInfoPage.bind(this);
   }
 
   static route = {
@@ -32,11 +33,13 @@ export default class PhotosScreen extends React.Component {
   componentDidMount () {
     Exponent.ImagePicker.launchCameraAsync()
     .then((photo) => {
-      console.log(photo)
       uploadImageAsync(photo.uri)
-    })
-    .then((response) => {
-      // console.log(response)
+      .then((response) => {
+        return response.json().then(responseJSON => {
+          console.log(responseJSON)
+          this._goToPersonInfoPage(responseJSON);
+        })
+      });
     })
   }
 
@@ -62,7 +65,8 @@ const styles = StyleSheet.create({
 });
 
 async function uploadImageAsync(uri) {
-  let apiUrl = 'http://10.6.21.34/mobile/identify';
+  let date = Date.now();
+  let apiUrl = `http://10.6.21.34:3000/mobile/identify?${date}`;
 
   // Note:
   // Uncomment this if you want to experiment with local server
@@ -79,7 +83,7 @@ async function uploadImageAsync(uri) {
   let formData = new FormData();
   formData.append('picture', {
     uri: uri,
-    name: 'picture.jpeg',
+    name: date + '.jpeg',
     type: 'image/jpeg',
   });
 
@@ -89,10 +93,8 @@ async function uploadImageAsync(uri) {
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'multipart/form-data',
-    },
+    }
   };
-
-  console.log(formData)
 
   return fetch(apiUrl, options);
 }

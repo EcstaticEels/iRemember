@@ -35,7 +35,7 @@ const upload = multer({
       cb(null, {fieldName: file.fieldname});
     },
     key(req, file, cb) {
-      cb(null,'picture.jpeg');
+      cb(null, file.originalname);
     }
   })
 });
