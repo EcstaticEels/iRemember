@@ -45,7 +45,6 @@ export default class RemindersScreen extends React.Component {
 
   render() {
     return (
-
         <ListView
           style={styles.list}
           dataSource={this.state.dataSource}
