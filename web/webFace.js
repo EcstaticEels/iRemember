@@ -41,6 +41,11 @@ class Face extends React.Component {
         this.setState({list: faces, current: faces[0]}, () => {
           console.log('face list on state', this.state)
         });
+      } else {
+        this.setState({
+          list: [],
+          current: {subjectName:"", photos:[""], description:""}
+        })
       }
     });
   }
@@ -86,7 +91,7 @@ class Face extends React.Component {
     this.setState({
       updatePhotos: event.target.files
     }, function() {
-      console.log(this.state)
+      console.log('after getPhotos', this.state)
     });
   }
 

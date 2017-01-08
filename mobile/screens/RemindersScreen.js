@@ -53,7 +53,7 @@ export default class RemindersScreen extends React.Component {
             <TouchableHighlight onPress={() => this._goToReminder(reminder)}>
               <View style={styles.reminderView}> 
                 <Image style={styles.reminderImage} source={{uri: 'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQrqidYU7IoDmubY_c9zU9pBGhfVBcJRvcaK6ghytIcCKrK-IAngQ'}} /> 
-                <Text style={styles.reminderText}>{reminder.note}</Text>
+                <Text style={styles.reminderText}>{reminder.title}</Text>
               </View>
             </TouchableHighlight> 
           }
