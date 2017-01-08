@@ -26,12 +26,12 @@ export default class PersonInfoScreen extends React.Component {
 
   render() {
     console.log('on personinfo screen', this.props.route.params)
-    var audio = <Text>''</Text>;
+    var audio = <Text></Text>;
     if (this.props.route.params.person.audio) {
       audio = <Components.Video source={{uri: this.props.route.params.person.audio}}/>;
     }
     return (
-      <ScrollView contentContainerstyle={styles.contentContainer} style={styles.container}>
+      <ScrollView contentContainerStyle={styles.contentContainer} style={styles.container}>
         <View style={styles.personInfoContainer}>
           <Text style={styles.personName}>{this.props.route.params.person.name}</Text>
         </View>
@@ -52,29 +52,28 @@ const styles = StyleSheet.create({
     backgroundColor: '#2c3e50',
   },
   contentContainer: {
-    paddingTop: 40,
     height: 300,
     flexDirection: 'column',
     justifyContent: 'space-around',
     flex: 1
   },
   personInfoContainer: {
-    backgroundColor: '#2c3e50',
     flexDirection: 'row',
     justifyContent: 'space-around',
+    alignItems: 'center'
   },
   personImage: {
-    height: 150,
-    width: 150,
+    height: 200,
+    width: 200,
   },
   personName: {
     color: '#ECECEC',
-    fontSize: 40,
+    fontSize: 50,
     textDecorationLine: 'underline',
     textDecorationColor: '#ECECEC'
   },
   personInfo: {
     color: '#ECECEC',
-    fontSize: 20,
-  },
+    fontSize: 30,
+  }
 });
