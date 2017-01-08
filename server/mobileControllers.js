@@ -103,25 +103,24 @@ module.exports = {
       }
     })
     .then(reminders => {
-      console.log(reminders.dataValues)
       res.status(200).send(JSON.stringify({reminders: reminders}));
     });
   },
-  updateReminder: (req, res) => {
-    let reminderId = req.body.reminderId;
-    db.Reminder.update(
-      { 
-        registered: req.body.registered,
-        notificationId: req.body.notificationId
-      },
-      { where: { id: reminderId}}
-    )
-    .then(updatedReminder => {
-      res.status(200).send(JSON.stringify(updatedReminder));
+  updateReminders: (req, res) => {
+    console.log(req)
+    req.body.forEach((reminder) => {
+      console.log('updating reminder', reminder)
+      db.Reminder.update(
+        { 
+          registered: reminder.registered,
+          notificationId: reminder.notificationId
+        },
+        { where: { id: reminder.id}}
+      )
     })
+    res.status(200).send('database updated')
   },
   addPushNotification: function(req, res) {
-    console.log(req.body)
 
     // let isPushToken = sdk.isExponentPushToken(somePushToken);
  
