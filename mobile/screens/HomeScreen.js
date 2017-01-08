@@ -53,8 +53,12 @@ export default class HomeScreen extends React.Component {
   //need to render something prettier
 
   componentDidMount () {
+    var that = this;
+    this.time();
     this.weather();
-    this.getReminders()
+    // this.allowPushNotification();
+    this.getReminders();
+    setInterval(() => {that.polling()}, 60000);
   }
 
   componentWillMount() {
@@ -78,52 +82,70 @@ export default class HomeScreen extends React.Component {
     // };
   };
 
-  pushNotification() {
-    this.state.reminders.map((reminder) => {
-      if (!reminder.registered) {
-        var localNotification = {
-          title: reminder.title,
-          body: reminder.note,
-          ios: {
-            sound: true
+  pushNotification() {  
+    const registerReminders = reminder => {
+      return new Promise((resolve, reject) => {
+        if (!reminder.registered) {
+          console.log('this reminder', reminder.registered)
+          var localNotification = {
+            title: reminder.title,
+            body: reminder.note,
+            data: {[reminder.title]: reminder.note},
+            ios: {
+              sound: true
+            }
           }
-        }
-        var schedulingOptions = {
-          time: (new Date(reminder.date.slice(-4))).getTime()
-        }
-        if (reminder.recurring) {
-          schedulingOptions.repeat = 'day';
-        }
-        if (reminder.notificationId) {
-          Exponent.Notifications.cancelScheduledNotificationAsync(reminder.notificationId)
-        }
-        Exponent.Notifications.scheduleLocalNotificationAsync(localNotification, schedulingOptions)
-          .then((notificatonId) => {
-            reminder.notification = notificationId;
+          var year = reminder.date.slice(0, 4);
+          var month = reminder.date.slice(5, 7) - 1;
+          var day = reminder.date.slice(8, 10);
+          var hour = reminder.date.slice(11, 13);
+          var minute = reminder.date.slice(14, 16);
+
+          var schedulingOptions = {
+            time: (new Date(year, month, day, hour, minute)).getTime()
+          }
+          if (reminder.recurring) {
+            schedulingOptions.repeat = 'day';
+          }
+          if (reminder.notificationId) {
+            Exponent.Notifications.cancelScheduledNotificationAsync(reminder.notificationId)
+          }
+          Exponent.Notifications.scheduleLocalNotificationAsync(localNotification, schedulingOptions)
+          .then((notificationId) => {
+            console.log('exponent notification scheduled')
+            reminder.notificationId = notificationId;
             reminder.registered = true;
+            console.log(reminder);
+            resolve(reminder);
           })
-          .then(() => {
-            axios.put('http://10.6.21.34:3000/mobile/pushNotification', {
-              reminderId: reminder.reminderId,
-              registered: reminder.registered,
-              notificationId: reminder.notificationId
-            })
-              .then(function (response) {
-                console.log(response);
-              })
-              .catch(function (error) {
-                console.log(error);
-              });
-          })
+          .catch(function(error) {
+            console.log('cannot add the reminder' + error);
+            reject(error);
+          });
+        } else {
+          resolve(false);
+        }
+      })
+    }  
+    var promisifiedregisterReminders = this.state.reminders.map(registerReminders)
+    Promise.all(promisifiedregisterReminders)
+    .then(updatedReminders => {
+      updatedReminders = updatedReminders.filter((reminder) => {
+        return reminder; 
+      })
+      axios.put('http://10.6.19.25:3000/mobile/reminders', updatedReminders)
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    })
+    .catch(error => {
+      console.log('error in promise.all');
 
-      }
-
-      
     })
     // Exponent.Notifications.cancelAllScheduledNotificationsAsync()
-    
-    
-    
   }
 
   allowPushNotification() {
@@ -151,8 +173,12 @@ export default class HomeScreen extends React.Component {
     });
   }
 
-  weather() {
+  polling() {
+    this.time();
+    this.getReminders();
+  }
 
+  time() {
     var date = new Date();
 
     var weekday = new Array(7);
@@ -215,8 +241,9 @@ export default class HomeScreen extends React.Component {
       time: hours + ':' + minutes,
       dayNight: dayNight
     }});
+  }
 
-
+  weather() {
     Exponent.Permissions.askAsync(Exponent.Permissions.LOCATION)
     .then(function (response) {
       if (response.status === 'granted') {
@@ -232,7 +259,7 @@ export default class HomeScreen extends React.Component {
             return response.json()
           })
           .then(function (responseJSON) {
-            console.log(responseJSON.weather[0].main)
+            // console.log(responseJSON.weather[0].main)
 
             responseJSON.weather[0].description = responseJSON.weather[0].description.split('');
 
@@ -322,7 +349,7 @@ export default class HomeScreen extends React.Component {
   }
 
   render() {
-    console.log(this.state)
+    // console.log(this.state)
     return (
 
         <ScrollView
