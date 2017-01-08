@@ -56,7 +56,7 @@ export default class HomeScreen extends React.Component {
     var that = this;
     this.time();
     this.weather();
-    // this.allowPushNotification();
+    if(!this.state.notificationToken) this.allowPushNotification();
     this.getReminders();
     setInterval(() => {that.polling()}, 60000);
   }
@@ -81,6 +81,32 @@ export default class HomeScreen extends React.Component {
     //   // this.setState({notificationData: notification})
     // };
   };
+
+  allowPushNotification() {
+    Exponent.Permissions.askAsync(Exponent.Permissions.REMOTE_NOTIFICATIONS)
+    .then((response) => {
+      if (response.status === "granted") {
+        Exponent.Notifications.getExponentPushTokenAsync()
+        .then((token) => {
+          this.setState({
+            notificationToken: token
+          })
+          axios.post('http://10.6.19.25:3000/mobile/pushNotification', {
+            token:  token,
+            id: 1,
+          })
+            .then(function (response) {
+              console.log(response);
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+        })
+      } else {
+        console.log('Permission NOT GRANTED');
+      }
+    })
+  }
 
   pushNotification() {  
     const registerReminders = reminder => {
@@ -148,30 +174,30 @@ export default class HomeScreen extends React.Component {
     // Exponent.Notifications.cancelAllScheduledNotificationsAsync()
   }
 
-  allowPushNotification() {
-    Exponent.Permissions.askAsync(Exponent.Permissions.REMOTE_NOTIFICATIONS)
-    .then((response) => {
-      // console.log(response);
-      if (response.status === "granted") {
-        Exponent.Notifications.getExponentPushTokenAsync()
-        .then((token) => {
-          axios.post('http://10.6.21.34:3000/mobile/pushNotification', {
-            token:  token,
-            username: 'Bob'
-          })
-            .then(function (response) {
-              // console.log(response);
-            })
-            .catch(function (error) {
-              // console.log(error);
-            });
+  // allowPushNotification() {
+  //   Exponent.Permissions.askAsync(Exponent.Permissions.REMOTE_NOTIFICATIONS)
+  //   .then((response) => {
+  //     // console.log(response);
+  //     if (response.status === "granted") {
+  //       Exponent.Notifications.getExponentPushTokenAsync()
+  //       .then((token) => {
+  //         axios.post('http://10.6.19.25:3000/mobile/pushNotification', {
+  //           token:  token,
+  //           username: 'Bob'
+  //         })
+  //           .then(function (response) {
+  //             console.log(response);
+  //           })
+  //           .catch(function (error) {
+  //             console.log(error);
+  //           });
 
-        })
-      } else {
-        // console.log('Permission NOT GRANTED');
-      }
-    });
-  }
+  //       })
+  //     } else {
+  //       console.log('Permission NOT GRANTED');
+  //     }
+  //   });
+  // }
 
   polling() {
     this.time();
@@ -328,7 +354,7 @@ export default class HomeScreen extends React.Component {
 
   getReminders() {
     var that = this;
-    axios.get('http://10.6.21.34:3000/mobile/reminders', {
+    axios.get('http://10.6.19.25:3000/mobile/reminders', {
       params: {
         id: 1
       }
