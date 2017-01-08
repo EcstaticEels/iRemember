@@ -22,6 +22,11 @@ const Patient = sequelizeDb.define('patient', {
     allowNull: false,
     unique: true
   },
+  token: {
+    type: Sequelize.STRING,
+    allowNull: true,
+    unique: true
+  },
   photo: Sequelize.STRING,
   personGroupID: Sequelize.STRING
 });

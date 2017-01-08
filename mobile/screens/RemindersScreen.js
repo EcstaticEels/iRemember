@@ -22,6 +22,12 @@ var dataSource = new ListView.DataSource({rowHasChanged: function (r1, r2) {
   return r1 !== r2
 }})
 
+var images = {
+  medication: 'https://s30.postimg.org/d0nn9k64d/pill_logo1.png',
+  appointment: 'https://s30.postimg.org/q3j9stwcd/appointment_logo3.jpg',
+  other: 'https://s30.postimg.org/i0l3hibr1/reminder_logo.png'
+}
+
 export default class RemindersScreen extends React.Component {
 
   constructor (props) {
@@ -52,7 +58,7 @@ export default class RemindersScreen extends React.Component {
           renderRow={(reminder) =>
             <TouchableHighlight onPress={() => this._goToReminder(reminder)}>
               <View style={styles.reminderView}> 
-                <Image style={styles.reminderImage} source={{uri: 'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQrqidYU7IoDmubY_c9zU9pBGhfVBcJRvcaK6ghytIcCKrK-IAngQ'}} /> 
+                <Image style={styles.reminderImage} source={{uri: images[reminder.type || 'other']}} /> 
                 <Text style={styles.reminderText}>{reminder.title}</Text>
               </View>
             </TouchableHighlight> 
@@ -61,8 +67,9 @@ export default class RemindersScreen extends React.Component {
         />
     );
   }
-
 }
+
+//{uri: 'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQrqidYU7IoDmubY_c9zU9pBGhfVBcJRvcaK6ghytIcCKrK-IAngQ'}
 
 const styles = StyleSheet.create({
   container: {
