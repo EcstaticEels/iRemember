@@ -57,6 +57,7 @@ app.put('/web/reminders', webControllers.updateReminder);
 app.delete('/web/reminders', webControllers.deleteReminder);
 //Mobile
 app.post('/mobile/identify', upload.single('picture'), mobileControllers.identifyFace);
+app.put('mobile/token', mobileControllers.addToken);
 app.get('/mobile/reminders', mobileControllers.retrieveReminders);
 app.put('/mobile/reminders', mobileControllers.updateReminders);
 app.post('/mobile/pushNotification', mobileControllers.addPushNotification);

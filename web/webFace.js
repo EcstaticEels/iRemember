@@ -10,12 +10,12 @@ class Face extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      list: [],
-      current: {subjectName:"", photos:[""], description:""},
+      list: [{subjectName:"", photos:[{photo: ''}], description:""}],
+      current: {subjectName:"", photos:[{}], description:""},
       showForm: false,
       editMode: false,
       subjectName: '',
-      photos: [""],
+      photos: [{}],
       description: '',
       updatePhotos: ''
     };
@@ -111,7 +111,21 @@ class Face extends React.Component {
     });
   }
 
+  vaildForm() {
+    if(this.state.subjectName.length < 3){
+      return false;
+    }
+    if(this.state.updatePhotos.length < 1) {
+      return false;
+    }
+    return true;
+  }
+
   submitForm(event) {
+    var vaild = this.vaildForm();
+    if(!vaild){
+      return window.alert("Invaild Form");
+    }
     event.preventDefault();
     var that = this;
     var formData = new FormData();
