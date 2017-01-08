@@ -35,14 +35,16 @@ cloudinary.config({
 
 module.exports = {
   identifyFace : function(req, res) {
-      const headers = {"Content-Type": "application/json", "Ocp-Apim-Subscription-Key": "f7badff0a4484fd5ab960d007d281e75"};
+      console.log('file coming in from mobile', req.file);
+      const date = urlModule.parse(req.url).query;
+      console.log('name of file', date);
       const detectParams = {
         "returnFaceId": "true",
         "returnFaceLandmarks": "false"
       }
-      const bodyForDetection = { "url": 'https://s3-us-west-1.amazonaws.com/hackreactorphoto/picture.jpeg'}; //only one url in the urlArray
+      const bodyForDetection = { "url": `https://s3-us-west-1.amazonaws.com/hackreactorphoto/${date}.jpeg`}; //only one url in the urlArray
       request.post({
-        headers: headers, 
+        headers: microsoftHeaders, 
         url: "https://api.projectoxford.ai/face/v1.0/detect",
         qs: detectParams,
         body: JSON.stringify(bodyForDetection)
@@ -51,22 +53,16 @@ module.exports = {
           console.log(err);
         }
         const parsedDetectBody = JSON.parse(body);
-        // console.log(parsedDetectBody);
-        if (parsedDetectBody.length === 1) { //if faces are detected...what if multiple faces? need note
-          //saying training photos can only have one face in frame
-
-          //query database for the name of the person group
-          console.log(parsedDetectBody)
+        console.log('detection results', parsedDetectBody);
+        if (parsedDetectBody.length === 1) { 
           var bodyForIdentification = {    
             "personGroupId":"ecstatic-eels", 
             "faceIds":[
                 parsedDetectBody[0].faceId
             ]
           };
-
-
           request.post({
-            headers: headers,
+            headers: microsoftHeaders,
             url: "https://api.projectoxford.ai/face/v1.0/identify",
             body: JSON.stringify(bodyForIdentification)
           }, function(err, response, body) {
@@ -74,19 +70,47 @@ module.exports = {
               console.log(err);
             }
             const parsedIdentifyBody = JSON.parse(body);
-            // console.log(parsedIdentifyBody);
-            if (parsedIdentifyBody.length === 0) {
+            if (parsedIdentifyBody[0].candidates.length === 0) {
               res.status(200).end("We couldn't find this person in the database...")
-            } else if (parsedIdentifyBody === 1) {
-              //query database for the personId received
-              //send response with the person's name and information
-
-              console.log(parsedIdentifyBody);
-              
-              res.status(200).send(body);
+            } else if (parsedIdentifyBody[0].candidates.length === 1) {
+              console.log('we found this person', parsedIdentifyBody[0].candidates);
+              db.Face.findOne({
+                where: {
+                  personId: parsedIdentifyBody[0].candidates[0].personId
+                }
+              })
+              .then(person => {
+                console.log('about to send this to mobile', JSON.stringify(person));
+                res.status(200).send(JSON.stringify(person));
+              })
             } else {
               //if more than one candidate, we can send suggestions of who this person is
               //or just tell them to take another photo with suggestions
+              console.log('we found more than one candidate');
+              const findIdentifiedFaces = personId => {
+                return new Promise( (resolve, reject) => {
+                  db.Face.findAll({
+                    where: {
+                      personId: personId
+                    }
+                  })
+                  .then(identifiedPerson => {
+                    const identifiedPersonObj = {
+                      dbId: identifiedPerson.id,
+                      name: identifiedPerson.name,
+                      description: identifiedPerson.description,
+                      photo: identifiedPerson.photo,
+                      audio: identifiedPerson.audio
+                    }
+                    resolve(identifiedPersonObj);
+                  });
+                })
+              }
+              let promisifiedFindIdentified = parsedIdentifyBody[0].candidates.map(findIdentifiedFaces);
+              Promise.all(promisifiedFindIdentified)
+              .then(identifiedObjArray => {
+                res.status(200).send(JSON.stringify({identifiedFaces: identifiedObjArray}));
+              });
             }
           });
         } else { //no faces detected in the photo
