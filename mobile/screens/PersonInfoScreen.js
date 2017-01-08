@@ -11,6 +11,10 @@ import {
   View,
 } from 'react-native';
 
+import Exponent, {
+  Components
+} from 'exponent';
+
 import { Router } from '../navigation/Router.js';
 
 export default class PersonInfoScreen extends React.Component {
@@ -21,16 +25,22 @@ export default class PersonInfoScreen extends React.Component {
   }
 
   render() {
+    console.log('on personinfo screen', this.props.route.params)
+    var audio = <Text>''</Text>;
+    if (this.props.route.params.person.audio) {
+      audio = <Components.Video source={{uri: this.props.route.params.person.audio}}/>;
+    }
     return (
       <ScrollView contentContainerstyle={styles.contentContainer} style={styles.container}>
         <View style={styles.personInfoContainer}>
           <Text style={styles.personName}>{this.props.route.params.person.name}</Text>
         </View>
+        {audio}
         <View style={styles.personInfoContainer}>
           <Image style={styles.personImage} source={{uri: this.props.route.params.person.photo}} /> 
         </View>
         <View style={styles.personInfoContainer}>
-          <Text style={styles.personInfo}>{this.props.route.params.person.info}</Text>
+          <Text style={styles.personInfo}>{this.props.route.params.person.description}</Text>
         </View>
       </ScrollView>
     );
