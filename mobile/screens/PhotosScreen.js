@@ -68,6 +68,7 @@ async function uploadImageAsync(uri) {
   let date = Date.now();
   let patientId = 1;
   let apiUrl = `http://10.6.21.34:3000/mobile/identify?date=${date}&patientId=${patientId}`;
+
   let uriParts = uri.split('.');
   let fileType = uriParts[uri.length - 1];
 
