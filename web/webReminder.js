@@ -63,6 +63,11 @@ class Reminder extends React.Component {
         }, () => {
           console.log(this.state)
         })
+      } else {
+        this.setState({
+          list: [],
+          current: {time: "", recurring: false, type: '', audio: "", note: "", title: ''}
+        })
       }
     });
   }

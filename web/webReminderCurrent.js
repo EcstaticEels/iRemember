@@ -4,6 +4,7 @@ import {Button} from 'react-bootstrap';
 
 
 var ReminderCurrent = (props) => {
+  console.log(props.current)
   return (
     <div className="reminder-current">
       <h1>{props.current.title}</h1>
