@@ -66,17 +66,8 @@ const styles = StyleSheet.create({
 
 async function uploadImageAsync(uri) {
   let date = Date.now();
-  let apiUrl = `http://10.6.21.34:3000/mobile/identify?${date}`;
-
-  // Note:
-  // Uncomment this if you want to experiment with local server
-  //
-  // if (Constants.isDevice) {
-  //   apiUrl = `https://your-ngrok-subdomain.ngrok.io/upload`;
-  // } else {
-  //   apiUrl = `http://localhost:3000/upload`
-  // }
-
+  let patientId = 1;
+  let apiUrl = `http://10.6.21.34:3000/mobile/identify?date=${date}&patientId=${patientId}`;
   let uriParts = uri.split('.');
   let fileType = uriParts[uri.length - 1];
 

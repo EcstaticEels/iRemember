@@ -96,7 +96,7 @@ module.exports = {
           db.Face.create({
             name: fields.subjectName[0], 
             description: fields.description[0], 
-            photo: '',//should be req.body...?
+            photo: urlArray[0],//should be req.body...?
             audio: '',//should be req.body.audio
             caregiverId: caregiver.get('id'),
             patientId: caregiver.get('patientId'),
@@ -158,8 +158,6 @@ module.exports = {
           db.Face.update(
             { name: fields.subjectName[0],
               description: fields.description[0], 
-              photo: '',//should be req.body...?
-              audio: ''//should be req.body.audio
             },
             { where: {id: face.get('id')}}
           )
