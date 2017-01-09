@@ -7,7 +7,7 @@ import {
 } from 'exponent';
 
 // Example server, implemented in Rails: https://git.io/vKHKv
-const PUSH_ENDPOINT = 'http://10.6.21.34:3000/mobile/pushNotification';
+const PUSH_ENDPOINT = 'http://54.202.107.224:3000/mobile/pushNotification';
 
 export default async function registerForPushNotificationsAsync() {
   // Android remote notification permissions are granted during the app
