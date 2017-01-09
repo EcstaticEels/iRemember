@@ -90,12 +90,12 @@ export default class RootNavigation extends React.Component {
   }
 
   _handleNotification = ({origin, data}) => {
-    var title = Object.getOwnPropertyNames(data);
-    this.props.navigator.showLocalAlert(
-      title + ' : ' + data[title],
-      Alerts.notice
-    );
-  }
+     var title = Object.getOwnPropertyNames(data);
+     this.props.navigator.showLocalAlert(
+       title + ' : ' + data[title],
+       Alerts.notice
+     );
+   }
 }
 
 const styles = StyleSheet.create({
