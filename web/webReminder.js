@@ -178,7 +178,32 @@ class Reminder extends React.Component {
     })
   }
 
+  vaildForm() {
+    if(this.state.date.length !== 16){
+      console.log('Date')
+      return false;
+    }
+    if(this.state.type.length < 2) {
+      console.log('type')
+      return false;
+    }
+    if(this.state.title.length < 1) {
+      console.log('title')
+      return false;
+    }
+    if(this.state.note.length < 1) {
+      console.log('note')
+      return false;
+    }
+    return true;
+  }
+
   submitForm(event) {
+    var vaild = this.vaildForm();
+    console.log(vaild)
+    if(!vaild){
+      return window.alert("Invaild Form");
+    }
     event.preventDefault();
     var that = this;
     var formData = new FormData();

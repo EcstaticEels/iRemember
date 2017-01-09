@@ -18,7 +18,7 @@ import Router from './Router.js'
 
 import Alerts from '../constants/Alerts';
 import Colors from '../constants/Colors';
-import registerForPushNotificationsAsync from '../api/registerForPushNotificationsAsync';
+// import registerForPushNotificationsAsync from '../api/registerForPushNotificationsAsync';
 
 export default class RootNavigation extends React.Component {
   constructor (props) {
@@ -83,15 +83,16 @@ export default class RootNavigation extends React.Component {
     // You can comment the following line out if you want to stop receiving
     // a notification every time you open the app. Check out the source
     // for this function in api/registerForPushNotificationsAsync.js
-    registerForPushNotificationsAsync();
+    // registerForPushNotificationsAsync();
 
     // Watch for incoming notifications
     this._notificationSubscription = Notifications.addListener(this._handleNotification);
   }
 
   _handleNotification = ({origin, data}) => {
+    var title = Object.getOwnPropertyNames(data);
     this.props.navigator.showLocalAlert(
-      `Push notification ${origin} with data: ${JSON.stringify(data)}`,
+      title + ' : ' + data[title],
       Alerts.notice
     );
   }

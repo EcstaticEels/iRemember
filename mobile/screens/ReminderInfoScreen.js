@@ -17,15 +17,23 @@ import Exponent, {
   Components
 } from 'exponent';
 
+import Moment from 'moment'
+
+var images = {
+  medication: 'https://s30.postimg.org/d0nn9k64d/pill_logo1.png',
+  appointment: 'https://s30.postimg.org/q3j9stwcd/appointment_logo3.jpg',
+  other: 'https://s30.postimg.org/i0l3hibr1/reminder_logo.png'
+}
+
 export default class ReminderInfoScreen extends React.Component {
   static route = {
     navigationBar: {
       title: 'Reminders'
     }
   }
-        
-
+  
   render() {
+    console.log(this.props.route.params.reminder.date + ' at ' + this.props.route.params.reminder.time)
     var audio = <Text>''</Text>;
     if (this.props.route.params.reminder.audio) {
       audio = <Components.Video source={{uri: this.props.route.params.reminder.audio}}/>;
@@ -42,10 +50,10 @@ export default class ReminderInfoScreen extends React.Component {
           <Text style={styles.reminderNote}>{this.props.route.params.reminder.note}</Text>
         </View>
         <View style={styles.reminderInfoContainer}>
-          <Image style={styles.reminderImage} source={{uri: 'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQrqidYU7IoDmubY_c9zU9pBGhfVBcJRvcaK6ghytIcCKrK-IAngQ'}} /> 
+          <Image style={styles.reminderImage} source={{uri: images[this.props.route.params.reminder.type || 'other']}} /> 
         </View>
         <View style={styles.reminderInfoContainer}>
-          <Text style={styles.reminderTimeDate}>{this.props.route.params.reminder.date + ' at ' + this.props.route.params.reminder.time}</Text>       
+          <Text style={styles.reminderTimeDate}>{Moment(this.props.route.params.reminder.date).calendar().toString()}</Text>       
         </View>
       </ScrollView>
     );
