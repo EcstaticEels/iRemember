@@ -28,17 +28,45 @@ const uploadPhoto = function(req, cb) {
     const urlArray = [];
     console.log('files', files);
     console.log('fields', fields)
-    if (Object.keys(files).length > 0) {
-      files.file.forEach(function(file) {
-        cloudinary.uploader.upload(file.path, function(result) { 
-          urlArray.push(result.url);
-          if (urlArray.length === files.file.length) {
-            cb(urlArray, fields);
-          }
+    if (Object.keys(files).length > 0) { //if there are files
+      if (files.photo) { //if there are photo files
+        files.photo.forEach(function(file) {
+          cloudinary.uploader.upload(file.path, function(result) { 
+            urlArray.push(result.url);
+            if (urlArray.length === files.photo.length) {
+              if (files.audio) { //if there are also audio files
+                files.audio.forEach(function(file) {
+                  cloudinary.v2.uploader.upload(file.path,
+                    { resource_type: 'raw' },
+                    function(error, result) {
+                      if (error) {  
+                        console.log(error);
+                      }
+                      console.log(result); 
+                      cb(urlArray, result.url, fields);        
+                  });
+                });
+              } else { //if there are no audio files
+                cb(urlArray, null, fields);
+              }
+            }
+          });
         });
-      });
-    } else {
-      cb(null, fields);
+      } else if (files.audio) { //if there is only an audio file
+        files.audio.forEach(function(file) {
+          cloudinary.v2.uploader.upload(file.path,
+            { resource_type: 'raw' },
+            function(error, result) {
+              if (error) {
+                console.log(error);
+              }
+              console.log(result); 
+              cb(null, result.url, fields);        
+          });
+        });
+      }
+    } else { //if there are no files sent
+      cb(null, null, fields);
     }
   });
 };
@@ -72,8 +100,8 @@ const uploadAudio = function(req, cb) {
 
 module.exports = {
   addFace: (req, res) => {
-    uploadPhoto(req, (urlArray, fields) => {
-      console.log(urlArray);
+    uploadPhoto(req, (urlArray, audioUrl, fields) => {
+      console.log(urlArray, audioUrl);
       db.Caregiver.findOne({
         where: {
           id: Number(fields.id[0])
@@ -96,8 +124,8 @@ module.exports = {
           db.Face.create({
             name: fields.subjectName[0], 
             description: fields.description[0], 
-            photo: '',//should be req.body...?
-            audio: '',//should be req.body.audio
+            photo: urlArray[0],//should be req.body...?
+            audio: audioUrl,//should be req.body.audio
             caregiverId: caregiver.get('id'),
             patientId: caregiver.get('patientId'),
             personId: createdPerson.personId
@@ -127,7 +155,7 @@ module.exports = {
                       if (err) {
                         console.log(err);
                       }
-                      res.status(201).send('Person and face successfully added, train API call made');
+                      res.status(201).send(JSON.stringify(face));
                     });
                   }
                 });
@@ -139,7 +167,8 @@ module.exports = {
     });
   },
   updateFace: (req, res) => {
-    uploadPhoto(req, (urlArray, fields) => {
+    console.log('hit updateFace')
+    uploadPhoto(req, (urlArray, audioUrl, fields) => {
       console.log(urlArray);
       let faceId = fields.faceId[0];
       db.Caregiver.findOne({
@@ -155,39 +184,45 @@ module.exports = {
           }
         })
         .then(face => {
-          db.Face.update(
+          let updateObj = audioUrl ? 
             { name: fields.subjectName[0],
-              description: fields.description[0], 
-              photo: '',//should be req.body...?
-              audio: ''//should be req.body.audio
-            },
+              description: fields.description[0],
+              audio: audioUrl}
+            : { name: fields.subjectName[0],
+              description: fields.description[0]};
+          db.Face.update(
+            updateObj,
             { where: {id: face.get('id')}}
           )
           .then(() => {
-            request.post({
-              headers: microsoftHeaders,
-              url: `https://api.projectoxford.ai/face/v1.0/persongroups/${personGroupId}/persons/${face.personId}/persistedFaces`,
-              body: JSON.stringify({"url": urlArray[0]})
-            }, (err, response, body) => {
-                if (err) {
-                  console.log(err);
-                }
-                db.FacePhoto.create({
-                  photo: urlArray[0],
-                  faceId: face.get('id')
-                })
-                .then(() => {
-                  request.post({
-                    headers: microsoftHeaders,
-                    url: `https://api.projectoxford.ai/face/v1.0/persongroups/${personGroupId}/train`,
-                  }, (err, response, body) => {
-                    if (err) {
-                      console.log(err);
-                    }
-                    res.status(201).send('Person and face successfully added, train API call made');
+            if (urlArray) {
+              request.post({
+                headers: microsoftHeaders,
+                url: `https://api.projectoxford.ai/face/v1.0/persongroups/${personGroupId}/persons/${face.personId}/persistedFaces`,
+                body: JSON.stringify({"url": urlArray[0]})
+              }, (err, response, body) => {
+                  if (err) {
+                    console.log(err);
+                  }
+                  db.FacePhoto.create({
+                    photo: urlArray[0],
+                    faceId: face.get('id')
+                  })
+                  .then(() => {
+                    request.post({
+                      headers: microsoftHeaders,
+                      url: `https://api.projectoxford.ai/face/v1.0/persongroups/${personGroupId}/train`,
+                    }, (err, response, body) => {
+                      if (err) {
+                        console.log(err);
+                      }
+                      res.status(201).send('Person and face successfully added, train API call made');
+                    });
                   });
-                });
-            });
+              });
+            } else {
+              res.status(201).send('Person updated');
+            }
           });
         });
       });

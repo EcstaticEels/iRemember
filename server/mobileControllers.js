@@ -1,5 +1,4 @@
 const cloudinary = require('cloudinary');
-// const multiparty = require('multiparty');
 const request = require('request');
 const urlModule = require('url');
 var fs = require('fs');
@@ -14,10 +13,7 @@ const s3 = new aws.S3({
   region: "us-west-1",
 });
 
-// puts file into req.files.file
-
 const db = require('../database/db.js');
-
 const sdk = require('exponent-server-sdk');
 
 //headers for the Microsoft Face API
@@ -35,9 +31,17 @@ cloudinary.config({
 
 module.exports = {
   identifyFace : function(req, res) {
-      console.log('file coming in from mobile', req.file);
-      const date = urlModule.parse(req.url).query;
-      console.log('name of file', date);
+    console.log('file coming in from mobile', req.file);
+    const qParams = urlModule.parse(req.url).query.split('&');
+    const date = qParams[0].slice(5);
+    const patientId = qParams[1].slice(10);
+    console.log('name of file', date, 'patientid ', patientId);
+    db.Patient.findOne({
+      where: {
+        id: Number(patientId)
+      }
+    })
+    .then(patient => {
       const detectParams = {
         "returnFaceId": "true",
         "returnFaceLandmarks": "false"
@@ -54,9 +58,10 @@ module.exports = {
         }
         const parsedDetectBody = JSON.parse(body);
         console.log('detection results', parsedDetectBody);
+        const personGroupId = patient.get('personGroupID');
         if (parsedDetectBody.length === 1) { 
           var bodyForIdentification = {    
-            "personGroupId":"ecstaticeelsforever", 
+            "personGroupId": personGroupId, 
             "faceIds":[
                 parsedDetectBody[0].faceId
             ]
@@ -69,6 +74,7 @@ module.exports = {
             if (err) {
               console.log(err);
             }
+            console.log('identification results', body)
             const parsedIdentifyBody = JSON.parse(body);
             if (parsedIdentifyBody[0].candidates.length === 0) {
               res.status(200).end("We couldn't find this person in the database...")
@@ -84,8 +90,6 @@ module.exports = {
                 res.status(200).send(JSON.stringify(person));
               })
             } else {
-              //if more than one candidate, we can send suggestions of who this person is
-              //or just tell them to take another photo with suggestions
               console.log('we found more than one candidate');
               const findIdentifiedFaces = personId => {
                 return new Promise( (resolve, reject) => {
@@ -104,7 +108,7 @@ module.exports = {
                     }
                     resolve(identifiedPersonObj);
                   });
-                })
+                });
               }
               let promisifiedFindIdentified = parsedIdentifyBody[0].candidates.map(findIdentifiedFaces);
               Promise.all(promisifiedFindIdentified)
@@ -117,16 +121,18 @@ module.exports = {
           res.status(200).end('Please take a new photo with the following suggestions...')
         }
       });
+    });
   },
   retrieveReminders: function(req, res) {
-    var caregiverId = Number(urlModule.parse(req.url).query.slice(12));
-    caregiverId = 1;
+    var patientId = Number(urlModule.parse(req.url).query.slice(10));
+    patientId = 1;
     db.Reminder.findAll({
       where: {
-        caregiverId: caregiverId
+        patientId: patientId
       }
     })
     .then(reminders => {
+      console.log(reminders);
       res.status(200).send(JSON.stringify({reminders: reminders}));
     });
   },

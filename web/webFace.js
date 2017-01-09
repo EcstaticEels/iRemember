@@ -17,7 +17,9 @@ class Face extends React.Component {
       subjectName: '',
       photos: [{}],
       description: '',
-      updatePhotos: ''
+      updatePhotos: '',
+      updateAudio: '',
+      audio: ''
     };
   }
 
@@ -39,21 +41,33 @@ class Face extends React.Component {
     this.getFaces((faces) => {
       if (faces.length > 0) {
         this.setState({list: faces, current: faces[0]}, () => {
-          console.log('face list on state', this.state)
+          console.log('mounted', this.state);
         });
       } else {
         this.setState({
           list: [],
-          current: {subjectName:"", photos:[""], description:""}
-        })
+          current: {subjectName:"", photos:[], description:"", audio: ""}
+        });
       }
     });
   }
 
-  displayForm(bool) {
-    this.setState({
-      showForm: bool
-    });
+  displayForm(bool, editMode) {
+    if (editMode) {
+      this.setState({
+        showForm: bool
+      });
+    } else {
+      this.setState({
+        showForm: bool,
+        subjectName: '',
+        photos: [],
+        description: '',
+        updatePhotos: '',
+        updateAudio: '',
+        audio: ''
+      });
+    }
   }
 
   updateCurrent(current) {
@@ -71,6 +85,12 @@ class Face extends React.Component {
     this.setState(obj);
   }
 
+  getAudio(event){
+    this.setState({
+      updateAudio: event.target.files
+    });
+  }
+
   editModeSwitch(bool) {
     this.setState({
       editMode: bool
@@ -82,16 +102,15 @@ class Face extends React.Component {
     this.setState({
       subjectName: current.subjectName,
       photos: current.photos,
-      description: current.description
-    })
-    this.displayForm(true);
+      description: current.description,
+      audio: current.audio
+    });
+    this.displayForm(true, true);
   }
 
   getPhotos(event){
     this.setState({
       updatePhotos: event.target.files
-    }, function() {
-      console.log('after getPhotos', this.state)
     });
   }
 
@@ -137,7 +156,10 @@ class Face extends React.Component {
       formData.append('faceId', this.state.current.dbId);
     } 
     for (var key in this.state.updatePhotos) {
-      formData.append('file', this.state.updatePhotos[key]);
+      formData.append('photo', this.state.updatePhotos[key]);
+    }
+    for (var key in this.state.updateAudio) {
+      formData.append('audio', this.state.updateAudio[key]);
     }
 
     $.ajax({
@@ -150,10 +172,23 @@ class Face extends React.Component {
         console.log('success', res);
         if (that.state.editMode) {
           that.handleUpdate();
+        } else {
+          var createdId = JSON.parse(res).id;
+          var current;
+          that.getFaces(faces => {
+            for (var i = 0; i < faces.length; i++) {
+              if (faces[i].dbId === createdId) {
+                current = faces[i];
+              }
+            }
+            that.setState({
+              list: faces,
+              current: current
+            });
+          });
         }
         that.editModeSwitch(false);
-        that.displayForm(false);
-        that.componentDidMount();
+        that.displayForm(false, false);
       },
       error: function (err) {
         console.log('error', err);
@@ -170,7 +205,7 @@ class Face extends React.Component {
             <div>
             {
               this.state.showForm ? null :  
-                <Button bsSize="large" className="btn-addNew" bsStyle="primary" onClick={ () => this.displayForm.call(this, true)}>Add New Face</Button>
+                <Button bsSize="large" className="btn-addNew" bsStyle="primary" onClick={ () => this.displayForm.call(this, true, false)}>Add New Face</Button>
             }
             </div>
             <FaceList 
@@ -188,6 +223,8 @@ class Face extends React.Component {
                 getPhotos={this.getPhotos.bind(this)}
                 submitForm={this.submitForm.bind(this)}
                 editMode={this.state.editMode}
+                getAudio={this.getAudio.bind(this)}
+                audio={this.state.audio}
                 subjectName={this.state.subjectName}
                 photos={this.state.photos} 
                 description={this.state.description}/> 

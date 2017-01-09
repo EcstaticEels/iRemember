@@ -1,10 +1,11 @@
 import React from 'react';
 import Moment from 'moment';
 import {Button} from 'react-bootstrap';
-
+import ReactAudioPlayer from 'react-audio-player';
 
 var ReminderCurrent = (props) => {
-  console.log(props.current)
+  var audio = props.current.audio || null;
+  console.log('audio', audio);
   return (
     <div className="reminder-current">
       <h1>{props.current.title}</h1>
@@ -13,7 +14,7 @@ var ReminderCurrent = (props) => {
       <div><h3>Description:</h3>{props.current.note}</div>
       <br/>
       <label><h3>Audio Reminder:</h3>
-        <audio src={props.current.audio} controls></audio>
+        <ReactAudioPlayer src={props.current.audio} />
       </label>
       <br/>
       <Button bsSize='small' className="btn-edit" onClick={props.edit}>Edit</Button>
@@ -23,3 +24,4 @@ var ReminderCurrent = (props) => {
 };
 
 module.exports = ReminderCurrent;
+

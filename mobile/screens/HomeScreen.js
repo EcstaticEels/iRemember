@@ -92,7 +92,7 @@ export default class HomeScreen extends React.Component {
           this.setState({
             notificationToken: token
           })
-          axios.post('http://10.6.19.25:3000/mobile/pushNotification', {
+          axios.post('http://10.6.21.34:3000/mobile/pushNotification', {
             token:  token,
             id: 1,
           })
@@ -161,7 +161,7 @@ export default class HomeScreen extends React.Component {
         return reminder; 
       })
       if(updatedReminders.length > 0) {
-        axios.put('http://10.6.19.25:3000/mobile/reminders', updatedReminders)
+        axios.put('http://10.6.21.34:3000/mobile/reminders', updatedReminders)
         .then(function (response) {
           console.log(response);
         })
@@ -288,8 +288,6 @@ export default class HomeScreen extends React.Component {
             return response.json()
           })
           .then(function (responseJSON) {
-            // console.log(responseJSON.weather[0].main)
-
             responseJSON.weather[0].description = responseJSON.weather[0].description.split('');
 
             responseJSON.weather[0].description[0] = responseJSON.weather[0].description[0].toUpperCase();
@@ -300,51 +298,50 @@ export default class HomeScreen extends React.Component {
               this.setState({
                 weatherDescription: responseJSON.weather[0].description,
                 weatherIcon: weatherIcons.rainy
-              })
+              });
             }
 
             if (responseJSON.weather[0].main === 'Thunderstorm') {
               this.setState({
                 weatherDescription: responseJSON.weather[0].description,
                 weatherIcon: weatherIcons.storm
-              })
+              });
             }
 
             if (responseJSON.weather[0].main === 'Snow') {
               this.setState({
                 weatherDescription: responseJSON.weather[0].description,
                 weatherIcon: weatherIcons.snow
-              })
+              });
             }
 
             if (responseJSON.weather[0].main === 'Clear') {
               this.setState({
                 weatherDescription: responseJSON.weather[0].description,
                 weatherIcon: weatherIcons.sunny
-              })
+              });
             }
 
             if (responseJSON.weather[0].main === 'Atmosphere' || responseJSON.weather[0].main === 'Mist') {
               this.setState({
                 weatherDescription: responseJSON.weather[0].description,
                 weatherIcon: weatherIcons.mist
-              })
+              });
             }
 
             if (responseJSON.weather[0].description === 'Few clouds') {
               this.setState({
                 weatherDescription: responseJSON.weather[0].description,
                 weatherIcon: weatherIcons.partiallyCloudy
-              })
+              });
             }
 
             if (responseJSON.weather[0].description === 'Scattered clouds' || responseJSON.weather[0].description === 'Broken clouds' || responseJSON.weather[0].description === 'Overcast clouds') {
               this.setState({
                 weatherDescription: responseJSON.weather[0].description,
                 weatherIcon: weatherIcons.cloudy
-              })
+              });
             }
-
           }.bind(this))
         }.bind(this))
       } else {
@@ -357,9 +354,9 @@ export default class HomeScreen extends React.Component {
 
   getReminders() {
     var that = this;
-    axios.get('http://10.6.19.25:3000/mobile/reminders', {
+    axios.get('http://10.6.21.34:3000/mobile/reminders', {
       params: {
-        id: 1
+        patientId: 1
       }
     })
       .then((response) => {
