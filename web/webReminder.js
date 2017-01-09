@@ -61,21 +61,35 @@ class Reminder extends React.Component {
           list: reminders,
           current: reminders[0]
         }, () => {
-          console.log(this.state)
-        })
+          console.log('retrieved reminders from server', this.state)
+        });
       } else {
         this.setState({
           list: [],
           current: {time: "", recurring: false, type: '', audio: "", note: "", title: ''}
-        })
+        });
       }
     });
   }
 
-  displayForm(bool) {
-    this.setState({
-      showForm: bool
-    });
+  displayForm(bool, editMode) {
+    if (editMode) {
+      this.setState({
+        showForm: bool
+      });
+    } else {
+      this.setState({
+        showForm: bool,
+        date: '',
+        type: 'medication',
+        recurring: false,
+        note: '',
+        img: '',
+        title: '',
+        updateAudio: '',
+        audio: ''
+      });
+    }
   }
 
   updateCurrent(current) {
@@ -106,8 +120,6 @@ class Reminder extends React.Component {
   getAudio(event){
     this.setState({
       updateAudio: event.target.files
-    }, function() {
-      console.log(this.state)
     });
   }
 
@@ -116,9 +128,7 @@ class Reminder extends React.Component {
     var value = event.target.value;
     var obj = {};
     obj[key] = value;
-    this.setState(obj, () => {
-      console.log(this.state)
-    });
+    this.setState(obj);
   }
 
   getBoolean(event) {
@@ -148,7 +158,7 @@ class Reminder extends React.Component {
       title: current.title,
       audio: current.audio
     });
-    this.displayForm(true);
+    this.displayForm(true, true);
   }
 
   delete() {
@@ -170,15 +180,12 @@ class Reminder extends React.Component {
 
   vaildForm() {
     if(this.state.date.length !== 16){
-      console.log('Date')
       return false;
     }
     if(this.state.type.length < 2) {
-      console.log('type')
       return false;
     }
     if(this.state.title.length < 1) {
-      console.log('title')
       return false;
     }
     if(this.state.note.length < 1) {
@@ -190,7 +197,6 @@ class Reminder extends React.Component {
 
   submitForm(event) {
     var vaild = this.vaildForm();
-    console.log(vaild)
     if(!vaild){
       return window.alert("Invaild Form");
     }
@@ -237,7 +243,7 @@ class Reminder extends React.Component {
           });
         }
         that.editModeSwitch(false);
-        that.displayForm(false);
+        that.displayForm(false, false);
       },
       error: function(err) {
         console.log('error', err);
@@ -252,8 +258,8 @@ class Reminder extends React.Component {
           <Col xs={12} md={4}>
             <div className="reminder">
               <div>
-                {this.state.showForm? null : 
-                  <Button bsSize="large" className="btn-addNew" bsStyle="primary" onClick={() => this.displayForm.call(this, true)}>Add New Reminder</Button>}
+                {this.state.showForm ? null : 
+                  <Button bsSize="large" className="btn-addNew" bsStyle="primary" onClick={() => this.displayForm.call(this, true, false)}>Add New Reminder</Button>}
               </div>
               <ReminderList list={this.state.list} getInput={this.getInput.bind(this)} updateCurrent={this.updateCurrent.bind(this)}/>
             </div>

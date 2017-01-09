@@ -35,9 +35,9 @@ class Gallery extends React.Component {
           <button className='button' onClick={this.next}>Next</button>
         </div>
         <div>
-          <Slider {...settings} ref={c => this.slider = c }>{
-            this.props.photos.map((photoObj, ind) => <img className='gallery-photo' src={photoObj.photo} key={ind}/>)
-          }</Slider>
+          <Slider {...settings} ref={c => this.slider = c }>
+          {this.props.photos.map((photoObj, ind) => <img className='gallery-photo' src={photoObj.photo} key={ind} />)}
+          </Slider>
         </div>
       </div>
     );
