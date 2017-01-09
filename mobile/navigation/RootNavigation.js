@@ -83,7 +83,7 @@ export default class RootNavigation extends React.Component {
     // You can comment the following line out if you want to stop receiving
     // a notification every time you open the app. Check out the source
     // for this function in api/registerForPushNotificationsAsync.js
-    registerForPushNotificationsAsync();
+    // registerForPushNotificationsAsync();
 
     // Watch for incoming notifications
     this._notificationSubscription = Notifications.addListener(this._handleNotification);
