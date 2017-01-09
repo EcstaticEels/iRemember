@@ -92,7 +92,7 @@ export default class HomeScreen extends React.Component {
           this.setState({
             notificationToken: token
           })
-          axios.post('http://10.6.19.25:3000/mobile/pushNotification', {
+          axios.post('http://10.6.21.34:3000/mobile/pushNotification', {
             token:  token,
             id: 1,
           })
@@ -161,7 +161,7 @@ export default class HomeScreen extends React.Component {
         return reminder; 
       })
       if(updatedReminders.length > 0) {
-        axios.put('http://10.6.19.25:3000/mobile/reminders', updatedReminders)
+        axios.put('http://10.6.21.34:3000/mobile/reminders', updatedReminders)
         .then(function (response) {
           console.log(response);
         })
@@ -354,7 +354,7 @@ export default class HomeScreen extends React.Component {
 
   getReminders() {
     var that = this;
-    axios.get('http://10.6.19.25:3000/mobile/reminders', {
+    axios.get('http://10.6.21.34:3000/mobile/reminders', {
       params: {
         patientId: 1
       }
