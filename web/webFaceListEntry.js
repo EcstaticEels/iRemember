@@ -7,7 +7,7 @@ var FaceEntry = (props) => {
     props.updateCurrent(props.data);
   };
 
-  var photoView = props.data.photos.length > 0 ? <img src={props.data.photos[0].photo} height="100" width="100"/> : null;
+  var photoView = props.data.photos.length > 0 ? <img src={props.data.photos[0].photo} className='facePic'/> : null;
 
   return (
     <Grid>

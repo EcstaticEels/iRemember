@@ -25,7 +25,7 @@ class AppContainer extends React.Component {
 
   componentWillMount() {
     this._loadAssetsAsync();
-    console.ignoredYellowBox = ['Warning: You passed a non-serializable value as route parameters.', 'source.uri should not be an empty string', 'Warning: In next release empty section headers will be rendered.'];
+    console.ignoredYellowBox = ['Warning: You passed a non-serializable value as route parameters.', 'Possible Unhandled Promise Rejection', 'source.uri should not be an empty string', 'Warning: In next release empty section headers will be rendered.'];
   }
 
   async _loadAssetsAsync() {

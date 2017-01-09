@@ -132,6 +132,7 @@ module.exports = {
       }
     })
     .then(reminders => {
+      console.log(reminders);
       res.status(200).send(JSON.stringify({reminders: reminders}));
     });
   },
