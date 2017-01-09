@@ -136,7 +136,6 @@ module.exports = {
     });
   },
   updateReminders: (req, res) => {
-    console.log(req)
     req.body.forEach((reminder) => {
       console.log('updating reminder', reminder)
       db.Reminder.update(
@@ -149,17 +148,24 @@ module.exports = {
     })
     res.status(200).send('database updated')
   },
+  addToken: (req, res) => {
+    db.Caregiver.update({token: req.body.token},{ where: { id: req.body.id}})
+    .then(() => {
+      res.status(200).send('Token added!');
+    })
+  },
   addPushNotification: function(req, res) {
+    console.log(req.body)
 
     // let isPushToken = sdk.isExponentPushToken(somePushToken);
  
     // To send a push notification 
     // (async function () {
-      sdk.sendPushNotificationAsync({
-        exponentPushToken: req.body.token, // The push token for the app user you want to send the notification to 
-        message: "This is a test notification",
-        data: {withSome: 'data'},
-      });
+    // sdk.sendPushNotificationAsync({
+    //   exponentPushToken: req.body.token, // The push token for the app user you want to send the notification to 
+    //   message: "This is a test notification",
+    //   data: {withSome: 'data'},
+    // });
     // })();
     res.send('got it')
   }
