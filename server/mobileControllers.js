@@ -150,16 +150,17 @@ module.exports = {
     })
   },
   addPushNotification: function(req, res) {
+    console.log(req.body)
 
     // let isPushToken = sdk.isExponentPushToken(somePushToken);
  
     // To send a push notification 
     // (async function () {
-    sdk.sendPushNotificationAsync({
-      exponentPushToken: req.body.token, // The push token for the app user you want to send the notification to 
-      message: "This is a test notification",
-      data: {withSome: 'data'},
-    });
+    // sdk.sendPushNotificationAsync({
+    //   exponentPushToken: req.body.token, // The push token for the app user you want to send the notification to 
+    //   message: "This is a test notification",
+    //   data: {withSome: 'data'},
+    // });
     // })();
     res.send('got it')
   }

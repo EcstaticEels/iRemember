@@ -58,17 +58,19 @@ export default class HomeScreen extends React.Component {
     this.weather();
     if(!this.state.notificationToken) this.allowPushNotification();
     this.getReminders();
-    setInterval(() => {that.polling()}, 60000);
+    console.log(this.props.navigator)
+    setInterval(() => {that.polling()}, 10000);
   }
 
   componentWillMount() {
+    // Exponent.Notifications.cancelAllScheduledNotificationsAsync()
     // registerForPushNotificationsAsync();
 
     // Handle notifications that are received or selected while the app
     // is open
-    this._notificationSubscription = DeviceEventEmitter.addListener(
-      'Exponent.Notification', this._handleNotification
-    );
+    // this._notificationSubscription = DeviceEventEmitter.addListener(
+    //   'Exponent.Notification', this._handleNotification
+    // );
 
     // Handle notifications that are received or selected while the app
     // is closed, and selected in order to open the app
@@ -77,8 +79,7 @@ export default class HomeScreen extends React.Component {
     // }
 
     // _handleNotification = (notification) => {
-    //   console.log(notification)
-    //   // this.setState({notificationData: notification})
+    //   console.log('notification!!', notification)
     // };
   };
 
@@ -159,13 +160,15 @@ export default class HomeScreen extends React.Component {
       updatedReminders = updatedReminders.filter((reminder) => {
         return reminder; 
       })
-      axios.put('http://10.6.19.25:3000/mobile/reminders', updatedReminders)
-      .then(function (response) {
-        console.log(response);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+      if(updatedReminders.length > 0) {
+        axios.put('http://10.6.19.25:3000/mobile/reminders', updatedReminders)
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+      }
     })
     .catch(error => {
       console.log('error in promise.all');
@@ -381,6 +384,7 @@ export default class HomeScreen extends React.Component {
         <ScrollView
           style={styles.container}
           contentContainerStyle={styles.contentContainer}>
+         
 
           <View style={styles.homepageContentContainer}>
             <Text style={styles.timeText}>
