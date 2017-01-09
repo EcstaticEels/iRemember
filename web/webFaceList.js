@@ -5,7 +5,7 @@ import {ListGroup, ListGroupItem} from 'react-bootstrap';
 var FaceList = (props) => (
   <div className="face-list">
     <ListGroup bsClass="list-group">
-    {props.list.map((val, ind) => <ListGroupItem key={ind}><FaceEntry data={val} key={ind} updateCurrent={props.updateCurrent}/></ListGroupItem>)}
+    {props.list.length > 0 ? props.list.map((val, ind) => <ListGroupItem key={ind}><FaceEntry data={val} key={ind} updateCurrent={props.updateCurrent}/></ListGroupItem>) : null}
     </ListGroup>
   </div>
 );
