@@ -18,7 +18,7 @@ import Router from './Router.js'
 
 import Alerts from '../constants/Alerts';
 import Colors from '../constants/Colors';
-import registerForPushNotificationsAsync from '../api/registerForPushNotificationsAsync';
+// import registerForPushNotificationsAsync from '../api/registerForPushNotificationsAsync';
 
 export default class RootNavigation extends React.Component {
   constructor (props) {
@@ -90,8 +90,9 @@ export default class RootNavigation extends React.Component {
   }
 
   _handleNotification = ({origin, data}) => {
+    var title = Object.getOwnPropertyNames(data);
     this.props.navigator.showLocalAlert(
-      `Push notification ${origin} with data: ${JSON.stringify(data)}`,
+      title + ' : ' + data[title],
       Alerts.notice
     );
   }
