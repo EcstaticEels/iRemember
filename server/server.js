@@ -60,7 +60,7 @@ app.post('/mobile/identify', upload.single('picture'), mobileControllers.identif
 app.put('mobile/token', mobileControllers.addToken);
 app.get('/mobile/reminders', mobileControllers.retrieveReminders);
 app.put('/mobile/reminders', mobileControllers.updateReminders);
-app.post('/mobile/pushNotification', mobileControllers.addPushNotification);
+// app.post('/mobile/pushNotification', mobileControllers.addPushNotification);
 
 //Configure express to serve index.html at every other route that comes to server
 app.get('*', function (req, res) {
