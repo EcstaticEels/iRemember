@@ -7,7 +7,7 @@ import {
 } from 'exponent';
 
 // Example server, implemented in Rails: https://git.io/vKHKv
-const PUSH_ENDPOINT = 'https://exponent-push-server.herokuapp.com/tokens';
+const PUSH_ENDPOINT = 'http://10.6.19.25:3000/mobile/pushNotification';
 
 export default async function registerForPushNotificationsAsync() {
   // Android remote notification permissions are granted during the app
@@ -30,9 +30,8 @@ export default async function registerForPushNotificationsAsync() {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      token: {
-        value: token,
-       },
+      token: token,
+      id: 1
     }),
   });
 }
