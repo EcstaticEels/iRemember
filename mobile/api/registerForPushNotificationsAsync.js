@@ -7,6 +7,7 @@ import {
 } from 'exponent';
 
 // Example server, implemented in Rails: https://git.io/vKHKv
+
 const PUSH_ENDPOINT = 'http://10.6.19.25:3000/mobile/pushNotification';
 
 export default async function registerForPushNotificationsAsync() {
