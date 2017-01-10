@@ -132,9 +132,11 @@ class Face extends React.Component {
 
   vaildForm() {
     if(this.state.subjectName.length < 3){
+      console.log('name')
       return false;
     }
-    if(this.state.updatePhotos.length < 1) {
+    if(!this.state.editMode && this.state.updatePhotos.length < 1) {
+      console.log('photo')
       return false;
     }
     return true;
