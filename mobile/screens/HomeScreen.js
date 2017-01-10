@@ -21,7 +21,11 @@ import { MonoText } from '../components/StyledText';
 
 import weatherIcons from '../assets/images/weatherIcons.js';
 
-import moment from 'moment'
+import moment from 'moment';
+
+import ipAdress from '../ip.js';
+
+var baseUrl = 'http://' + ipAdress;
 
 // import registerForPushNotificationsAsync from 'registerForPushNotificationsAsync';
 
@@ -34,10 +38,6 @@ export default class HomeScreen extends React.Component {
       currentLatitude: '',
       currentLongitude: '',
       dateTime: {
-        weekDay: '',
-        month: '',
-        monthDay: '',
-        year: '',
         time: '',
         dayNight: ''
       }
@@ -57,6 +57,7 @@ export default class HomeScreen extends React.Component {
     this.time();
     this.weather();
     if(!this.state.notificationToken) this.allowPushNotification();
+    console.log('getting here?')
     this.getReminders();
     console.log(this.props.navigator)
     setInterval(() => {that.polling()}, 10000);
@@ -91,8 +92,9 @@ export default class HomeScreen extends React.Component {
         .then((token) => {
           this.setState({
             notificationToken: token
-          })
-          axios.post('http://54.202.107.224:3000/mobile/pushNotification', {
+          });
+
+          axios.post(baseUrl + '/mobile/pushNotification', {
             token:  token,
             id: 1,
           })
@@ -116,7 +118,7 @@ export default class HomeScreen extends React.Component {
           console.log('this reminder', reminder.registered)
           var localNotification = {
             title: reminder.title,
-            body: reminder.note,
+            body: reminder.note || ' ',
             data: {[reminder.title]: reminder.note},
             ios: {
               sound: true
@@ -161,7 +163,7 @@ export default class HomeScreen extends React.Component {
         return reminder; 
       })
       if(updatedReminders.length > 0) {
-        axios.put('http://54.202.107.224:3000/mobile/reminders', updatedReminders)
+        axios.put(baseUrl + '/mobile/reminders', updatedReminders)
         .then(function (response) {
           console.log(response);
         })
@@ -210,39 +212,7 @@ export default class HomeScreen extends React.Component {
   time() {
     var date = new Date();
 
-    var weekday = new Array(7);
-    weekday[0] =  "Sunday";
-    weekday[1] = "Monday";
-    weekday[2] = "Tuesday";
-    weekday[3] = "Wednesday";
-    weekday[4] = "Thursday";
-    weekday[5] = "Friday";
-    weekday[6] = "Saturday";
-
-    var weekDay = weekday[date.getDay()];
-
-    var monthArr = new Array(12);
-    monthArr[0] = "January";
-    monthArr[1] = "February";
-    monthArr[2] = "March";
-    monthArr[3] = "April";
-    monthArr[4] = "May";
-    monthArr[5] = "June";
-    monthArr[6] = "July";
-    monthArr[7] = "August";
-    monthArr[8] = "September";
-    monthArr[9] = "October";
-    monthArr[10] = "November";
-    monthArr[11] = "December";
-    var month = monthArr[date.getMonth()];
-
-    var monthDay = date.getDate();
-
-    var year = date.getFullYear();
-
     var hours = date.getHours();
-
-    var minutes = date.getMinutes();
 
     if (hours > 18) {
       var dayNight = 'night';
@@ -250,24 +220,9 @@ export default class HomeScreen extends React.Component {
       var dayNight = 'day';
     }
 
-    if (minutes < 10) {
-      minutes = '0' + minutes;
-    }
-
-    if (hours > 12) {
-      minutes += ' P.M.';
-      hours -= 12;
-    } else {
-      minutes += ' A.M.'
-    }
-
 
     this.setState({dateTime: {
-      weekDay: weekDay,
-      month: month,
-      monthDay: monthDay,
-      year: year,
-      time: hours + ':' + minutes,
+      time: moment().format('LT'),
       dayNight: dayNight
     }});
   }
@@ -354,7 +309,8 @@ export default class HomeScreen extends React.Component {
 
   getReminders() {
     var that = this;
-    axios.get('http://54.202.107.224:3000/mobile/reminders', {
+    console.log('getting reminders', baseUrl + '/mobile/reminders')
+    axios.get(baseUrl + '/mobile/reminders', {
       params: {
         patientId: 1
       }
@@ -395,9 +351,7 @@ export default class HomeScreen extends React.Component {
             </Text>
           </View>
           <View style={styles.homepageContentContainer}>
-            <Text style={styles.dateText}>
-              {this.state.dateTime.weekDay + ', ' + this.state.dateTime.month + ' ' + this.state.dateTime.monthDay + ' ' + this.state.dateTime.year} 
-            </Text>
+            <Text style={styles.dateText}>{moment().format('dddd, MMMM DD YYYY')}</Text>
           </View>
 
           <View style={styles.homepageContentContainer}>

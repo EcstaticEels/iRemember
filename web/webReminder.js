@@ -182,14 +182,7 @@ class Reminder extends React.Component {
     if(this.state.date.length !== 16){
       return false;
     }
-    if(this.state.type.length < 2) {
-      return false;
-    }
     if(this.state.title.length < 1) {
-      return false;
-    }
-    if(this.state.note.length < 1) {
-      console.log('note')
       return false;
     }
     return true;

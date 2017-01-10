@@ -3,6 +3,7 @@ const express = require('express');
 const app = express();
 var path = require('path');
 
+//HTTP request
 var axios = require('axios');
 
 //Database
@@ -14,6 +15,9 @@ const morgan = require('morgan');
 app.use(bodyParser.urlencoded({ extended: true}));
 app.use(bodyParser.json());
 app.use(morgan('dev'));
+
+//Environment variables
+require('dotenv').config();
 
 const aws = require('aws-sdk')
 const multer = require('multer')
