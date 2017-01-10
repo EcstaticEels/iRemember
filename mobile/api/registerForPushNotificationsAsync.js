@@ -10,7 +10,7 @@ import {
 
 import ipAdress from '../ip.js';
 
-var baseUrl = 'http://' + ipAdress;
+var baseUrl = 'http://' + ipAddress;
 
 export default async function registerForPushNotificationsAsync() {
   // Android remote notification permissions are granted during the app

@@ -23,9 +23,9 @@ import weatherIcons from '../assets/images/weatherIcons.js';
 
 import moment from 'moment';
 
-import ipAdress from '../ip.js';
+import ipAddress from '../ip.js';
 
-var baseUrl = 'http://' + ipAdress;
+var baseUrl = 'http://' + ipAddress;
 
 // import registerForPushNotificationsAsync from 'registerForPushNotificationsAsync';
 
