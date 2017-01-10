@@ -23,6 +23,8 @@ import weatherIcons from '../assets/images/weatherIcons.js';
 
 import moment from 'moment'
 
+var ip = 'http://' + process.env.IP_ADDRESS;
+
 // import registerForPushNotificationsAsync from 'registerForPushNotificationsAsync';
 
 export default class HomeScreen extends React.Component {
@@ -57,6 +59,7 @@ export default class HomeScreen extends React.Component {
     this.time();
     this.weather();
     if(!this.state.notificationToken) this.allowPushNotification();
+    console.log('getting here?')
     this.getReminders();
     console.log(this.props.navigator)
     setInterval(() => {that.polling()}, 10000);
@@ -91,12 +94,9 @@ export default class HomeScreen extends React.Component {
         .then((token) => {
           this.setState({
             notificationToken: token
-          })
-<<<<<<< HEAD
-          axios.post('http://10.6.19.25:3000/mobile/pushNotification', {
-=======
-          axios.post('http://54.202.107.224:3000/mobile/pushNotification', {
->>>>>>> upstream/master
+          });
+
+          axios.post(ip + '/mobile/pushNotification', {
             token:  token,
             id: 1,
           })
@@ -165,11 +165,7 @@ export default class HomeScreen extends React.Component {
         return reminder; 
       })
       if(updatedReminders.length > 0) {
-<<<<<<< HEAD
-        axios.put('http://10.6.19.25:3000/mobile/reminders', updatedReminders)
-=======
-        axios.put('http://54.202.107.224:3000/mobile/reminders', updatedReminders)
->>>>>>> upstream/master
+        axios.put(ip + '/mobile/reminders', updatedReminders)
         .then(function (response) {
           console.log(response);
         })
@@ -362,11 +358,8 @@ export default class HomeScreen extends React.Component {
 
   getReminders() {
     var that = this;
-<<<<<<< HEAD
-    axios.get('http://10.6.19.25:3000/mobile/reminders', {
-=======
-    axios.get('http://54.202.107.224:3000/mobile/reminders', {
->>>>>>> upstream/master
+    console.log('getting reminders', ip + '/mobile/reminders')
+    axios.get(ip + '/mobile/reminders', {
       params: {
         patientId: 1
       }

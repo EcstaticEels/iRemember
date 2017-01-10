@@ -8,7 +8,7 @@ import {
 
 // Example server, implemented in Rails: https://git.io/vKHKv
 
-const PUSH_ENDPOINT = 'http://10.6.19.25:3000/mobile/pushNotification';
+var ip = 'http://' + process.env.IP_ADDRESS;
 
 export default async function registerForPushNotificationsAsync() {
   // Android remote notification permissions are granted during the app
@@ -24,7 +24,7 @@ export default async function registerForPushNotificationsAsync() {
   let token = await Notifications.getExponentPushTokenAsync();
 
   // POST the token to our backend so we can use it to send pushes from there
-  return fetch(PUSH_ENDPOINT, {
+  return fetch(ip + '/mobile/pushNotification', {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
