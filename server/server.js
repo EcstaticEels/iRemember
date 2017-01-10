@@ -1,9 +1,8 @@
 //Basic server
 const express = require('express');
 const app = express();
-var path = require('path');
-
-var axios = require('axios');
+const path = require('path');
+const axios = require('axios');
 
 //Database
 const db = require('../database/db.js');
@@ -11,14 +10,14 @@ const db = require('../database/db.js');
 //Middleware
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
+const aws = require('aws-sdk')
+const multer = require('multer')
+const multerS3 = require('multer-s3')
 app.use(bodyParser.urlencoded({ extended: true}));
 app.use(bodyParser.json());
 app.use(morgan('dev'));
 
-const aws = require('aws-sdk')
-const multer = require('multer')
-const multerS3 = require('multer-s3')
-
+//Amazon S3 uploader middleware
 const s3 = new aws.S3({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
@@ -55,12 +54,16 @@ app.post('/web/reminders', webControllers.addReminder);
 app.get('/web/reminders', webControllers.retrieveReminders);
 app.put('/web/reminders', webControllers.updateReminder);
 app.delete('/web/reminders', webControllers.deleteReminder);
+
 //Mobile
 app.post('/mobile/identify', upload.single('picture'), mobileControllers.identifyFace);
 app.put('mobile/token', mobileControllers.addToken);
 app.get('/mobile/reminders', mobileControllers.retrieveReminders);
 app.put('/mobile/reminders', mobileControllers.updateReminders);
 app.post('/mobile/pushNotification', mobileControllers.addPushNotification);
+
+//Authentication
+app.post('/login', passport.authenticate(''))
 
 //Configure express to serve index.html at every other route that comes to server
 app.get('*', function (req, res) {
