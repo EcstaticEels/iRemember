@@ -7,7 +7,10 @@ import {
 } from 'exponent';
 
 // Example server, implemented in Rails: https://git.io/vKHKv
-const PUSH_ENDPOINT = 'http://54.202.107.224:3000/mobile/pushNotification';
+
+import ipAdress from '../ip.js';
+
+var baseUrl = 'http://' + ipAdress;
 
 export default async function registerForPushNotificationsAsync() {
   // Android remote notification permissions are granted during the app
@@ -23,7 +26,7 @@ export default async function registerForPushNotificationsAsync() {
   let token = await Notifications.getExponentPushTokenAsync();
 
   // POST the token to our backend so we can use it to send pushes from there
-  return fetch(PUSH_ENDPOINT, {
+  return fetch(baseUrl + '/mobile/pushNotification', {
     method: 'POST',
     headers: {
       'Accept': 'application/json',

@@ -14,11 +14,11 @@ import {
 import {
   FontAwesome,
 } from '@exponent/vector-icons';
-import Router from './Router.js'
 
+import Router from './Router.js';
 import Alerts from '../constants/Alerts';
 import Colors from '../constants/Colors';
-// import registerForPushNotificationsAsync from '../api/registerForPushNotificationsAsync';
+import registerForPushNotificationsAsync from '../api/registerForPushNotificationsAsync';
 
 export default class RootNavigation extends React.Component {
   constructor (props) {
@@ -50,7 +50,7 @@ export default class RootNavigation extends React.Component {
         <TabNavigationItem
           id="home"
           renderIcon={isSelected => this._renderIcon('home', isSelected)}>
-          <StackNavigation initialRoute={Router.getRoute('home', {reminders: this.state.reminders, updateReminders:this.updateReminders.bind(this) })}/>
+          <StackNavigation initialRoute={Router.getRoute('home', {reminders: this.state.reminders, updateReminders:this.updateReminders.bind(this)})}/>
         </TabNavigationItem>
 
         <TabNavigationItem
@@ -83,7 +83,7 @@ export default class RootNavigation extends React.Component {
     // You can comment the following line out if you want to stop receiving
     // a notification every time you open the app. Check out the source
     // for this function in api/registerForPushNotificationsAsync.js
-    // registerForPushNotificationsAsync();
+    registerForPushNotificationsAsync();
 
     // Watch for incoming notifications
     this._notificationSubscription = Notifications.addListener(this._handleNotification);

@@ -1,8 +1,15 @@
 //Basic server
 const express = require('express');
 const app = express();
+<<<<<<< HEAD
 const path = require('path');
 const axios = require('axios');
+=======
+var path = require('path');
+
+//HTTP request
+var axios = require('axios');
+>>>>>>> upstream/master
 
 //Database
 const db = require('../database/db.js');
@@ -10,6 +17,16 @@ const db = require('../database/db.js');
 //Middleware
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
+<<<<<<< HEAD
+=======
+app.use(bodyParser.urlencoded({ extended: true}));
+app.use(bodyParser.json());
+app.use(morgan('dev'));
+
+//Environment variables
+require('dotenv').config();
+
+>>>>>>> upstream/master
 const aws = require('aws-sdk')
 const multer = require('multer')
 const multerS3 = require('multer-s3')
