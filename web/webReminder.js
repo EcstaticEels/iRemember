@@ -196,8 +196,8 @@ class Reminder extends React.Component {
     event.preventDefault();
     var that = this;
     var formData = new FormData();
-    formData.append('id', this.props.id);
-    formData.append('name', this.props.name);
+    formData.append('id', this.props.caregiverId);
+    formData.append('name', this.props.caregiverName);
     formData.append('date', this.state.date);
     formData.append('recurring', this.state.recurring);
     formData.append('type', this.state.type);
