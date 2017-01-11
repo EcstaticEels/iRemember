@@ -11,6 +11,7 @@ var ReminderCurrent = (props) => {
       <h1>{props.current.title}</h1>
       <img src={props.current.img} height="200" width="200"/>
       <div><h3>Time:</h3>{Moment(props.current.date).calendar().toString()}</div>
+      <div><h3>RecurringDays:</h3>{props.current.recurringDays}</div>
       <div><h3>Description:</h3>{props.current.note}</div>
       <br/>
       <label><h3>Audio Reminder:</h3>
