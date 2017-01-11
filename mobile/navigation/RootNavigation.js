@@ -3,7 +3,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import * as Exponent from 'exponent';
+import {Notifications, ImagePicker} from 'exponent';
 import {
   StackNavigation,
   TabNavigation,
