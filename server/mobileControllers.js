@@ -31,7 +31,8 @@ cloudinary.config({
 
 module.exports = {
   identifyFace : function(req, res) {
-    console.log('file coming in from mobile', req.file);
+    console.log('REQ INCOMING', req)
+    // console.log('file coming in from mobile', req.file);
     const qParams = urlModule.parse(req.url).query.split('&');
     const date = qParams[0].slice(5);
     const patientId = qParams[1].slice(10);
@@ -118,13 +119,14 @@ module.exports = {
             }
           });
         } else { //no faces detected in the photo
-          res.status(200).end('Please take a new photo with the following suggestions...')
+          console.log('HIT ELSE BLOCK')
+          res.sendStatus(404)
         }
       });
     });
   },
   loginFace : function(req, res) {
-    console.log('file coming in from mobile', req.file);
+    // console.log('file coming in from mobile', req.file);
     const qParams = urlModule.parse(req.url).query.split('&');
     const date = qParams[0].slice(5);
     console.log('name of file', date);
@@ -204,8 +206,8 @@ module.exports = {
           }
         });
       } else { //no faces detected in the photo
-        res.status(200).end('Please take a new photo with the following suggestions...')
-      }
+          console.log('HIT ELSE BLOCK')
+          res.sendStatus(404)      }
     });
   },
   retrieveReminders: function(req, res) {
