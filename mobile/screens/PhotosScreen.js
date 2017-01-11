@@ -17,6 +17,10 @@ import axios from 'axios';
 
 import Router from '../navigation/Router.js';
 
+import ipAdress from '../ip.js';
+
+var baseUrl = 'http://' + ipAdress;
+
 export default class PhotosScreen extends React.Component {
 
   constructor (props) {
@@ -67,7 +71,7 @@ const styles = StyleSheet.create({
 async function uploadImageAsync(uri) {
   let date = Date.now();
   let patientId = 1;
-  let apiUrl = `http://54.202.107.224:3000/mobile/identify?date=${date}&patientId=${patientId}`;
+  let apiUrl = `${baseUrl}/mobile/identify?date=${date}&patientId=${patientId}`;
 
   let uriParts = uri.split('.');
   let fileType = uriParts[uri.length - 1];
