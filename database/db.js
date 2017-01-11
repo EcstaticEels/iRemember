@@ -46,6 +46,7 @@ const Reminder = sequelizeDb.define('reminder', {
   },
   registered: {
     type: Sequelize.BOOLEAN,
+    allowNull: true,
     defaultValue: false
   },
   audio: Sequelize.STRING,

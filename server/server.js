@@ -64,6 +64,7 @@ app.post('/mobile/identify', upload.single('picture'), mobileControllers.identif
 app.put('mobile/token', mobileControllers.addToken);
 app.get('/mobile/reminders', mobileControllers.retrieveReminders);
 app.put('/mobile/reminders', mobileControllers.updateReminders);
+app.delete('/mobile/reminders', mobileControllers.deleteReminders);
 app.post('/mobile/pushNotification', mobileControllers.addPushNotification);
 
 //Configure express to serve index.html at every other route that comes to server
