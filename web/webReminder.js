@@ -17,6 +17,15 @@ class Reminder extends React.Component {
       date: '',
       type: 'medication',
       recurring: false,
+      selectedDays: {
+        Monday: false,
+        Tuesday: false,
+        Wednesday: false,
+        Thursday: false,
+        Friday: false,
+        Saturday: false,
+        Sunday: false
+      },
       note: '',
       img: '',
       title: '',
@@ -26,6 +35,7 @@ class Reminder extends React.Component {
   }
 
   getReminders(func) {
+    var that = this
     var mapIcons = (type) => {
       if (type === 'medication') {
         return '/pill_logo1.jpg';
@@ -44,6 +54,7 @@ class Reminder extends React.Component {
         reminders.forEach(function(reminder) {
           reminder.date = reminder.date.slice(0, 16);
           reminder.img = mapIcons(reminder.type);
+          reminder.selectedDays = that.recurringDaysToObj(reminder.recurringDays);
           return reminder;
         });
         func(reminders);
@@ -66,7 +77,22 @@ class Reminder extends React.Component {
       } else {
         this.setState({
           list: [],
-          current: {time: "", recurring: false, type: '', audio: "", note: "", title: ''}
+          current: {
+            time: "", 
+            recurring: false, 
+            selectedDays: {
+              Monday: false,
+              Tuesday: false,
+              Wednesday: false,
+              Thursday: false,
+              Friday: false,
+              Saturday: false,
+              Sunday: false
+            }, 
+            type: '', 
+            audio: '', 
+            note: '', 
+            title: ''}
         });
       }
     });
@@ -139,6 +165,36 @@ class Reminder extends React.Component {
     this.setState(obj);
   }
 
+  getSelectedDay(event){
+    var selectedDays = this.state.selectedDays;
+    var key = event.target.getAttribute('id');
+    var value = !selectedDays[key];
+    selectedDays[key] = value;
+    this.setState({
+      selectedDays: selectedDays
+    });
+  }
+
+  selectedDaysToArray(obj) {
+    var recurringDays = [];
+    for(var day in obj){
+      if(obj[day]){
+        recurringDays.push(day);
+      }
+    }
+    return recurringDays;
+  }
+
+  recurringDaysToObj(str) {
+    var arr = str.split(',');
+    var selectedDays = {};
+    var daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    daysOfWeek.forEach((day) => {
+      selectedDays[day] = arr.indexOf(day) === -1 ? false : true;
+    })
+    return selectedDays;
+  }
+
   editModeSwitch(bool) {
     this.setState({
       editMode: bool
@@ -151,6 +207,7 @@ class Reminder extends React.Component {
     this.setState({
       date: current.date,
       recurring: current.recurring,
+      selectedDays: current.selectedDays,
       type: current.type,
       note: current.note,
       reminderId: current.id,
@@ -194,12 +251,16 @@ class Reminder extends React.Component {
       return window.alert("Invaild Form");
     }
     event.preventDefault();
+    if(this.state.recurring){
+      var recurringDays = this.selectedDaysToArray(this.state.selectedDays);
+    }
     var that = this;
     var formData = new FormData();
     formData.append('id', this.props.id);
     formData.append('name', this.props.name);
     formData.append('date', this.state.date);
     formData.append('recurring', this.state.recurring);
+    formData.append('recurringDays', recurringDays || []);
     formData.append('type', this.state.type);
     formData.append('note', this.state.note);
     formData.append('title', this.state.title);
@@ -210,7 +271,6 @@ class Reminder extends React.Component {
     for (var key in this.state.updateAudio) {
       formData.append('file', this.state.updateAudio[key]);
     }
-
     $.ajax({
       method: this.state.editMode ? 'PUT': 'POST',
       url: '/web/reminders',
@@ -270,7 +330,9 @@ class Reminder extends React.Component {
                   date={this.state.date}
                   type={this.state.type}
                   title={this.state.title}
-                  recurring={this.state.recurring} 
+                  recurring={this.state.recurring}
+                  selectedDays={this.state.selectedDays}
+                  getSelectedDay={this.getSelectedDay.bind(this)} 
                   img={this.state.img} 
                   note={this.state.note}
                   audio={this.state.audio}

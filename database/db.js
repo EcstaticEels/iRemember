@@ -38,6 +38,7 @@ const Reminder = sequelizeDb.define('reminder', {
   type: Sequelize.STRING,
   note: Sequelize.STRING,
   recurring: Sequelize.BOOLEAN,
+  recurringDays: Sequelize.STRING,
   notificationId: {
     type: Sequelize.STRING,
     allowNull: true,

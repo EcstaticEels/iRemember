@@ -88,6 +88,8 @@ app.listen(3000, function () {
   //   personGroupID: 'ecstaticeelsforever'
   // }).save();
 
+  //go into mySQL and enter update caregivers set patientId = 1 where id=1;
+
 });
 
 
