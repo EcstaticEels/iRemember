@@ -13,7 +13,9 @@ const Caregiver = sequelizeDb.define('caregiver', {
     unique: true
   },
   photo: Sequelize.STRING,
-  personGroupID: Sequelize.STRING
+  personGroupID: Sequelize.STRING, 
+  googleId: Sequelize.STRING, 
+  authToken: Sequelize.STRING
 });
 
 const Patient = sequelizeDb.define('patient', {

@@ -130,7 +130,7 @@ class Face extends React.Component {
     });
   }
 
-  vaildForm() {
+  validForm() {
     if(this.state.subjectName.length < 3){
       console.log('name')
       return false;
@@ -143,15 +143,15 @@ class Face extends React.Component {
   }
 
   submitForm(event) {
-    var vaild = this.vaildForm();
+    var vaild = this.validForm();
     if(!vaild){
       return window.alert("Invaild Form");
     }
     event.preventDefault();
     var that = this;
     var formData = new FormData();
-    formData.append('id', this.props.id);
-    formData.append('name', this.props.name);
+    formData.append('id', this.props.caregiverId);
+    formData.append('name', this.props.caregiverName);
     formData.append('subjectName', this.state.subjectName);
     formData.append('description', this.state.description);
     if (this.state.editMode) {
