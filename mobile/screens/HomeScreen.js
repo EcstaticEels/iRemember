@@ -40,7 +40,8 @@ export default class HomeScreen extends React.Component {
       dateTime: {
         time: '',
         dayNight: ''
-      }
+      },
+      authenticated: false
     }
   }
 
@@ -61,6 +62,10 @@ export default class HomeScreen extends React.Component {
     this.getReminders();
     console.log(this.props.navigator)
     setInterval(() => {that.polling()}, 10000);
+
+    // if (!authenticated) {
+    //   this.props.navigator.push(Router.getRoute('login'))
+    // }
   }
 
   componentWillMount() {
