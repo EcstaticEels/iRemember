@@ -3,7 +3,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import {Notifications, ImagePicker} from 'exponent';
+import {Notifications, ImagePicker, TouchID} from 'exponent';
 import {
   StackNavigation,
   TabNavigation,
@@ -18,6 +18,10 @@ import Alerts from '../constants/Alerts';
 import Colors from '../constants/Colors';
 import registerForPushNotificationsAsync from '../api/registerForPushNotificationsAsync';
 
+import ipAdress from '../ip.js';
+
+var baseUrl = 'http://' + ipAdress;
+
 export default class RootNavigation extends React.Component {
   constructor (props) {
     super(props)
@@ -28,6 +32,8 @@ export default class RootNavigation extends React.Component {
     }
 
     this.handleTextChange = this.handleTextChange.bind(this);
+    this.handleTextSubmit = this.handleTextSubmit.bind(this);
+
   }
 
   componentDidMount() {
@@ -44,67 +50,76 @@ export default class RootNavigation extends React.Component {
     })
   }
 
-  // uploadImageAsync(uri) {
-  //   let date = Date.now();
-  //   let apiUrl = `${baseUrl}/mobile/login?date=${date}`
-  //   console.log(apiUrl)
+  uploadImageAsync(uri) {
+    let date = Date.now();
+    let apiUrl = `${baseUrl}/mobile/login?date=${date}`
+    console.log(apiUrl)
 
-  //   let uriParts = uri.split('.');
-  //   let fileType = uriParts[uri.length - 1];
+    let uriParts = uri.split('.');
+    let fileType = uriParts[uri.length - 1];
 
-  //   let formData = new FormData();
-  //   formData.append('picture', {
-  //     uri: uri,
-  //     name: date + '.jpeg',
-  //     type: 'image/jpeg',
-  //   });
+    let formData = new FormData();
+    formData.append('picture', {
+      uri: uri,
+      name: date + '.jpeg',
+      type: 'image/jpeg',
+    });
 
-  //   let options = {
-  //     method: 'POST',
-  //     body: formData,
-  //     headers: {
-  //       'Accept': 'application/json',
-  //       'Content-Type': 'multipart/form-data',
-  //     },
-  //     patientName: this.state.name
-  //   };
+    let options = {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'multipart/form-data',
+      },
+      patientName: this.state.name
+    };
 
-  //   return fetch(apiUrl, options);
-  // }
+    return fetch(apiUrl, options);
+  }
 
   handleTextChange (text) {
     console.log(text)
     this.setState({name: text});
   }
 
-  // handleTextSubmit () {
-  //   Exponent.ImagePicker.launchCameraAsync()
-  //   .then((photo) => {
-  //     this.uploadImageAsync(photo.uri)
-  //     .then((person) => {
-  //       return person.json()
-  //       .then((person) => {
-  //         console.log(person)
-  //         if (person.name === this.state.name) {
-  //           this.setState({authenticated: true})
-  //         }
-  //       })
-  //     })
-  //     .catch((err) => {
-  //       console.log('BRO WE CANT AUTHENTICATE U')
-  //       console.log('ERROR', err)
-  //     })
-  //   })
-  // }
+  _failedLogin() {
+    this.props.navigator.push(Router.getRoute('failedLogin'))
+  }
+
+  handleTextSubmit () {
+    ImagePicker.launchCameraAsync()
+    .then((photo) => {
+      this.uploadImageAsync(photo.uri)
+      .then((person) => {
+        console.log(person)
+        return person.json()
+        .then((person) => {
+          console.log(person)
+          if (person.name === this.state.name) {
+            this.setState({authenticated: true})
+          } else {
+            this._failedLogin()
+          }
+        })
+      })
+      .catch((err) => {
+        console.log('BRO WE CANT AUTHENTICATE U')
+        console.log('ERROR', err)
+        this._failedLogin()
+      })
+    })
+  }
 
   render() {
 
-    // if (!this.state.authenticated) {
-    //   return (
-    //     <StackNavigation
-    //       initialRoute={Router.getRoute('login', {handleTextChange: this.handleTextChange})}/>
-    //   )
-    // } else {
+    if (!this.state.authenticated) {
+      return (
+        <StackNavigation
+          initialRoute={Router.getRoute('login', {handleTextChange: this.handleTextChange, handleTextSubmit: this.handleTextSubmit})}/>
+          // initialRoute='login' />
+      )
+    } else {
       return (
         <TabNavigation
           tabBarHeight={200}
@@ -129,7 +144,7 @@ export default class RootNavigation extends React.Component {
         </TabNavigation>
       );
 
-    // }
+    }
   }
 
   _renderIcon(name, isSelected) {
@@ -142,7 +157,7 @@ export default class RootNavigation extends React.Component {
     );
   }
 
-  // _registerForPushNotifications() {
+  _registerForPushNotifications() {
   //   // Send our push token over to our backend so we can receive notifications
   //   // You can comment the following line out if you want to stop receiving
   //   // a notification every time you open the app. Check out the source
@@ -150,16 +165,16 @@ export default class RootNavigation extends React.Component {
   //   registerForPushNotificationsAsync();
 
   //   // Watch for incoming notifications
-  //   this._notificationSubscription = Notifications.addListener(this._handleNotification);
-  // }
+    this._notificationSubscription = Notifications.addListener(this._handleNotification);
+  }
 
-  // _handleNotification = ({origin, data}) => {
-  //    var title = Object.getOwnPropertyNames(data);
-  //    this.props.navigator.showLocalAlert(
-  //      title + ' : ' + data[title],
-  //      Alerts.notice
-  //    );
-  //  }
+  _handleNotification = ({origin, data}) => {
+     var title = Object.getOwnPropertyNames(data);
+     this.props.navigator.showLocalAlert(
+       title + ' : ' + data[title],
+       Alerts.notice
+     );
+   }
 }
 
 const styles = StyleSheet.create({

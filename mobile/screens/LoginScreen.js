@@ -8,12 +8,6 @@ import {
   Text
 } from 'react-native';
 
-import * as Exponent from 'exponent';
-
-import ipAdress from '../ip.js';
-
-var baseUrl = 'http://' + ipAdress;
-
 export default class LoginScreen extends React.Component {
   constructor (props) {
     super (props);
@@ -33,7 +27,7 @@ export default class LoginScreen extends React.Component {
         style={styles.container}
         contentContainerStyle={styles.contentContainer}>
           <TextInput
-            // onSubmitEditing={this.props.handleTextSubmit}
+            onSubmitEditing={this.props.route.params.handleTextSubmit}
             onChangeText={this.props.route.params.handleTextChange}
             placeholder={'Enter your first name here'}
             placeholderTextColor={'#95a5a6'}
