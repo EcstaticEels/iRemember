@@ -23,10 +23,14 @@ import weatherIcons from '../assets/images/weatherIcons.js';
 
 import moment from 'moment';
 
+import {observer} from 'mobx-react/native';
+import Store from '../store.js'
+
 import baseUrl from '../ip.js';
 
 // import registerForPushNotificationsAsync from 'registerForPushNotificationsAsync';
 
+@observer
 export default class HomeScreen extends React.Component {
   constructor (props) {
     super (props);
@@ -51,6 +55,8 @@ export default class HomeScreen extends React.Component {
   //need to render something prettier
 
   componentDidMount () {
+    const {reminders, change} = Store;
+    change('reminders', 'bye');
     var that = this;
     this.time();
     this.weather();
@@ -349,6 +355,7 @@ export default class HomeScreen extends React.Component {
         }.bind(this))
       } else {
         //THIS IS JANKY -- PLEASE FIX
+        console.log('PLEASE ALLOW US TO USE YOUR LOCATION')
         this.setState({weatherDescription: 'PLEASE ALLOW US TO USE YOUR LOCATION'})
       }
 
