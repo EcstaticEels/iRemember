@@ -17,6 +17,10 @@ import axios from 'axios';
 
 import Router from '../navigation/Router.js';
 
+import ipAdress from '../ip.js';
+
+var baseUrl = 'http://' + ipAdress;
+
 export default class PhotosScreen extends React.Component {
 
   constructor (props) {
@@ -30,16 +34,22 @@ export default class PhotosScreen extends React.Component {
     },
   }
 
-  componentDidMount () {
+  takePhoto () {
     Exponent.ImagePicker.launchCameraAsync()
     .then((photo) => {
-      uploadImageAsync(photo.uri)
-      .then((response) => {
-        return response.json().then(responseJSON => {
-          console.log(responseJSON)
-          this._goToPersonInfoPage(responseJSON);
+      if (photo.cancelled) {
+        this.props.navigation.performAction(({ tabs }) => {
+          tabs('main').jumpToTab('home');
         })
-      });
+      } else {
+        uploadImageAsync(photo.uri)
+        .then((response) => {
+          return response.json().then(responseJSON => {
+            console.log(responseJSON)
+            this._goToPersonInfoPage(responseJSON);
+          })
+        });
+      }
     })
   }
 
@@ -48,6 +58,7 @@ export default class PhotosScreen extends React.Component {
   }
 
   render() {
+  this.takePhoto()
     return (
       <ScrollView
         style={styles.container}
@@ -67,7 +78,7 @@ const styles = StyleSheet.create({
 async function uploadImageAsync(uri) {
   let date = Date.now();
   let patientId = 1;
-  let apiUrl = `http://54.202.107.224:3000/mobile/identify?date=${date}&patientId=${patientId}`;
+  let apiUrl = `${baseUrl}/mobile/identify?date=${date}&patientId=${patientId}`;
 
   let uriParts = uri.split('.');
   let fileType = uriParts[uri.length - 1];
