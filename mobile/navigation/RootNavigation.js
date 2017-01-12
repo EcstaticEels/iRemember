@@ -113,15 +113,17 @@ export default class RootNavigation extends React.Component {
 
   render() {
 
-    if (!this.state.authenticated) {
-      return (
-        <StackNavigation
-          initialRoute={Router.getRoute('login', {handleTextChange: this.handleTextChange, handleTextSubmit: this.handleTextSubmit})}/>
-          // initialRoute='login' />
-      )
-    } else {
+    // if (!this.state.authenticated) {
+    //   return (
+    //     <StackNavigation
+    //       initialRoute={Router.getRoute('login', {handleTextChange: this.handleTextChange, handleTextSubmit: this.handleTextSubmit})}/>
+    //       // initialRoute='login' />
+    //   )
+    // } else {
       return (
         <TabNavigation
+          id="main"
+          navigatorUID="main"
           tabBarHeight={200}
           initialTab="home">
           <TabNavigationItem
@@ -144,7 +146,7 @@ export default class RootNavigation extends React.Component {
         </TabNavigation>
       );
 
-    }
+    // }
   }
 
   _renderIcon(name, isSelected) {

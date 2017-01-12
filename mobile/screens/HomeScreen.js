@@ -62,10 +62,6 @@ export default class HomeScreen extends React.Component {
     this.getReminders();
     console.log(this.props.navigator)
     setInterval(() => {that.polling()}, 10000);
-
-    // if (!authenticated) {
-    //   this.props.navigator.push(Router.getRoute('login'))
-    // }
   }
 
   componentWillMount() {
@@ -248,6 +244,7 @@ export default class HomeScreen extends React.Component {
             return response.json()
           })
           .then(function (responseJSON) {
+            console.log(responseJSON)
             responseJSON.weather[0].description = responseJSON.weather[0].description.split('');
 
             responseJSON.weather[0].description[0] = responseJSON.weather[0].description[0].toUpperCase();
@@ -282,7 +279,7 @@ export default class HomeScreen extends React.Component {
               });
             }
 
-            if (responseJSON.weather[0].main === 'Atmosphere' || responseJSON.weather[0].main === 'Mist') {
+            if (responseJSON.weather[0].id >= 700 && responseJSON.weather[0].id < 800) {
               this.setState({
                 weatherDescription: responseJSON.weather[0].description,
                 weatherIcon: weatherIcons.mist

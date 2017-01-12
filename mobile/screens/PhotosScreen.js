@@ -34,16 +34,22 @@ export default class PhotosScreen extends React.Component {
     },
   }
 
-  componentDidMount () {
+  takePhoto () {
     Exponent.ImagePicker.launchCameraAsync()
     .then((photo) => {
-      uploadImageAsync(photo.uri)
-      .then((response) => {
-        return response.json().then(responseJSON => {
-          console.log(responseJSON)
-          this._goToPersonInfoPage(responseJSON);
+      if (photo.cancelled) {
+        this.props.navigation.performAction(({ tabs }) => {
+          tabs('main').jumpToTab('home');
         })
-      });
+      } else {
+        uploadImageAsync(photo.uri)
+        .then((response) => {
+          return response.json().then(responseJSON => {
+            console.log(responseJSON)
+            this._goToPersonInfoPage(responseJSON);
+          })
+        });
+      }
     })
   }
 
@@ -52,6 +58,7 @@ export default class PhotosScreen extends React.Component {
   }
 
   render() {
+  this.takePhoto()
     return (
       <ScrollView
         style={styles.container}
