@@ -241,6 +241,13 @@ module.exports = {
     })
     res.status(200).send('database updated')
   },
+  deleteReminders: (req, res) => {
+    let reminderIds = req.body.id;
+    db.Reminder.destory({ where: {id: reminderIds}})
+    .then(updatedReminder => {
+      res.status(200).send('deleted');
+    });
+  },
   addToken: (req, res) => {
     db.Caregiver.update({token: req.body.token},{ where: { id: req.body.id}})
     .then(() => {

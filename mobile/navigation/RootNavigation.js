@@ -1,9 +1,10 @@
+//React & Exponent
 import React from 'react';
 import {
   StyleSheet,
   View,
 } from 'react-native';
-import {Notifications, ImagePicker, TouchID} from 'exponent';
+import {ImagePicker, TouchID} from 'exponent';
 import {
   StackNavigation,
   TabNavigation,
@@ -12,21 +13,17 @@ import {
 import {
   FontAwesome,
 } from '@exponent/vector-icons';
-
 import Router from './Router.js';
-import Alerts from '../constants/Alerts';
 import Colors from '../constants/Colors';
-import registerForPushNotificationsAsync from '../api/registerForPushNotificationsAsync';
 
-import ipAdress from '../ip.js';
+// import registerForPushNotificationsAsync from '../api/registerForPushNotificationsAsync';
 
-var baseUrl = 'http://' + ipAdress;
+import baseUrl from '../ip.js';
 
 export default class RootNavigation extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      reminders: [],
       authenticated: false,
       name: ''
     }
@@ -34,20 +31,6 @@ export default class RootNavigation extends React.Component {
     this.handleTextChange = this.handleTextChange.bind(this);
     this.handleTextSubmit = this.handleTextSubmit.bind(this);
 
-  }
-
-  componentDidMount() {
-    this._notificationSubscription = this._registerForPushNotifications();
-  }
-
-  componentWillUnmount() {
-    this._notificationSubscription && this._notificationSubscription.remove();
-  }
-
-  updateReminders (reminders) {
-    this.setState({
-      reminders: reminders
-    })
   }
 
   uploadImageAsync(uri) {
@@ -129,19 +112,19 @@ export default class RootNavigation extends React.Component {
           <TabNavigationItem
             id="home"
             renderIcon={isSelected => this._renderIcon('home', isSelected)}>
-            <StackNavigation initialRoute={Router.getRoute('home', {reminders: this.state.reminders, updateReminders:this.updateReminders.bind(this)})}/>
+            <StackNavigation initialRoute="home"/>
           </TabNavigationItem>
 
           <TabNavigationItem
             id="reminders"
             renderIcon={isSelected => this._renderIcon('bell', isSelected)}>
-            <StackNavigation initialRoute={Router.getRoute('reminders', {reminders: this.state.reminders})} />
+            <StackNavigation initialRoute="reminders"/>
           </TabNavigationItem>
 
           <TabNavigationItem
             id="photos"
             renderIcon={isSelected => this._renderIcon('camera', isSelected)}>
-            <StackNavigation initialRoute="photos" />
+            <StackNavigation initialRoute="photos"/>
           </TabNavigationItem>
         </TabNavigation>
       );
@@ -158,25 +141,6 @@ export default class RootNavigation extends React.Component {
       />
     );
   }
-
-  _registerForPushNotifications() {
-  //   // Send our push token over to our backend so we can receive notifications
-  //   // You can comment the following line out if you want to stop receiving
-  //   // a notification every time you open the app. Check out the source
-  //   // for this function in api/registerForPushNotificationsAsync.js
-  //   registerForPushNotificationsAsync();
-
-  //   // Watch for incoming notifications
-    this._notificationSubscription = Notifications.addListener(this._handleNotification);
-  }
-
-  _handleNotification = ({origin, data}) => {
-     var title = Object.getOwnPropertyNames(data);
-     this.props.navigator.showLocalAlert(
-       title + ' : ' + data[title],
-       Alerts.notice
-     );
-   }
 }
 
 const styles = StyleSheet.create({
