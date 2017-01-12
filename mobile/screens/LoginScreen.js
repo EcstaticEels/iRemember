@@ -8,15 +8,12 @@ import {
   Text
 } from 'react-native';
 
-<<<<<<< HEAD
 import * as Exponent from 'exponent';
 
 import ipAdress from '../ip.js';
 
 var baseUrl = 'http://' + ipAdress;
 
-=======
->>>>>>> mobileAuth
 export default class LoginScreen extends React.Component {
   constructor (props) {
     super (props);
@@ -36,11 +33,7 @@ export default class LoginScreen extends React.Component {
         style={styles.container}
         contentContainerStyle={styles.contentContainer}>
           <TextInput
-<<<<<<< HEAD
-            // onSubmitEditing={this.props.handleTextSubmit}
-=======
             onSubmitEditing={this.props.route.params.handleTextSubmit}
->>>>>>> mobileAuth
             onChangeText={this.props.route.params.handleTextChange}
             placeholder={'Enter your first name here'}
             placeholderTextColor={'#95a5a6'}
