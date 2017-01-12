@@ -1,7 +1,5 @@
+//React & Exponent
 import React from 'react';
-
-import axios from 'axios';
-
 import {
   Button,
   Image,
@@ -14,21 +12,28 @@ import {
   View,
   DeviceEventEmitter
 } from 'react-native';
-
 import * as Exponent from 'exponent';
 
-import { MonoText } from '../components/StyledText';
+//MobX
+import {observer} from 'mobx-react/native';
+import Store from '../store.js'
 
-import weatherIcons from '../assets/images/weatherIcons.js';
+//Server connection
+import axios from 'axios';
+import baseUrl from '../ip.js';
 
+//Time helper
 import moment from 'moment';
 
-import ipAdress from '../ip.js';
+//Styling
+import { MonoText } from '../components/StyledText';
+import weatherIcons from '../assets/images/weatherIcons.js';
 
-var baseUrl = 'http://' + ipAdress;
+
 
 // import registerForPushNotificationsAsync from 'registerForPushNotificationsAsync';
 
+@observer
 export default class HomeScreen extends React.Component {
   constructor (props) {
     super (props);
@@ -40,8 +45,7 @@ export default class HomeScreen extends React.Component {
       dateTime: {
         time: '',
         dayNight: ''
-      },
-      authenticated: false
+      }
     }
   }
 
@@ -54,17 +58,25 @@ export default class HomeScreen extends React.Component {
   //need to render something prettier
 
   componentDidMount () {
+    const {reminders, change} = Store;
+    change('reminders', 'bye');
     var that = this;
-    this.time();
-    this.weather();
+    this.getTime();
+    this.getWeather();
     if(!this.state.notificationToken) this.allowPushNotification();
+// <<<<<<< HEAD
+//     this.cancelDeletedReminders();
+//     this.getReminders();
+    setInterval(that.getTime(), 10000);
+// =======
     // console.log('getting here?')
-    this.getReminders();
+    // this.getReminders();
     // console.log(this.props.navigator)
-    setInterval(() => {that.polling()}, 10000);
+    // setInterval(() => {that.polling()}, 10000);
+// >>>>>>> upstream/master
   }
 
-  componentWillMount() {
+  // componentWillMount() {
     // Exponent.Notifications.cancelAllScheduledNotificationsAsync()
     // registerForPushNotificationsAsync();
 
@@ -83,7 +95,34 @@ export default class HomeScreen extends React.Component {
     // _handleNotification = (notification) => {
     //   console.log('notification!!', notification)
     // };
-  };
+  // };
+
+  cancelDeletedReminders() {
+    var reminders = this.props.reminders;
+    var deleted = [];
+    reminders = reminders.map((reminder) => {
+      if(reminder.registered === null) {
+        if(reminder.notificationId) {
+          reminder.notificationId.forEach((notificationid) => {
+            if(notificationid) Exponent.Notifications.cancelScheduledNotificationAsync(notificationid);
+          })
+        }
+        deleted.push(reminder.id);
+      } else {
+        return reminders
+      }
+    })
+    if (deleted.length !== 0) {
+      axios.delete(baseUrl + '/mobile/reminders', {id: deleted})
+      .then((success) => {
+        console.log('deleted');
+      })
+      .catch((error) => {
+        console.log('error', error)
+      })
+    }
+    this.props.updatedReminders(reminders);
+  }
 
   allowPushNotification() {
     Exponent.Permissions.askAsync(Exponent.Permissions.REMOTE_NOTIFICATIONS)
@@ -112,72 +151,10 @@ export default class HomeScreen extends React.Component {
     })
   }
 
-  pushNotification() {  
-    const registerReminders = reminder => {
-      return new Promise((resolve, reject) => {
-        if (!reminder.registered) {
-          console.log('this reminder', reminder.registered)
-          var localNotification = {
-            title: reminder.title,
-            body: reminder.note || ' ',
-            data: {[reminder.title]: reminder.note},
-            ios: {
-              sound: true
-            }
-          }
-          var year = reminder.date.slice(0, 4);
-          var month = reminder.date.slice(5, 7) - 1;
-          var day = reminder.date.slice(8, 10);
-          var hour = reminder.date.slice(11, 13);
-          var minute = reminder.date.slice(14, 16);
+  registerReminder(reminder, localNotification, schedulingOptions) {
+  }
 
-          var schedulingOptions = {
-            time: (new Date(year, month, day, hour, minute)).getTime()
-          }
-          if (reminder.recurring) {
-            schedulingOptions.repeat = 'day';
-          }
-          if (reminder.notificationId) {
-            Exponent.Notifications.cancelScheduledNotificationAsync(reminder.notificationId)
-          }
-          Exponent.Notifications.scheduleLocalNotificationAsync(localNotification, schedulingOptions)
-          .then((notificationId) => {
-            console.log('exponent notification scheduled')
-            reminder.notificationId = notificationId;
-            reminder.registered = true;
-            console.log(reminder);
-            resolve(reminder);
-          })
-          .catch(function(error) {
-            console.log('cannot add the reminder' + error);
-            reject(error);
-          });
-        } else {
-          resolve(false);
-        }
-      })
-    }  
-    var promisifiedregisterReminders = this.state.reminders.map(registerReminders)
-    Promise.all(promisifiedregisterReminders)
-    .then(updatedReminders => {
-      updatedReminders = updatedReminders.filter((reminder) => {
-        return reminder; 
-      })
-      if(updatedReminders.length > 0) {
-        axios.put(baseUrl + '/mobile/reminders', updatedReminders)
-        .then(function (response) {
-          console.log(response);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-      }
-    })
-    .catch(error => {
-      console.log('error in promise.all');
-
-    })
-    // Exponent.Notifications.cancelAllScheduledNotificationsAsync()
+  pushNotification() {
   }
 
   // allowPushNotification() {
@@ -205,12 +182,12 @@ export default class HomeScreen extends React.Component {
   //   });
   // }
 
-  polling() {
-    this.time();
-    this.getReminders();
-  }
+  // polling() {
+  //   this.time();
+  //   this.getReminders();
+  // }
 
-  time() {
+  getTime() {
     var date = new Date();
 
     var hours = date.getHours();
@@ -228,108 +205,73 @@ export default class HomeScreen extends React.Component {
     }});
   }
 
-  weather() {
+  getWeather() {
     Exponent.Permissions.askAsync(Exponent.Permissions.LOCATION)
-    .then(function (response) {
+    .then((response) => {
       if (response.status === 'granted') {
         Exponent.Location.getCurrentPositionAsync()
-        .then(function (location) {
+        .then((location) => {
           this.setState({
             currentLatitude: location.coords.latitude,
             currentLongitude: location.coords.longitude
           })
-          var weatherUrl = 'http://api.openweathermap.org/data/2.5/weather?lat=' + this.state.currentLatitude + '&lon=' + this.state.currentLongitude + '&APPID=dbab6e66b7e766cdfaf26fd6000f06e4';
-          fetch (weatherUrl)
-          .then(function (response) {
-            return response.json()
+          var weatherUrl = 'http://api.openweathermap.org/data/2.5/weather?' 
+          weatherUrl += 'lat=' + this.state.currentLatitude + '&lon=' + this.state.currentLongitude;
+          weatherUrl += '&APPID=dbab6e66b7e766cdfaf26fd6000f06e4';
+          axios.get(weatherUrl)
+          .then((response) => response.data.weather[0])
+          .then((weather) => {
+            var iconReference = {
+              2: 'storm',
+              3: 'rainy',
+              5: 'rainy',
+              6: 'snow',
+              7: 'mist',
+              8: 'cloudy',
+              800: 'sunny',
+              801: 'partiallyCloudy'
+
+            }
+            var ind = Math.floor(weather.id/100);
+            var iconKey = iconReference[ind];
+            if (weather.id === 800 || weather.id === 801) {
+              iconKey = iconReference[weather.id];
+            }
+            var description = weather.description;
+            this.setState({
+              weatherDescription: description.charAt(0).toUpperCase() + description.slice(1),
+              weatherIcon: weatherIcons[iconKey]
+            });
           })
-          .then(function (responseJSON) {
-            console.log(responseJSON)
-            responseJSON.weather[0].description = responseJSON.weather[0].description.split('');
-
-            responseJSON.weather[0].description[0] = responseJSON.weather[0].description[0].toUpperCase();
-
-            responseJSON.weather[0].description = responseJSON.weather[0].description.join('');
-
-            if (responseJSON.weather[0].main === 'Rain' || responseJSON.weather[0].main === 'Drizzle') {
-              this.setState({
-                weatherDescription: responseJSON.weather[0].description,
-                weatherIcon: weatherIcons.rainy
-              });
-            }
-
-            if (responseJSON.weather[0].main === 'Thunderstorm') {
-              this.setState({
-                weatherDescription: responseJSON.weather[0].description,
-                weatherIcon: weatherIcons.storm
-              });
-            }
-
-            if (responseJSON.weather[0].main === 'Snow') {
-              this.setState({
-                weatherDescription: responseJSON.weather[0].description,
-                weatherIcon: weatherIcons.snow
-              });
-            }
-
-            if (responseJSON.weather[0].main === 'Clear') {
-              this.setState({
-                weatherDescription: responseJSON.weather[0].description,
-                weatherIcon: weatherIcons.sunny
-              });
-            }
-
-            if (responseJSON.weather[0].id >= 700 && responseJSON.weather[0].id < 800) {
-              this.setState({
-                weatherDescription: responseJSON.weather[0].description,
-                weatherIcon: weatherIcons.mist
-              });
-            }
-
-            if (responseJSON.weather[0].description === 'Few clouds') {
-              this.setState({
-                weatherDescription: responseJSON.weather[0].description,
-                weatherIcon: weatherIcons.partiallyCloudy
-              });
-            }
-
-            if (responseJSON.weather[0].description === 'Scattered clouds' || responseJSON.weather[0].description === 'Broken clouds' || responseJSON.weather[0].description === 'Overcast clouds') {
-              this.setState({
-                weatherDescription: responseJSON.weather[0].description,
-                weatherIcon: weatherIcons.cloudy
-              });
-            }
-          }.bind(this))
-        }.bind(this))
+        })
       } else {
-        //THIS IS JANKY -- PLEASE FIX
-        this.setState({weatherDescription: 'PLEASE ALLOW US TO USE YOUR LOCATION'})
+        console.log('PLEASE ALLOW US TO USE YOUR LOCATION');
+        this.setState({weatherDescription: 'PLEASE ALLOW US TO USE YOUR LOCATION'});
       }
-
-    }.bind(this));
+    });
   }
 
   getReminders() {
-    var that = this;
-    // console.log('getting reminders', baseUrl + '/mobile/reminders')
-    axios.get(baseUrl + '/mobile/reminders', {
-      params: {
-        patientId: 1
-      }
-    })
-      .then((response) => {
-        var reminders = response.data.reminders;
-        that.props.updateReminders(reminders);
-        that.setState({
-          reminders: reminders
-        })
-      })
-      .then(() => {
-        that.pushNotification();
-      })
-      .catch(function (error) {
-      //   console.log('error', error);
-      });
+    // var that = this;
+    // // console.log('getting reminders', baseUrl + '/mobile/reminders')
+    // axios.get(baseUrl + '/mobile/reminders', {
+    //   params: {
+    //     patientId: 1
+    //   }
+    // })
+    //   .then((response) => {
+    //     var reminders = response.data.reminders;
+    //     that.props.updateReminders(reminders);
+    //     that.setState({
+    //       reminders: reminders
+    //     })
+    //   })
+    //   .then(() => {
+    //     that.pushNotification();
+    //   })
+    //   .catch(function (error) {
+    //   //   console.log('error', error);
+    //   });
   }
 
   render() {
