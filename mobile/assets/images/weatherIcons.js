@@ -20,13 +20,24 @@
 //<img src="https://maxcdn.icons8.com/Color/PNG/96/Weather/fog_day-96.png" title="Fog Day" width="96">
 
 var weatherIcons = {
-  sunny: "https://maxcdn.icons8.com/Color/PNG/96/Astrology/summer-96.png",
-  partiallyCloudy: "https://maxcdn.icons8.com/Color/PNG/96/Weather/partly_cloudy_day-96.png",
-  cloudy: "https://maxcdn.icons8.com/Color/PNG/96/Weather/clouds-96.png",
-  rainy: "https://maxcdn.icons8.com/Color/PNG/96/Weather/rain-96.png",
-  storm: "https://maxcdn.icons8.com/Color/PNG/96/Weather/downpour-96.png",
-  snow: "https://maxcdn.icons8.com/Color/PNG/96/Weather/snow-96.png",
-  mist: "https://maxcdn.icons8.com/Color/PNG/96/Weather/fog_day-96.png",
+  day: {
+    sunny: "https://maxcdn.icons8.com/Color/PNG/96/Astrology/summer-96.png",
+    partiallyCloudy: "https://maxcdn.icons8.com/Color/PNG/96/Weather/partly_cloudy_day-96.png",
+    cloudy: "https://maxcdn.icons8.com/Color/PNG/96/Weather/clouds-96.png",
+    rainy: "https://maxcdn.icons8.com/Color/PNG/96/Weather/rain-96.png",
+    storm: "https://maxcdn.icons8.com/Color/PNG/96/Weather/downpour-96.png",
+    snow: "https://maxcdn.icons8.com/Color/PNG/96/Weather/snow-96.png",
+    mist: "https://maxcdn.icons8.com/Color/PNG/96/Weather/fog_day-96.png",
+  },
+  night: {
+    sunny: "https://maxcdn.icons8.com/Color/PNG/24/Cinema/moon-24.png",
+    partiallyCloudy: "https://maxcdn.icons8.com/office/PNG/16/Weather/fog_night-16.png",
+    cloudy: "https://maxcdn.icons8.com/Color/PNG/96/Weather/clouds-96.png",
+    rainy: "https://maxcdn.icons8.com/Color/PNG/96/Weather/rain-96.png",
+    storm: "https://maxcdn.icons8.com/Color/PNG/96/Weather/downpour-96.png",
+    snow: "https://maxcdn.icons8.com/Color/PNG/96/Weather/snow-96.png",
+    mist: "https://maxcdn.icons8.com/Color/PNG/96/Weather/fog_day-96.png",
+  }
 };
 
 export default weatherIcons;
