@@ -5,9 +5,6 @@ export default class Setup extends React.Component {
     super(props);
   }
 
-  componentDidMount() {
-    // this.props.handleLogin();
-  }
 
   render() {
     return (

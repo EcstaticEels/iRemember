@@ -1,24 +1,21 @@
-import cookie from 'react-cookie';
-
 module.exports = {
   getToken: function() {
-    return localStorage.token
+    return localStorage.getItem('userId');
   },
 
-  logout: function(cb) {
-    delete localStorage.token
-    if (cb) {
-      cb()
+  logout: function() {
+    localStorage.removeItem('userId');
+    if (!!localStorage.getItem('setup')) {
+      localStorage.removeItem('setup');
     }
-    // this.onChange(false)
   },
 
   loggedIn: function() {
-    // console.log('is logged in', !!localStorage.token);
+    return !!localStorage.getItem('userId');
   },
 
-  onChange: function() {
-
+  needSetup: function() {
+    return !!localStorage.getItem('setup');
   }
 
 }

@@ -12,17 +12,32 @@ import Reminder from './webReminder.js';
 import NotFound from './web404.js';
 import Signin from './webSignin.js';
 import Setup from './webSetup.js';
+import Signout from './webSignout.js';
 
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      caregiverId: '',
-      caregiverName: '',
-      view: 'reminders'
+      view: 'reminders',
+      caregiverName: ''
     };
-    this.handleLogin = this.handleLogin.bind(this);
+  }
+
+  componentDidMount() {
+    $.ajax({
+      method: 'GET',
+      url: '/user',
+      success: function(res) {
+        console.log(res);
+        this.setState({
+          caregiverName: JSON.parse(res).name
+        });
+      }.bind(this),
+      error: function(err) {
+        console.log('error', err);
+      }
+    });
   }
 
   changeView(select) {
@@ -31,29 +46,44 @@ class App extends React.Component {
     });
   }
 
-  handleLogin() {
-    console.log(document.cookie)
-    // if (document.cookie) {
-    //   const cookies = document.cookie.split(';');
-    //   const username = unescape(cookies[0].slice(cookies[0].indexOf('=') + 1));
-    //   const userId = cookies[1].slice(cookies[1].indexOf('=') + 1);
-    //   this.setState({
-    //     caregiverId: userId,
-    //     caregiverName: username
-    //   });
-    // }
+  handleLogin(cb) {
+    $.ajax({
+      method: 'GET',
+      url: '/user',
+      success: function(res) {
+        if (res) {
+          var parsedRes = JSON.parse(res);
+          console.log('setting token for', parsedRes);
+          if (parsedRes.patientId) {
+            localStorage.setItem('userId', parsedRes.id);
+          } else {
+            localStorage.setItem('setup', 'false');
+            localStorage.setItem('userId', parsedRes.id);
+          }
+          cb()
+        }
+      }.bind(this),
+      error: function(err) {
+        console.log('error', err);
+      }
+    });
+  }
+
+  handleLoginRedirect(path) {
+    browserHistory.push(path);
   }
 
   render() {
     return (
       <div className="app-body">
-        <Nav />
+        <Nav name={this.state.caregiverName}/>
 
         <Tab changeView={this.changeView.bind(this)}/>
         {this.props.children && React.cloneElement(this.props.children, {
           caregiverId: this.state.caregiverId,
           caregiverName: this.state.caregiverName,
-          handleLogin: this.handleLogin
+          handleLogin: this.handleLogin,
+          handleLoginRedirect: this.handleLoginRedirect
         })}
       </div>
     )
@@ -61,14 +91,12 @@ class App extends React.Component {
 }
 
 const requireAuth = function(nextState, replace) {
-  console.log(document.cookie.split(';'))
-  // if (!Auth.loggedIn()) {
-  //   console.log('you are not logged in')
-  //   replace({
-  //     pathname: '/signin',
-  //     state: { nextPathname: nextState.location.pathname }
-  //   });
-  // }
+  if (!Auth.loggedIn()) {
+    replace({
+      pathname: '/signin',
+      state: { nextPathname: nextState.location.pathname }
+    });
+  }
 };
 
 
@@ -76,6 +104,7 @@ ReactDOM.render((
   <Router history={browserHistory}>
     <Route path="/" component={App}>
       <Route path="/signin" component={Signin}/>
+      <Route path="/signout" component={Signout}/>
       <Route path="/setup" component={Setup} onEnter={requireAuth}/>
       <Route path="/reminders" component={Reminder} onEnter={requireAuth}/>
       <Route path="/face" component={Face} onEnter={requireAuth}/>

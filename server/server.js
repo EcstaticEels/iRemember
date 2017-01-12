@@ -4,6 +4,7 @@ const app = express();
 const path = require('path');
 const axios = require('axios');
 const passport = require('passport');
+const request = require('request');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 //Environment variables
@@ -26,12 +27,19 @@ app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(session({
   secret: 'keyboard cat',
-  resave: true,
-  saveUninitialized: true,
+  resave: false,
+  saveUninitialized: false,
   maxAge: 604800000
 }))
 app.use(passport.initialize());
 app.use(passport.session());
+
+const ensureAuthenticated = function(req, res, next) {
+  if (req.isAuthenticated()) { 
+    return next(); 
+  }
+  res.status(401).send('you are not logged in'); 
+}
 
 //Google Strategy for Passport
 passport.use(new GoogleStrategy({
@@ -49,8 +57,7 @@ passport.use(new GoogleStrategy({
         }
     })
     .then(caregiver => {
-      console.log('passing caregiver', caregiver)
-      cb(null, caregiver[0])
+      cb(null, caregiver[0]);
     })
     .catch(err => {
       cb(err, null)
@@ -104,6 +111,7 @@ app.put('/mobile/reminders', mobileControllers.updateReminders);
 app.post('/mobile/pushNotification', mobileControllers.addPushNotification);
 
 //Authentication
+
 passport.serializeUser(function(user, done) {
   done(null, user.id);
 });
@@ -115,7 +123,6 @@ passport.deserializeUser(function(id, done) {
     }
   })
   .then(caregiver => {
-    console.log('found a caregiver')
     done(null, caregiver);
   })
   .catch(err => {
@@ -124,25 +131,31 @@ passport.deserializeUser(function(id, done) {
 });
 
 app.get('/auth/google',
-  passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/plus.login'] }));
+  passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/plus.login'] })
+);
+
+app.get('/user', function(req, res) {
+  res.status(200).send(JSON.stringify(req.user));
+});
 
 app.get('/auth/google/callback', 
   passport.authenticate('google', { 
     failureRedirect: '/signin'
   }), function(req, res) {
     console.log('req.user', req.user)
-    // res.cookie('username', req.user[0].name);
-    // res.cookie('userId', req.user[0].id);
+    console.log('req.session', req.session)
     if (req.user.patientId) {
-      res.redirect('/reminders');
+      console.log('redirecting to reminders after success login');
+      res.redirect('/signin');
     } else {
-      res.redirect('/setup');
+      console.log('redirecting to signin/setup after success login')
+      res.redirect('/signin');
     }
   }); 
 
-app.get('/signout', function(req, res){
+app.get('/logout', function(req, res){
   req.session.destroy(function (err) {
-    res.redirect('/'); //Inside a callback… bulletproof!
+    res.status(200).send('logged out'); 
   });
 });
 
@@ -150,14 +163,6 @@ app.get('/signout', function(req, res){
 app.get('*', function (req, res) {
   res.sendFile(path.join(__dirname, '..', 'public/webIndex.html'));
 });
-
-function ensureAuthenticated(req, res, next) {
-  console.log('req session', req.session);
-  if (req.isAuthenticated()) { 
-    return next(); 
-  }
-  res.redirect('/signout');
-}
 
 app.listen(3000, function () {
   console.log('iRemember is running on port 3000!');
