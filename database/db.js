@@ -28,7 +28,10 @@ const Patient = sequelizeDb.define('patient', {
     unique: true
   },
   photo: Sequelize.STRING,
-  personGroupID: Sequelize.STRING
+  personGroupID: Sequelize.STRING,
+  personId: {
+    type: Sequelize.STRING
+  },
 });
 
 const Reminder = sequelizeDb.define('reminder', {
@@ -66,6 +69,10 @@ const Face = sequelizeDb.define('face', {
 });
 
 const FacePhoto = sequelizeDb.define('facePhoto', {
+  photo: Sequelize.STRING
+});
+
+const PatientPhoto = sequelizeDb.define('patientPhoto', {
   photo: Sequelize.STRING
 });
 
