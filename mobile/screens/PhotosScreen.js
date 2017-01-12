@@ -44,10 +44,14 @@ export default class PhotosScreen extends React.Component {
       } else {
         uploadImageAsync(photo.uri)
         .then((response) => {
-          return response.json().then(responseJSON => {
-            console.log(responseJSON)
-            this._goToPersonInfoPage(responseJSON);
-          })
+          if (response.status === 404) {
+            this._goToFailedFacePage()
+          } else {
+            return response.json().then(responseJSON => {
+              console.log(responseJSON)
+              this._goToPersonInfoPage(responseJSON);
+            })
+          }
         });
       }
     })
@@ -55,6 +59,10 @@ export default class PhotosScreen extends React.Component {
 
   _goToPersonInfoPage = (person) => {
     this.props.navigator.push(Router.getRoute('person', {person: person}))
+  }
+
+  _goToFailedFacePage () {
+    this.props.navigator.push(Router.getRoute('failedFace'))    
   }
 
   render() {

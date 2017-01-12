@@ -58,9 +58,9 @@ export default class HomeScreen extends React.Component {
     this.time();
     this.weather();
     if(!this.state.notificationToken) this.allowPushNotification();
-    console.log('getting here?')
+    // console.log('getting here?')
     this.getReminders();
-    console.log(this.props.navigator)
+    // console.log(this.props.navigator)
     setInterval(() => {that.polling()}, 10000);
   }
 
@@ -311,7 +311,7 @@ export default class HomeScreen extends React.Component {
 
   getReminders() {
     var that = this;
-    console.log('getting reminders', baseUrl + '/mobile/reminders')
+    // console.log('getting reminders', baseUrl + '/mobile/reminders')
     axios.get(baseUrl + '/mobile/reminders', {
       params: {
         patientId: 1

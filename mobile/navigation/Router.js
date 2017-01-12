@@ -11,6 +11,7 @@ import PersonInfoScreen from '../screens/PersonInfoScreen';
 import LoginScreen from '../screens/LoginScreen';
 import FailedLoginScreen from '../screens/FailedLoginScreen';
 import TouchIDScreen from '../screens/TouchIDScreen';
+import FailedFaceScreen from '../screens/FailedFaceScreen';
 
 export default createRouter(() => ({
   failedLogin: () => FailedLoginScreen,
@@ -20,5 +21,6 @@ export default createRouter(() => ({
   photos: () => PhotosScreen,
   rootNavigation: () => RootNavigation,
   reminder: () => ReminderInfoScreen,
-  person: () => PersonInfoScreen,  
+  person: () => PersonInfoScreen,
+  failedFace: () => FailedFaceScreen  
 }));
