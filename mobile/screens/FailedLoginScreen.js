@@ -8,16 +8,7 @@ import {
   Text
 } from 'react-native';
 
-<<<<<<< HEAD
-import * as Exponent from 'exponent';
-
-import ipAdress from '../ip.js';
-
-var baseUrl = 'http://' + ipAdress;
-
-=======
->>>>>>> mobileAuth
-export default class LoginScreen extends React.Component {
+export default class FailedLoginScreen extends React.Component {
   constructor (props) {
     super (props);
 
@@ -26,7 +17,7 @@ export default class LoginScreen extends React.Component {
 
   static route = {
     navigationBar: {
-      visible: false
+      title: 'Failed Login'
     },
   }
 
@@ -35,18 +26,8 @@ export default class LoginScreen extends React.Component {
       <ScrollView 
         style={styles.container}
         contentContainerStyle={styles.contentContainer}>
-          <TextInput
-<<<<<<< HEAD
-            // onSubmitEditing={this.props.handleTextSubmit}
-=======
-            onSubmitEditing={this.props.route.params.handleTextSubmit}
->>>>>>> mobileAuth
-            onChangeText={this.props.route.params.handleTextChange}
-            placeholder={'Enter your first name here'}
-            placeholderTextColor={'#95a5a6'}
-            style={styles.nameTextInput} />
           <Text style={styles.infoText}> 
-            On the next screen, you will take a photo of yourself. Please make sure that only your face is in the photo
+            We couldnt find ya please go back and try again
           </Text>
       </ScrollView>
     )
