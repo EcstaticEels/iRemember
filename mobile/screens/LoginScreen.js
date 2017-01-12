@@ -15,8 +15,6 @@ import baseUrl from '../ip.js';
 export default class LoginScreen extends React.Component {
   constructor (props) {
     super (props);
-
-    console.log(this.props.route.params)
   }
 
   static route = {

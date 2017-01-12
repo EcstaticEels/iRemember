@@ -79,7 +79,8 @@ export default class PhotosScreen extends React.Component {
 
 
   render() {
-  this.takePhoto()
+    console.log(this.props.route.params.state)
+    this.takePhoto()
     return (
       <ScrollView
         style={styles.container}
@@ -109,6 +110,8 @@ async function uploadImageAsync(uri) {
     uri: uri,
     name: date + '.jpeg',
     type: 'image/jpeg',
+    patientId: this.props.route.params.id,
+    patientName: this.props.route.params.name
   });
 
   let options = {
