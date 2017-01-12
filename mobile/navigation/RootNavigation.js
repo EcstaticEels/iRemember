@@ -28,7 +28,8 @@ export default class RootNavigation extends React.Component {
     this.state = {
       reminders: [],
       authenticated: false,
-      name: ''
+      name: '',
+      id: ''
     }
 
     this.handleTextChange = this.handleTextChange.bind(this);
@@ -97,7 +98,7 @@ export default class RootNavigation extends React.Component {
         .then((person) => {
           console.log(person)
           if (person.name === this.state.name) {
-            this.setState({authenticated: true})
+            this.setState({authenticated: true, id: person.id})
           } else {
             this._failedLogin()
           }
@@ -113,13 +114,13 @@ export default class RootNavigation extends React.Component {
 
   render() {
 
-    // if (!this.state.authenticated) {
-    //   return (
-    //     <StackNavigation
-    //       initialRoute={Router.getRoute('login', {handleTextChange: this.handleTextChange, handleTextSubmit: this.handleTextSubmit})}/>
-    //       // initialRoute='login' />
-    //   )
-    // } else {
+    if (!this.state.authenticated) {
+      return (
+        <StackNavigation
+          initialRoute={Router.getRoute('login', {handleTextChange: this.handleTextChange, handleTextSubmit: this.handleTextSubmit})}/>
+          // initialRoute='login' />
+      )
+    } else {
       return (
         <TabNavigation
           id="main"
@@ -146,7 +147,7 @@ export default class RootNavigation extends React.Component {
         </TabNavigation>
       );
 
-    // }
+    }
   }
 
   _renderIcon(name, isSelected) {
