@@ -11,7 +11,9 @@ import PersonInfoScreen from '../screens/PersonInfoScreen';
 import LoginScreen from '../screens/LoginScreen';
 import FailedLoginScreen from '../screens/FailedLoginScreen';
 import TouchIDScreen from '../screens/TouchIDScreen';
-import FailedFaceScreen from '../screens/FailedFaceScreen';
+import FailedFaceLookupScreen from '../screens/FailedFaceLookupScreen';
+import NoFaceFoundScreen from '../screens/NoFaceFoundScreen';
+import MultipleFacesFoundScreen from '../screens/MultipleFacesFoundScreen';
 
 export default createRouter(() => ({
   failedLogin: () => FailedLoginScreen,
@@ -22,5 +24,7 @@ export default createRouter(() => ({
   rootNavigation: () => RootNavigation,
   reminder: () => ReminderInfoScreen,
   person: () => PersonInfoScreen,
-  failedFace: () => FailedFaceScreen  
+  failedFaceLookup: () => FailedFaceLookupScreen,
+  noFaceFound: () => NoFaceFoundScreen,
+  multipleFacesFound: () => MultipleFacesFoundScreen   
 }));

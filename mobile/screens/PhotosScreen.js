@@ -44,14 +44,20 @@ export default class PhotosScreen extends React.Component {
       } else {
         uploadImageAsync(photo.uri)
         .then((response) => {
-          if (response.status === 404) {
-            this._goToFailedFacePage()
-          } else {
-            return response.json().then(responseJSON => {
-              console.log(responseJSON)
+          return response.json().then(responseJSON => {
+            console.log(responseJSON)
+            if(responseJSON.message === 'No faces detected') {
+              this._goToNoFacesFoundPage()
+            }
+            else if (responseJSON.message === 'Multiple faces detected') {
+              this._goToMultipleFacesFoundPage()
+            }
+            else if (responseJSON.message === 'Failed DB lookup') {
+              this._goToFailedFaceLookupPage()
+            } else {
               this._goToPersonInfoPage(responseJSON);
-            })
-          }
+            }
+          })
         });
       }
     })
@@ -61,9 +67,18 @@ export default class PhotosScreen extends React.Component {
     this.props.navigator.push(Router.getRoute('person', {person: person}))
   }
 
-  _goToFailedFacePage () {
-    this.props.navigator.push(Router.getRoute('failedFace'))    
+  _goToFailedFaceLookupPage () {
+    this.props.navigator.push(Router.getRoute('failedFaceLookup'))    
   }
+
+   _goToNoFacesFoundPage () {
+    this.props.navigator.push(Router.getRoute('noFaceFound'))    
+  }
+
+  _goToMultipleFacesFoundPage () {
+    this.props.navigator.push(Router.getRoute('multipleFacesFound'))    
+  }
+
 
   render() {
   this.takePhoto()

@@ -77,7 +77,7 @@ module.exports = {
             console.log('identification results', body)
             const parsedIdentifyBody = JSON.parse(body);
             if (parsedIdentifyBody[0].candidates.length === 0) {
-              res.status(200).end("We couldn't find this person in the database...")
+              res.status(404).send({message: 'Failed DB lookup'})
             } else if (parsedIdentifyBody[0].candidates.length === 1) {
               console.log('we found this person', parsedIdentifyBody[0].candidates);
               db.Face.findOne({
@@ -90,7 +90,8 @@ module.exports = {
                   console.log('about to send this to mobile', JSON.stringify(person));
                   res.status(200).send(JSON.stringify(person));
                 } else {
-                  res.sendStatus(404)
+                  console.log('IS THIS NULL??', person)
+                  res.status(404).send({message: 'Failed DB lookup'})
                 }
               })
             } else {
@@ -121,9 +122,11 @@ module.exports = {
               });
             }
           });
-        } else { //no faces detected in the photo
+        } else if (parsedDetectBody.length > 1) { //multiple faces detected in the photo
           console.log('HIT ELSE BLOCK')
-          res.sendStatus(404)
+          res.status(404).send({message: 'Multiple faces detected'})
+        } else { //no faces detected in the photo
+          res.status(404).send({message: 'No faces detected'})
         }
       });
     });
