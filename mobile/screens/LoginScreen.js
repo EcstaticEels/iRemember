@@ -10,9 +10,7 @@ import {
 
 import * as Exponent from 'exponent';
 
-import ipAdress from '../ip.js';
-
-var baseUrl = 'http://' + ipAdress;
+import baseUrl from '../ip.js';
 
 export default class LoginScreen extends React.Component {
   constructor (props) {

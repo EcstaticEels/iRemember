@@ -17,9 +17,7 @@ import axios from 'axios';
 
 import Router from '../navigation/Router.js';
 
-import ipAdress from '../ip.js';
-
-var baseUrl = 'http://' + ipAdress;
+import baseUrl from '../ip.js';
 
 export default class PhotosScreen extends React.Component {
 
