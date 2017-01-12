@@ -64,9 +64,16 @@ export default class HomeScreen extends React.Component {
     this.getTime();
     this.getWeather();
     if(!this.state.notificationToken) this.allowPushNotification();
-    this.cancelDeletedReminders();
-    this.getReminders();
+// <<<<<<< HEAD
+//     this.cancelDeletedReminders();
+//     this.getReminders();
     setInterval(that.getTime(), 10000);
+// =======
+    // console.log('getting here?')
+    // this.getReminders();
+    // console.log(this.props.navigator)
+    // setInterval(() => {that.polling()}, 10000);
+// >>>>>>> upstream/master
   }
 
   // componentWillMount() {
@@ -132,10 +139,10 @@ export default class HomeScreen extends React.Component {
             id: 1,
           })
             .then(function (response) {
-              console.log(response);
+              // console.log(response);
             })
             .catch(function (error) {
-              console.log(error);
+              // console.log(error);
             });
         })
       } else {
@@ -245,7 +252,26 @@ export default class HomeScreen extends React.Component {
   }
 
   getReminders() {
-    
+    // var that = this;
+    // // console.log('getting reminders', baseUrl + '/mobile/reminders')
+    // axios.get(baseUrl + '/mobile/reminders', {
+    //   params: {
+    //     patientId: 1
+    //   }
+    // })
+    //   .then((response) => {
+    //     var reminders = response.data.reminders;
+    //     that.props.updateReminders(reminders);
+    //     that.setState({
+    //       reminders: reminders
+    //     })
+    //   })
+    //   .then(() => {
+    //     that.pushNotification();
+    //   })
+    //   .catch(function (error) {
+    //   //   console.log('error', error);
+    //   });
   }
 
   render() {
