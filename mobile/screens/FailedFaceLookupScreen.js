@@ -17,7 +17,7 @@ export default class FailedLoginScreen extends React.Component {
 
   static route = {
     navigationBar: {
-      title: 'Failed Login'
+      title: 'Failed Face Lookup'
     },
   }
 
@@ -27,7 +27,7 @@ export default class FailedLoginScreen extends React.Component {
         style={styles.container}
         contentContainerStyle={styles.contentContainer}>
           <Text style={styles.infoText}> 
-            We couldn't find your face in the database!
+            We couldn't find this face on your profile! Please check with your caregiver
           </Text>
       </ScrollView>
     )
