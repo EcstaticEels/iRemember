@@ -14,7 +14,10 @@ import {
   ExponentLinksView,
 } from '@exponent/samples';
 
-import axios from 'axios';
+//MobX
+import {observer} from 'mobx-react/native';
+import {observer} from 'mobx-react/native';
+import Store from '../store.js'
 
 import Router from '../navigation/Router.js'
 
@@ -34,8 +37,7 @@ export default class RemindersScreen extends React.Component {
     super(props);
     this.state = {
       upcomingReminders: [],
-      completedReminders: [],
-      dataSource: dataSource.cloneWithRows(props.reminders),
+      completedReminders: []
     }
   }
 
@@ -46,15 +48,14 @@ export default class RemindersScreen extends React.Component {
   }
 
   _goToReminder = (reminder) => {
-    this.props.navigator.push(Router.getRoute('reminder', {reminder: reminder}))
+    this.props.navigator.push(Router.getRoute('reminder'))
   }
 
   render() {
     return (
         <ListView
           style={styles.list}
-          dataSource={this.state.dataSource}
-          renderRow={(reminder) =>
+          renderRow={(Store.reminder) =>
             <TouchableHighlight onPress={() => this._goToReminder(reminder)}>
               <View style={styles.reminderView}> 
                 <Image style={styles.reminderImage} source={{uri: images[reminder.type || 'other']}} /> 

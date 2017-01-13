@@ -1,5 +1,5 @@
+//React & Exponent
 import React from 'react';
-
 import {
   Image,
   Linking,
@@ -10,14 +10,17 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-
-import { Router } from '../navigation/Router.js';
-
 import Exponent, {
   Components
 } from 'exponent';
+import { Router } from '../navigation/Router.js';
 
-import Moment from 'moment'
+//MobX
+import {observer} from 'mobx-react/native';
+import Store from '../store.js'
+
+//Time
+import Moment from 'moment';
 
 var images = {
   medication: 'https://s30.postimg.org/d0nn9k64d/pill_logo1.png',
@@ -33,27 +36,26 @@ export default class ReminderInfoScreen extends React.Component {
   }
   
   render() {
-    console.log(this.props.route.params.reminder.audio)
     var audio = <Text>''</Text>;
-    if (this.props.route.params.reminder.audio) {
-      audio = <Components.Video source={{uri: this.props.route.params.reminder.audio}}/>;
+    if (Store.current.audio) {
+      audio = <Components.Video source={{uri: Store.current.audio}}/>;
     }
     return (
       <ScrollView 
         style={styles.container}
         contentContainerStyle={styles.contentContainer}>
         <View style={styles.reminderInfoContainer}>
-          <Text style={styles.reminderTitle}>{this.props.route.params.reminder.title}</Text>
+          <Text style={styles.reminderTitle}>{Store.current.title}</Text>
         </View>
         {audio}
         <View style={styles.reminderInfoContainer}>
-          <Text style={styles.reminderNote}>{this.props.route.params.reminder.note}</Text>
+          <Text style={styles.reminderNote}>{Store.current.note}</Text>
         </View>
         <View style={styles.reminderInfoContainer}>
-          <Image style={styles.reminderImage} source={{uri: images[this.props.route.params.reminder.type || 'other']}} /> 
+          <Image style={styles.reminderImage} source={{uri: images[Store.current.type || 'other']}} /> 
         </View>
         <View style={styles.reminderInfoContainer}>
-          <Text style={styles.reminderTimeDate}>{Moment(this.props.route.params.reminder.date.slice(0, 16)).calendar().toString()}</Text>       
+          <Text style={styles.reminderTimeDate}>{Moment(Store.current.date.slice(0, 16)).calendar().toString()}</Text>       
         </View>
       </ScrollView>
     );
