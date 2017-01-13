@@ -4,7 +4,8 @@ import $ from 'jquery';
 import {Route, Router, browserHistory, IndexRoute, IndexRedirect} from 'react-router';
 import { Jumbotron, Button} from 'react-bootstrap';
 import { observer } from 'mobx-react';
-import WebMobxStore from './webMobxStore';
+import { observable } from 'mobx';
+import {caregiverName, needsSetup} from './webMobxStore';
 
 import Nav from './webNav.js';
 import Tab from './webTab.js';
@@ -15,38 +16,35 @@ import Signin from './webSignin.js';
 import Setup from './webSetup.js';
 import Signout from './webSignout.js';
 
-var {caregiverName} = WebMobxStore;
-var {needsSetup} = WebMobxStore;
-
 @observer
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      view: 'reminders',
-      caregiverName: ''
+      view: 'reminders'
     };
   }
 
   componentDidMount() {
     //ajax function that sets the user--> protects the front end
+    var that = this;
     $.ajax({
       method: 'GET',
       url: '/user',
       success: function(res) {
         if (res) {
           var parsed = JSON.parse(res);
-          WebMobxStore.update("caregiverName", parsed.name);
+          console.log(parsed)
+          caregiverName.set(parsed.name);
           if (!parsed.patientId) {
-            WebMobxStore.update("needsSetup", true);
+            needsSetup.set(true);
+            browserHistory.push('/setup');; //needs to redirect
+          } else {
+            browserHistory.push('/reminders');;
           }
-          this.setState({
-            caregiverName: parsed.name
-          }, () => {
-            console.log('state after app mount get user', this.state)
-          })
+          console.log('logging in, caregiver name: ', caregiverName.get(), ' needssetup: ', needsSetup.get())
         } else {
-          console.log('app mount you are not signed in', caregiverName, needsSetup)
+          console.log('app mount you are not signed in', caregiverName.get(), needsSetup.get())
         }
       }.bind(this),
       error: function(err) {
@@ -55,6 +53,7 @@ class App extends React.Component {
     });
   }
 
+
   changeView(select) {  
     this.setState({
       view: select
@@ -62,31 +61,20 @@ class App extends React.Component {
   }
 
   handleLogout() {
-    WebMobxStore.update("caregiverName", '');
-    WebMobxStore.update("needsSetup", false);
-    this.setState({
-      caregiverName: ''
-    }, () => {
-      console.log('state after logout', this.state)
-    })
-  }
-
-
-  handleRedirect(path) {
-    browserHistory.push(path);
+    caregiverName.set('');
+    needsSetup.set(false);
+    console.log('logging out, caregiver name: ', caregiverName.get(), ' needssetup: ', needsSetup.get())
   }
 
   render() {
     return (
       <div className="app-body">
-        <Nav caregiverName={this.state.caregiverName}/>
+        <Nav />
 
         <Tab changeView={this.changeView.bind(this)}/>
         {this.props.children && React.cloneElement(this.props.children, {
           // caregiverId: this.state.caregiverId,
-          // caregiverName: this.state.caregiverName
-          handleLogout: this.handleLogout.bind(this),
-          // handleRedirect: this.handleRedirect.bind(this),
+          handleLogout: this.handleLogout.bind(this)
           // isLoggedIn: this.isLoggedIn.bind(this),
           // needsSetup: this.needsSetup.bind(this)
         })}
@@ -95,9 +83,10 @@ class App extends React.Component {
   }
 }
 
+
 const requireAuth = function(nextState, replace) {
-  if (!!caregiverName) {
-    console.log('not logged in');
+  console.log('in require auth allow next:', !!caregiverName.get())
+  if (!caregiverName.get()) {
     replace({
       pathname: '/signin',
       state: { nextPathname: nextState.location.pathname }

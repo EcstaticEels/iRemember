@@ -34,6 +34,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+//Middleware function to ensure authentication to protected routes
 const ensureAuthenticated = function(req, res, next) {
   if (req.isAuthenticated()) { 
     return next(); 
@@ -102,6 +103,7 @@ app.post('/web/reminders', ensureAuthenticated, webControllers.addReminder);
 app.get('/web/reminders', ensureAuthenticated, webControllers.retrieveReminders);
 app.put('/web/reminders', ensureAuthenticated, webControllers.updateReminder);
 app.delete('/web/reminders', ensureAuthenticated, webControllers.deleteReminder);
+app.post('/web/setup', ensureAuthenticated, webControllers.setup);
 
 //Mobile
 app.post('/mobile/identify', upload.single('picture'), mobileControllers.identifyFace);
@@ -111,7 +113,6 @@ app.put('/mobile/reminders', mobileControllers.updateReminders);
 app.post('/mobile/pushNotification', mobileControllers.addPushNotification);
 
 //Authentication
-
 passport.serializeUser(function(user, done) {
   done(null, user.id);
 });
@@ -145,7 +146,7 @@ app.get('/auth/google/callback',
   }), function(req, res) {
     console.log('req.user', req.user)
     console.log('req.session', req.session)
-    res.redirect('/setup');
+    res.redirect('/');
   }); 
 
 app.get('/logout', function(req, res){
