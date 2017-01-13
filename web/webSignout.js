@@ -1,6 +1,11 @@
 import React from 'react';
-import Auth from './webAuth.js';
 import $ from 'jquery';
+
+import {observer} from 'mobx-react';
+import WebMobxStore from './webMobxStore';
+
+var {caregiverName} = WebMobxStore;
+var {needsSetup} = WebMobxStore;
 
 export default class Signout extends React.Component {
   constructor(props) {
@@ -8,12 +13,11 @@ export default class Signout extends React.Component {
   }
 
   componentDidMount() {
-    Auth.logout();
     $.ajax({
       method: 'GET',
       url: '/logout',
       success: function(res) {
-        console.log(res);
+        this.props.handleLogout();
       }.bind(this),
       error: function(err) {
         console.log('error', err);
@@ -24,4 +28,8 @@ export default class Signout extends React.Component {
   render() {
     return (<p>You are now logged out</p>);
   }
+}
+
+Signout.contextTypes = {
+  router: React.PropTypes.object.isRequired
 }

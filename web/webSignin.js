@@ -7,16 +7,6 @@ export default class Signin extends React.Component {
   constructor(props) {
     super(props);
   }
-
-  componentDidMount() {
-    this.props.handleLogin(() => {
-      if (Auth.loggedIn() && Auth.needSetup()) {
-        this.props.handleLoginRedirect('/setup');
-      } else if (Auth.loggedIn()) {
-        this.props.handleLoginRedirect('/')
-      }
-    }); 
-  }
   
   render() {
     return (

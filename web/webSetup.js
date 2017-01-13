@@ -5,11 +5,11 @@ export default class Setup extends React.Component {
     super(props);
   }
 
-
   render() {
     return (
       <div>
-        <h1>Dis the setup page</h1>
+        <h1>Setup Your Account</h1>
+
       </div>
     )
   }
