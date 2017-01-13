@@ -137,7 +137,22 @@ app.get('/auth/google',
 
 app.get('/user', function(req, res) {
   console.log(req.user)
-  res.status(200).send(JSON.stringify(req.user));
+  var userObj;
+  if (req.user) {
+    if (req.user.patientId) {
+      db.Patient.findOne({
+        where: {
+          id: req.user.patientId
+        }
+      })
+      .then(patient => {
+        res.status(200).send(JSON.stringify({caregiver: req.user, patient: patient}))
+      })
+    } else {
+      res.status(200).send(JSON.stringify({caregiver: req.user}));
+    }
+  }
+
 });
 
 app.get('/auth/google/callback', 

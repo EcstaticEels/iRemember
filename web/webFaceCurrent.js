@@ -1,26 +1,44 @@
 import React from 'react';
 import ReactAudioPlayer from 'react-audio-player';
 import Gallery from './webGallery.js';
+import { observable } from 'mobx';
+import {caregiverName, patientName} from './webMobxStore';
 
 
-var FaceCurrent = (props) => {
-  var edit = () => {
-    props.edit(props.current);
-  };
-  var galleryView = props.current.photos.length > 0 ? <Gallery photos={props.current.photos}/> : null;
+export default class FaceCurrent extends React.Component {
+  constructor(props) {
+    super(props);
+  }
 
-  return (
-    <div className="face-current">
-      <h1>{props.current.subjectName}</h1>
-      {galleryView}
-      <div><h3>Description: </h3>{props.current.description}</div>
-      <label><h3>Audio Message:</h3>
-        <ReactAudioPlayer src={props.current.audio} />
-      </label>
-      <br />
-      <button onClick={edit}>Edit</button>
-    </div>
-  )
+  edit() {
+    this.props.edit(this.props.current);
+  }
+
+  render() {
+    var galleryView = this.props.current.photos.length > 0 ? <Gallery photos={this.props.current.photos}/> : null;
+    var currentView;
+    var audioView = this.props.current.audio ? <ReactAudioPlayer src={this.props.current.audio} /> : <h4>No audio set for this face</h4>;
+    if (!!this.props.current.subjectName) {
+      currentView = (
+        <div className="face-current">
+          <h1>{this.props.current.subjectName}</h1>
+          {galleryView}
+          <div><h3>Description: </h3>{this.props.current.description}</div>
+          <label><h3>Audio Message:</h3>
+            {audioView}
+          </label>
+          <br />
+          <button onClick={this.edit}>Edit</button>
+        </div>
+      );
+    } else {
+      currentView = (
+        <div className="face-current">
+          <h1>Add a person to {patientName.get()}'s face gallery</h1>
+        </div>
+      );
+    }
+    return currentView;
+  }
 };
 
-module.exports = FaceCurrent;

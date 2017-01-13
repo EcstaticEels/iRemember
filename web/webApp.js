@@ -5,7 +5,7 @@ import {Route, Router, browserHistory, IndexRoute, IndexRedirect} from 'react-ro
 import { Jumbotron, Button} from 'react-bootstrap';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
-import {caregiverName, needsSetup} from './webMobxStore';
+import {caregiverName, needsSetup, patientName} from './webMobxStore';
 
 import Nav from './webNav.js';
 import Tab from './webTab.js';
@@ -35,10 +35,13 @@ class App extends React.Component {
         if (res) {
           var parsed = JSON.parse(res);
           console.log(parsed)
-          caregiverName.set(parsed.name);
-          if (!parsed.patientId) {
+          caregiverName.set(parsed.caregiver.name);
+          if (parsed.patient) {
+            patientName.set(parsed.patient.name);
+          }
+          if (!parsed.caregiver.patientId) {
             needsSetup.set(true);
-            browserHistory.push('/setup');; //needs to redirect
+            browserHistory.push('/setup');
           } else {
             browserHistory.push('/reminders');;
           }

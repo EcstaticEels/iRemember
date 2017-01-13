@@ -26,7 +26,7 @@ class Face extends React.Component {
   getFaces(func) {
     $.ajax({
       method: 'GET',
-      url: '/web/identify' + '?caregiverId=1',
+      url: '/web/identify',
       success: function(res) {
         var faces = JSON.parse(res).faces;
         func(faces);
@@ -143,14 +143,12 @@ class Face extends React.Component {
   }
 
   submitForm(event) {
-    var vaild = this.validForm();
-    if (!vaild){
-      return window.alert("Invaild Form");
-    }
     event.preventDefault();
+    var valid = this.validForm();
+    if (!valid){
+      return window.alert("Invalid Form");
+    }
     var formData = new FormData();
-    formData.append('id', this.props.caregiverId);
-    formData.append('name', this.props.caregiverName);
     formData.append('subjectName', this.state.subjectName);
     formData.append('description', this.state.description);
     if (this.state.editMode) {
@@ -162,7 +160,7 @@ class Face extends React.Component {
     for (var key in this.state.updateAudio) {
       formData.append('audio', this.state.updateAudio[key]);
     }
-
+    var that = this;
     $.ajax({
       url: '/web/identify',
       method: this.state.editMode ? 'PUT' : 'POST',
