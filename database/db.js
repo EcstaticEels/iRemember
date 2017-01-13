@@ -14,8 +14,7 @@ const Caregiver = sequelizeDb.define('caregiver', {
   },
   photo: Sequelize.STRING,
   personGroupID: Sequelize.STRING, 
-  googleId: Sequelize.STRING, 
-  authToken: Sequelize.STRING
+  googleId: Sequelize.STRING
 });
 
 const Patient = sequelizeDb.define('patient', {
@@ -30,7 +29,8 @@ const Patient = sequelizeDb.define('patient', {
     unique: true
   },
   photo: Sequelize.STRING,
-  personGroupID: Sequelize.STRING
+  personGroupID: Sequelize.STRING,
+  personId: Sequelize.STRING
 });
 
 const Reminder = sequelizeDb.define('reminder', {
@@ -71,6 +71,10 @@ const FacePhoto = sequelizeDb.define('facePhoto', {
   photo: Sequelize.STRING
 });
 
+const PatientPhoto = sequelizeDb.define('patientPhoto', {
+ photo: Sequelize.STRING
+});
+
 //Associations
 Patient.hasOne(Caregiver);
 Reminder.belongsTo(Patient);
@@ -78,6 +82,7 @@ Reminder.belongsTo(Caregiver);
 Face.belongsTo(Patient);
 Face.belongsTo(Caregiver);
 FacePhoto.belongsTo(Face);
+PatientPhoto.belongsTo(Patient);
 
 sequelizeDb.sync();
 

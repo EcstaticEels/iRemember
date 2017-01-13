@@ -135,6 +135,7 @@ app.get('/auth/google',
 );
 
 app.get('/user', function(req, res) {
+  console.log(req.user)
   res.status(200).send(JSON.stringify(req.user));
 });
 
@@ -144,13 +145,7 @@ app.get('/auth/google/callback',
   }), function(req, res) {
     console.log('req.user', req.user)
     console.log('req.session', req.session)
-    if (req.user.patientId) {
-      console.log('redirecting to reminders after success login');
-      res.redirect('/signin');
-    } else {
-      console.log('redirecting to signin/setup after success login')
-      res.redirect('/signin');
-    }
+    res.redirect('/setup');
   }); 
 
 app.get('/logout', function(req, res){
