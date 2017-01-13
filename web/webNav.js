@@ -4,9 +4,7 @@ import { IndexLink } from 'react-router';
 import { LinkContainer, IndexLinkContainer } from 'react-router-bootstrap';
 
 import {observer} from 'mobx-react';
-import WebMobxStore from './webMobxStore';
-
-var {caregiverName} = WebMobxStore;
+import {caregiverName, needsSetup} from './webMobxStore';
 
 @observer
 class WebNav extends React.Component {
@@ -19,7 +17,8 @@ class WebNav extends React.Component {
   }
 
   render() {
-    var loggedInMsg = !!this.props.caregiverName ? <NavItem>Logged in as: {this.props.caregiverName}</NavItem> : null;
+    var loggedInMsg = !!caregiverName.get() ? <NavItem>Logged in as: {caregiverName.get()}</NavItem> : null;
+    var signInBtn = !caregiverName.get() ?  <NavItem href="/signin">Sign In</NavItem> : null;
     return (
       <Navbar>
         <Navbar.Header>
@@ -29,7 +28,7 @@ class WebNav extends React.Component {
         </Navbar.Header>
         <Nav pullRight>
           {loggedInMsg}
-          <NavItem href="/signin">Sign In</NavItem>
+          {signInBtn}
           <NavItem href="/signout">Sign Out</NavItem>
         </Nav>
       </Navbar>

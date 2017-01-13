@@ -144,11 +144,10 @@ class Face extends React.Component {
 
   submitForm(event) {
     var vaild = this.validForm();
-    if(!vaild){
+    if (!vaild){
       return window.alert("Invaild Form");
     }
     event.preventDefault();
-    var that = this;
     var formData = new FormData();
     formData.append('id', this.props.caregiverId);
     formData.append('name', this.props.caregiverName);

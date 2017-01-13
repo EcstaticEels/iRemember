@@ -9,10 +9,8 @@ const sequelizeDb = new Sequelize('iremember', 'ecstaticeels', 'cool', {
 const Caregiver = sequelizeDb.define('caregiver', {
   name: {
     type: Sequelize.STRING,
-    allowNull: false,
-    unique: true
+    allowNull: false
   },
-  photo: Sequelize.STRING,
   personGroupID: Sequelize.STRING, 
   googleId: Sequelize.STRING
 });
@@ -21,14 +19,12 @@ const Patient = sequelizeDb.define('patient', {
   name: {
     type: Sequelize.STRING,
     allowNull: false,
-    unique: true
   },
   token: {
     type: Sequelize.STRING,
     allowNull: true,
     unique: true
   },
-  photo: Sequelize.STRING,
   personGroupID: Sequelize.STRING,
   personId: Sequelize.STRING
 });
@@ -72,7 +68,7 @@ const FacePhoto = sequelizeDb.define('facePhoto', {
 });
 
 const PatientPhoto = sequelizeDb.define('patientPhoto', {
- photo: Sequelize.STRING
+  photo: Sequelize.STRING
 });
 
 //Associations
@@ -91,5 +87,6 @@ module.exports = {
   Patient,
   Reminder,
   Face,
-  FacePhoto
+  FacePhoto,
+  PatientPhoto
 }

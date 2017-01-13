@@ -1,17 +1,7 @@
 import {observable, computed, autorun, action} from "mobx";
 
-class Store {
-  constructor() {
-    this.update = this.update.bind(this)
-  }
-  @observable caregiverName = '';
-  @observable needsSetup = false;
+const caregiverName = observable('');
+const needsSetup = observable(false);
 
-  @action update(key, value) {
-    this[key] = value;
-    console.log(key, ': ', value);
-  }
-}
-
-const WebMobxStore = new Store();
-export default WebMobxStore;
+module.exports.caregiverName = caregiverName;
+module.exports.needsSetup = needsSetup;
