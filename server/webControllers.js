@@ -292,7 +292,8 @@ module.exports = {
     var caregiverId = Number(urlModule.parse(req.url).query.slice(12));
     db.Reminder.findAll({
       where: {
-        caregiverId: caregiverId
+        caregiverId: caregiverId,
+        registered: {$ne: null}
       }, 
       order: [['date']]
     })
