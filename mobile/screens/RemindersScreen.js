@@ -45,18 +45,14 @@ export default class RemindersScreen extends React.Component {
     }
   }
 
-  componentWillMount() {
-    var reminders = 
-    console.log(reminders)
-    // this.setState({
-    //   dataSource: dataSource.cloneWithRows(reminders);
-    // })
-  }
-
   static route = {
     navigationBar: {
       title: 'Reminders',
     },
+  }
+
+  show(data) {
+    this.props.navigator.showLocalAlert(data, Alerts.notice);
   }
 
   _goToReminder = (reminder) => {

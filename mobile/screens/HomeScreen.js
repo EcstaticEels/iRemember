@@ -32,6 +32,9 @@ import weatherIcons from '../assets/images/weatherIcons.js';
 import LocalNotification from '../notification/localNotification.js';
 import PushNotification from '../notification/pushNotification.js';
 
+
+import Router from '../navigation/Router.js';
+
 import Alerts from '../constants/Alerts';
 
 // import registerForPushNotificationsAsync from 'registerForPushNotificationsAsync';
@@ -105,6 +108,7 @@ export default class HomeScreen extends React.Component {
   }
 
   _goToReminder = (reminder) => {
+    console.log('current', Store.current,'reminder', reminder)
     Store.current = reminder;
     this.props.navigator.push(Router.getRoute('reminder'))
   }
