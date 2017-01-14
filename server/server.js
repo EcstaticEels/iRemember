@@ -89,6 +89,7 @@ const upload = multer({
 });
 
 //Express static
+app.use('/scripts', express.static(path.join(__dirname, '..', 'node_modules')))
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
 //Controllers

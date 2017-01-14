@@ -332,7 +332,7 @@ module.exports = {
   deleteReminder: (req, res) => {
     let reminderId = req.body.reminderId;
     db.Reminder.destroy({ where: {id: reminderId}})
-    .then(updatedReminder => {
+    .then(reminder => {
       res.status(200).send('deleted');
     });
   },

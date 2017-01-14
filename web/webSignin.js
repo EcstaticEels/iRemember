@@ -1,6 +1,5 @@
 import React from 'react';
 import $ from 'jquery';
-import Auth from './webAuth.js';
 import { browserHistory } from 'react-router'
 
 export default class Signin extends React.Component {

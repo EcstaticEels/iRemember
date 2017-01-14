@@ -5,6 +5,8 @@ import {Button, Row, Col, Grid} from 'react-bootstrap';
 import FaceList from './webFaceList.js';
 import FaceCurrent from './webFaceCurrent.js';
 import FaceForm from './webFaceForm.js';
+import Loader from 'react-loader-advanced';
+
 
 class Face extends React.Component {
   constructor(props) {
@@ -19,7 +21,8 @@ class Face extends React.Component {
       description: '',
       updatePhotos: '',
       updateAudio: '',
-      audio: ''
+      audio: '',
+      loader: false
     };
   }
 
@@ -144,6 +147,9 @@ class Face extends React.Component {
 
   submitForm(event) {
     event.preventDefault();
+    this.setState({
+      loader: true
+    });
     var valid = this.validForm();
     if (!valid){
       return window.alert("Invalid Form");
@@ -188,6 +194,9 @@ class Face extends React.Component {
         }
         that.editModeSwitch(false);
         that.displayForm(false, false);
+        that.setState({
+          loader: false
+        });
       },
       error: function (err) {
         console.log('error', err);
@@ -195,7 +204,9 @@ class Face extends React.Component {
     });
   }
 
+
   render() {
+    const spinner = <span><img src={'/default.svg'} /></span>
     return (
     <Grid>
       <Row className="show-grid">
@@ -215,22 +226,24 @@ class Face extends React.Component {
         </Col>
         <Col xs={12} md={8}>
           <div>
-          {
-            this.state.showForm ? 
-              <FaceForm 
-                getInput={this.getInput.bind(this)} 
-                getPhotos={this.getPhotos.bind(this)}
-                submitForm={this.submitForm.bind(this)}
-                editMode={this.state.editMode}
-                getAudio={this.getAudio.bind(this)}
-                audio={this.state.audio}
-                subjectName={this.state.subjectName}
-                photos={this.state.photos} 
-                description={this.state.description}/> 
-              : <FaceCurrent
-                  current={this.state.current}
-                  edit={this.edit.bind(this)} />
-          }
+          <Loader show={this.state.loader} message={spinner} foregroundStyle={{color: 'white'}} backgroundStyle={{backgroundColor: 'white'}} className="spinner">
+            {
+              this.state.showForm ? 
+                <FaceForm 
+                  getInput={this.getInput.bind(this)} 
+                  getPhotos={this.getPhotos.bind(this)}
+                  submitForm={this.submitForm.bind(this)}
+                  editMode={this.state.editMode}
+                  getAudio={this.getAudio.bind(this)}
+                  audio={this.state.audio}
+                  subjectName={this.state.subjectName}
+                  photos={this.state.photos} 
+                  description={this.state.description}/> 
+                : <FaceCurrent
+                    current={this.state.current}
+                    edit={this.edit.bind(this)} />
+            }
+          </Loader>
           </div>
         </Col>
       </Row>
