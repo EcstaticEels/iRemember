@@ -42,7 +42,6 @@ const handleFaceForm = function(req, cb) {
                       if (error) {  
                         console.log(error);
                       }
-                      console.log(result); 
                       cb(urlArray, result.url, fields);        
                   });
                 });
@@ -60,7 +59,6 @@ const handleFaceForm = function(req, cb) {
               if (error) {
                 console.log(error);
               }
-              console.log(result); 
               cb(null, result.url, fields);        
           });
         });

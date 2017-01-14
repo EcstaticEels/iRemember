@@ -16,7 +16,7 @@ var ReminderEntry = (props) => {
             <img src={props.data.img} height="100" width="100"/>
           </Col>
           <Col xs={12} md={8}>
-            <h4>{Moment(props.data.date).calendar().toString()}</h4>
+            <h4>{Moment(props.data.date).calendar(null, {sameElse: 'MM/DD/YYYY hh:mm a'}).toString()}</h4>
             <h4>{props.data.title}</h4>
           </Col>
         </div>
