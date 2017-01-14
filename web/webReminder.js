@@ -47,7 +47,7 @@ class Reminder extends React.Component {
       success: function(res) {
         var reminders = JSON.parse(res).reminders;
         reminders.forEach(function(reminder) {
-          reminder.date = reminder.date.slice(0, 16);
+          reminder.date = new Date (reminder.date);
           reminder.img = mapIcons(reminder.type);
           return reminder;
         });
@@ -74,6 +74,12 @@ class Reminder extends React.Component {
           current: {time: "", recurring: false, type: '', audio: "", note: "", title: ''}
         });
       }
+    });
+  }
+
+  handleDateChange(date) {
+    this.setState({
+      date: date
     });
   }
 
@@ -198,13 +204,16 @@ class Reminder extends React.Component {
     this.setState({
       loader: true
     });
-    var valid = this.validForm();
-    if(!valid){
-      return window.alert("Invalid Form");
-    }
+    // var valid = this.validForm();
+    // if(!valid){
+    //   return window.alert("Invalid Form");
+    // }
     var that = this;
     var formData = new FormData();
-    formData.append('date', this.state.date);
+    console.log('uncoverted date', this.state.date)
+    var reminderUTCdate = new Date(this.state.date).toISOString();
+    console.log('coverted date', reminderUTCdate)
+    formData.append('date', reminderUTCdate);
     formData.append('recurring', this.state.recurring);
     formData.append('type', this.state.type);
     formData.append('note', this.state.note);
@@ -276,6 +285,7 @@ class Reminder extends React.Component {
                   getInput={this.getInput.bind(this)} 
                   getBoolean={this.getBoolean.bind(this)}
                   getAudio={this.getAudio.bind(this)}
+                  handleDateChange={this.handleDateChange.bind(this)}
                   submitForm={this.submitForm.bind(this)}
                   editMode={this.state.editMode}
                   date={this.state.date}
