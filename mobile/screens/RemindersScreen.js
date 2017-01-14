@@ -33,15 +33,24 @@ var images = {
   other: 'https://s30.postimg.org/i0l3hibr1/reminder_logo.png'
 }
 
+@observer
 export default class RemindersScreen extends React.Component {
 
   constructor (props) {
     super(props);
     this.state = {
-      upcomingReminders: [],
-      completedReminders: [],
-      dataSource: dataSource.cloneWithRows(props.reminders),
+      dataSource: dataSource.cloneWithRows(Store.reminders.map((reminder) => {
+        return mobx.toJS(reminder);
+      }))
     }
+  }
+
+  componentWillMount() {
+    var reminders = 
+    console.log(reminders)
+    // this.setState({
+    //   dataSource: dataSource.cloneWithRows(reminders);
+    // })
   }
 
   static route = {
@@ -51,7 +60,8 @@ export default class RemindersScreen extends React.Component {
   }
 
   _goToReminder = (reminder) => {
-    this.props.navigator.push(Router.getRoute('reminder', {reminder: reminder}))
+    Store.current = reminder;
+    this.props.navigator.push(Router.getRoute('reminder'))
   }
 
   render() {
