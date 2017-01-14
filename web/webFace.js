@@ -5,6 +5,8 @@ import {Button, Row, Col, Grid} from 'react-bootstrap';
 import FaceList from './webFaceList.js';
 import FaceCurrent from './webFaceCurrent.js';
 import FaceForm from './webFaceForm.js';
+import Loader from 'react-loader-advanced';
+
 
 class Face extends React.Component {
   constructor(props) {
@@ -19,14 +21,15 @@ class Face extends React.Component {
       description: '',
       updatePhotos: '',
       updateAudio: '',
-      audio: ''
+      audio: '',
+      loader: false
     };
   }
 
   getFaces(func) {
     $.ajax({
       method: 'GET',
-      url: '/web/identify' + '?caregiverId=1',
+      url: '/web/identify',
       success: function(res) {
         var faces = JSON.parse(res).faces;
         func(faces);
@@ -130,7 +133,7 @@ class Face extends React.Component {
     });
   }
 
-  vaildForm() {
+  validForm() {
     if(this.state.subjectName.length < 3){
       console.log('name')
       return false;
@@ -143,15 +146,15 @@ class Face extends React.Component {
   }
 
   submitForm(event) {
-    var vaild = this.vaildForm();
-    if(!vaild){
-      return window.alert("Invaild Form");
-    }
     event.preventDefault();
-    var that = this;
+    this.setState({
+      loader: true
+    });
+    var valid = this.validForm();
+    if (!valid){
+      return window.alert("Invalid Form");
+    }
     var formData = new FormData();
-    formData.append('id', this.props.id);
-    formData.append('name', this.props.name);
     formData.append('subjectName', this.state.subjectName);
     formData.append('description', this.state.description);
     if (this.state.editMode) {
@@ -163,7 +166,7 @@ class Face extends React.Component {
     for (var key in this.state.updateAudio) {
       formData.append('audio', this.state.updateAudio[key]);
     }
-
+    var that = this;
     $.ajax({
       url: '/web/identify',
       method: this.state.editMode ? 'PUT' : 'POST',
@@ -191,6 +194,9 @@ class Face extends React.Component {
         }
         that.editModeSwitch(false);
         that.displayForm(false, false);
+        that.setState({
+          loader: false
+        });
       },
       error: function (err) {
         console.log('error', err);
@@ -198,7 +204,9 @@ class Face extends React.Component {
     });
   }
 
+
   render() {
+    const spinner = <span><img src={'/default.svg'} /></span>
     return (
     <Grid>
       <Row className="show-grid">
@@ -218,22 +226,24 @@ class Face extends React.Component {
         </Col>
         <Col xs={12} md={8}>
           <div>
-          {
-            this.state.showForm ? 
-              <FaceForm 
-                getInput={this.getInput.bind(this)} 
-                getPhotos={this.getPhotos.bind(this)}
-                submitForm={this.submitForm.bind(this)}
-                editMode={this.state.editMode}
-                getAudio={this.getAudio.bind(this)}
-                audio={this.state.audio}
-                subjectName={this.state.subjectName}
-                photos={this.state.photos} 
-                description={this.state.description}/> 
-              : <FaceCurrent
-                  current={this.state.current}
-                  edit={this.edit.bind(this)} />
-          }
+          <Loader show={this.state.loader} message={spinner} foregroundStyle={{color: 'white'}} backgroundStyle={{backgroundColor: 'white'}} className="spinner">
+            {
+              this.state.showForm ? 
+                <FaceForm 
+                  getInput={this.getInput.bind(this)} 
+                  getPhotos={this.getPhotos.bind(this)}
+                  submitForm={this.submitForm.bind(this)}
+                  editMode={this.state.editMode}
+                  getAudio={this.getAudio.bind(this)}
+                  audio={this.state.audio}
+                  subjectName={this.state.subjectName}
+                  photos={this.state.photos} 
+                  description={this.state.description}/> 
+                : <FaceCurrent
+                    current={this.state.current}
+                    edit={this.edit.bind(this)} />
+            }
+          </Loader>
           </div>
         </Col>
       </Row>
