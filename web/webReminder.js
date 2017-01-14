@@ -242,6 +242,9 @@ class Reminder extends React.Component {
     if(this.state.title.length < 1) {
       return false;
     }
+     if(this.state.recurring && (!this.state.recurringDays || !this.state.recurringDays[0])) {
+      return false;
+    }
     return true;
   }
 

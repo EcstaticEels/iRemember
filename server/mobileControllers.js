@@ -222,6 +222,7 @@ module.exports = {
     db.Reminder.findAll({
       where: {
         patientId: patientId
+        // date: {$gte: new Date().toLocaleDateString()}
       }
     })
     .then(reminders => {
@@ -229,12 +230,14 @@ module.exports = {
     });
   },
   updateReminders: (req, res) => {
+    console.log('body', req.body)
     req.body.forEach((reminder) => {
+      console.log(reminder.notificationId.join(','))
       // console.log('updating reminder', reminder)
       db.Reminder.update(
         { 
           registered: reminder.registered,
-          notificationId: reminder.notificationId
+          notificationId: reminder.notificationId.join(',')
         },
         { where: { id: reminder.id}}
       )
@@ -242,8 +245,9 @@ module.exports = {
     res.status(200).send('database updated')
   },
   deleteReminders: (req, res) => {
+    console.log(req.body)
     let reminderIds = req.body.id;
-    db.Reminder.destory({ where: {id: reminderIds}})
+    db.Reminder.destroy({ where: {id: reminderIds}})
     .then(updatedReminder => {
       res.status(200).send('deleted');
     });
