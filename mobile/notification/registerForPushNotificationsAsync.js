@@ -6,8 +6,6 @@ import {
   Notifications,
 } from 'exponent';
 
-// Example server, implemented in Rails: https://git.io/vKHKv
-
 import baseUrl from '../ip.js';
 
 export default async function registerForPushNotificationsAsync() {

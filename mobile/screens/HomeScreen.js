@@ -29,6 +29,8 @@ import moment from 'moment';
 import { MonoText } from '../components/StyledText';
 import weatherIcons from '../assets/images/weatherIcons.js';
 
+import LocalNotification from '../notification/localNotification.js';
+
 // import registerForPushNotificationsAsync from 'registerForPushNotificationsAsync';
 
 @observer
@@ -271,6 +273,7 @@ export default class HomeScreen extends React.Component {
             </Image> 
           </View>
 
+          <LocalNotification/>
         </ScrollView>
     );
   }
