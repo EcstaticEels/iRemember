@@ -18,7 +18,6 @@ import Exponent, {
 } from 'exponent';
 
 //MobX
-import mobx from 'mobx';
 import { observer } from 'mobx-react/native';
 import Store from '../store.js';
 

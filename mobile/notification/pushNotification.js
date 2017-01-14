@@ -1,9 +1,8 @@
 //React & Exponent
 import React from 'react';
-import { Notifications } from 'exponent';
-import Alerts from '../constants/Alerts';
+import { Notifications, Permissions } from 'exponent';
 
-import registerForPushNotificationsAsync from './registerForPushNotificationsAsync';
+// import registerForPushNotificationsAsync from './registerForPushNotificationsAsync';
 
 //MobX
 import mobx from 'mobx';
@@ -20,6 +19,10 @@ var sample = { "id": 1, "date": "2017-01-10T13:01:00.000Z", "type": "medication"
 
 @observer
 export default class PushNotification extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
   componentDidMount() {
     this._notificationSubscription = this._registerForPushNotifications();
   }
@@ -28,27 +31,52 @@ export default class PushNotification extends React.Component {
     this._notificationSubscription && this._notificationSubscription.remove();
   }
 
-  _registerForPushNotifications() {
-  //   // Send our push token over to our backend so we can receive notifications
-  //   // You can comment the following line out if you want to stop receiving
-  //   // a notification every time you open the app. Check out the source
-  //   // for this function in api/registerForPushNotificationsAsync.js
-    registerForPushNotificationsAsync();
-
-  //   // Watch for incoming notifications
-    this._notificationSubscription = Notifications.addListener(this._handleNotification);
+  allowPushNotification() {
+    Permissions.askAsync(Permissions.REMOTE_NOTIFICATIONS)
+    .then((response) => {
+      if (response.status === "granted") {
+        Notifications.getExponentPushTokenAsync()
+        .then((token) => {
+          axios.post(baseUrl + '/mobile/pushNotification', {
+            token:  token,
+            id: Store.id,
+          })
+            .then(function (response) {
+              console.log(response);
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+        })
+      } else {
+        console.log('Permission NOT GRANTED');
+      }
+    })
   }
 
-  _handleNotification = ({origin, data}) => {
+  _registerForPushNotifications() {
+    // Send our push token over to our backend so we can receive notifications
+    // You can comment the following line out if you want to stop receiving
+    // a notification every time you open the app. Check out the source
+    // for this function in api/registerForPushNotificationsAsync.js
+    this.allowPushNotification();
+    var that = this;
+
+    // Watch for incoming notifications
+    this._notificationSubscription = Notifications.addListener(that._handleNotification.bind(that));
+  }
+
+  _handleNotification ({origin, data}) {
+    console.log(origin, data)
     if(origin === 'received') {
-      var title = Object.getOwnPropertyNames(data);
-      this.props.navigator.showLocalAlert(
-        title + ' : ' + data[title],
-        Alerts.notice
-      );
+      // var message = data.title;
+      // if(data.note) {
+      //   message += ' : ' + data.note;
+      // }
+      this.props.showPushNotification(data)
     } else {
-      Store.current = data
-      this.props.navigator.push(Router.getRoute('reminder', {reminder: Store.current}))
+      var selected = JSON.parse(data.data);
+      this.props._goToReminder(selected);
     }
   }
 
