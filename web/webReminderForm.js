@@ -12,15 +12,7 @@ export default class ReminderList extends React.Component {
     }
   }
 
-              // <Calendar
-              //   dateFormat="DD/MM/YYYY HH:mm:ss"
-              //   weekNumbers={false}
-              //   defaultDate="20/04/2016 16:23:56"
-              //   onChange={(dateString, { dateMoment, timestamp}) => {}}
-              // />
   render() {
-                // <input className="date" type="datetime-local" value={this.props.date} onChange={this.props.getInput}/>
-
     return (
       <div className="reminder-form">
         <h4>New Reminder</h4>
@@ -74,6 +66,19 @@ export default class ReminderList extends React.Component {
               Recurring
             </label>
           </label>
+           <div>{
+            this.props.recurring? 
+            <label className="recurringDays">
+              Select Days:
+              <input type="checkbox" id="Monday" value="Monday" checked={this.props.selectedDays.Monday} onClick={this.props.getSelectedDay}/><label for="Monday">Monday</label>
+              <input type="checkbox" id="Tuesday" value="Tuesday" checked={this.props.selectedDays.Tuesday} onClick={this.props.getSelectedDay}/><label for="Tuesday">Tuesday</label>
+              <input type="checkbox" id="Wednesday" value="Wednesday" checked={this.props.selectedDays.Wednesday} onClick={this.props.getSelectedDay}/><label for="Wednesday">Wednesday</label>
+              <input type="checkbox" id="Thursday" value="Thursday" checked={this.props.selectedDays.Thursday} onClick={this.props.getSelectedDay}/><label for="Thursday">Thursday</label>
+              <input type="checkbox" id="Friday" value="Friday" checked={this.props.selectedDays.Friday} onClick={this.props.getSelectedDay}/><label for="Friday">Friday</label>
+              <input type="checkbox" id="Saturday" value="Saturday" checked={this.props.selectedDays.Saturday} onClick={this.props.getSelectedDay}/><label for="Saturday">Saturday</label>
+              <input type="checkbox" id="Sunday" value="Sunday" checked={this.props.selectedDays.Sunday} onClick={this.props.getSelectedDay}/><label for="Sunday">Sunday</label>
+            </label> : null
+          }</div>
           <br/>
           <label>Current Uploaded Audio Reminder:
             <br />
@@ -98,5 +103,3 @@ export default class ReminderList extends React.Component {
     );
   }
 }
-
-
