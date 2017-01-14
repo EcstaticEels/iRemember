@@ -19,7 +19,7 @@ cloudinary.config({
 });
 
 //Helper function to upload photos to cloudinary
-const uploadPhoto = function(req, cb) {
+const handleFaceForm = function(req, cb) {
   const faceForm = new multiparty.Form();
   faceForm.parse(req, function(err, fields, files) {
     if (err) {
@@ -40,7 +40,6 @@ const uploadPhoto = function(req, cb) {
                       if (error) {  
                         console.log(error);
                       }
-                      console.log(result); 
                       cb(urlArray, result.url, fields);        
                   });
                 });
@@ -58,7 +57,6 @@ const uploadPhoto = function(req, cb) {
               if (error) {
                 console.log(error);
               }
-              console.log(result); 
               cb(null, result.url, fields);        
           });
         });
@@ -69,7 +67,29 @@ const uploadPhoto = function(req, cb) {
   });
 };
 
-const uploadAudio = function(req, cb) {
+const handleSetupForm = function(req, cb) {
+  const setupForm = new multiparty.Form();
+  setupForm.parse(req, function(err, fields, files) {
+    if (err) {
+      console.log(err);
+    }
+    const patientPhotoArray = [];
+    console.log('files', files);
+    console.log('fields', fields);
+    if (Object.keys(files).length > 0) {
+      files.patientPhoto.forEach(function(file) {
+        cloudinary.uploader.upload(file.path, function(result) { 
+          patientPhotoArray.push(result.url);
+          if (patientPhotoArray.length === files.patientPhoto.length) {
+            cb(patientPhotoArray, fields);
+          }
+        });
+      });
+    }
+  })
+}
+
+const handleReminderForm = function(req, cb) {
   const reminderForm = new multiparty.Form();
   reminderForm.parse(req, function(err, fields, files) {
     console.log(fields)
@@ -85,7 +105,6 @@ const uploadAudio = function(req, cb) {
             if (error) {
               console.log(error);
             }
-            console.log(result); 
             cb(result.url, fields);        
         });
       });
@@ -97,65 +116,58 @@ const uploadAudio = function(req, cb) {
 
 module.exports = {
   addFace: (req, res) => {
-    uploadPhoto(req, (urlArray, audioUrl, fields) => {
+    handleFaceForm(req, (urlArray, audioUrl, fields) => {
       console.log(urlArray, audioUrl);
-      db.Caregiver.findOne({
-        where: {
-          id: Number(fields.id[0])
+      let personGroupId = req.user.personGroupID;
+      request.post({
+        headers: microsoftHeaders,
+        url: `https://api.projectoxford.ai/face/v1.0/persongroups/${personGroupId}/persons`,
+        body: JSON.stringify({
+          "name": fields.subjectName[0],
+          "userData": fields.description[0] 
+        })
+      }, (err, response, body) => {
+        if (err) {
+          console.log(err);
         }
-      })
-      .then(caregiver => {
-        let personGroupId = caregiver.get('personGroupID');
-        request.post({
-          headers: microsoftHeaders,
-          url: `https://api.projectoxford.ai/face/v1.0/persongroups/${personGroupId}/persons`,
-          body: JSON.stringify({
-            "name": fields.subjectName[0],
-            "userData": fields.description[0] 
-          })
-        }, (err, response, body) => {
-          if (err) {
-            console.log(err);
-          }
-          let createdPerson = JSON.parse(body);
-          db.Face.create({
-            name: fields.subjectName[0], 
-            description: fields.description[0], 
-            photo: urlArray[0],//should be req.body...?
-            audio: audioUrl,//should be req.body.audio
-            caregiverId: caregiver.get('id'),
-            patientId: caregiver.get('patientId'),
-            personId: createdPerson.personId
-          })
-          .then(face => {
-            var result = [];
-            urlArray.forEach(url => {
-              request.post({
-                headers: microsoftHeaders,
-                url: `https://api.projectoxford.ai/face/v1.0/persongroups/${personGroupId}/persons/${createdPerson.personId}/persistedFaces`,
-                body: JSON.stringify({"url": url})
-              }, (err, response, body) => {
-                if (err) {
-                  console.log(err);
+        let createdPerson = JSON.parse(body);
+        db.Face.create({
+          name: fields.subjectName[0], 
+          description: fields.description[0], 
+          photo: urlArray[0],
+          audio: audioUrl,
+          caregiverId: req.user.id,
+          patientId: req.user.patientId,
+          personId: createdPerson.personId
+        })
+        .then(face => {
+          var result = [];
+          urlArray.forEach(url => {
+            request.post({
+              headers: microsoftHeaders,
+              url: `https://api.projectoxford.ai/face/v1.0/persongroups/${personGroupId}/persons/${createdPerson.personId}/persistedFaces`,
+              body: JSON.stringify({"url": url})
+            }, (err, response, body) => {
+              if (err) {
+                console.log(err);
+              }
+              result.push(body);
+              db.FacePhoto.create({
+                photo: url,
+                faceId: face.get('id')
+              })
+              .then(() => {
+                if (urlArray.length === result.length) {
+                  request.post({
+                    headers: microsoftHeaders,
+                    url: `https://api.projectoxford.ai/face/v1.0/persongroups/${personGroupId}/train`,
+                  }, (err, response, body) => {
+                    if (err) {
+                      console.log(err);
+                    }
+                    res.status(201).send(JSON.stringify(face));
+                  });
                 }
-                result.push(body);
-                db.FacePhoto.create({
-                  photo: url,
-                  faceId: face.get('id')
-                })
-                .then(() => {
-                  if (urlArray.length === result.length) {
-                    request.post({
-                      headers: microsoftHeaders,
-                      url: `https://api.projectoxford.ai/face/v1.0/persongroups/${personGroupId}/train`,
-                    }, (err, response, body) => {
-                      if (err) {
-                        console.log(err);
-                      }
-                      res.status(201).send(JSON.stringify(face));
-                    });
-                  }
-                });
               });
             });
           });
@@ -165,71 +177,64 @@ module.exports = {
   },
   updateFace: (req, res) => {
     console.log('hit updateFace')
-    uploadPhoto(req, (urlArray, audioUrl, fields) => {
+    handleFaceForm(req, (urlArray, audioUrl, fields) => {
       console.log(urlArray);
       let faceId = fields.faceId[0];
-      db.Caregiver.findOne({
+      let personGroupId = req.user.personGroupID;
+      db.Face.findOne({
         where: {
-          id: Number(fields.id[0])
+          id: faceId
         }
       })
-      .then(caregiver => {
-        let personGroupId = caregiver.get('personGroupID');
-        db.Face.findOne({
-          where: {
-            id: faceId
-          }
-        })
-        .then(face => {
-          let updateObj = audioUrl ? 
-            { name: fields.subjectName[0],
-              description: fields.description[0],
-              audio: audioUrl}
-            : { name: fields.subjectName[0],
-              description: fields.description[0]};
-          db.Face.update(
-            updateObj,
-            { where: {id: face.get('id')}}
-          )
-          .then(() => {
-            if (urlArray) {
-              request.post({
-                headers: microsoftHeaders,
-                url: `https://api.projectoxford.ai/face/v1.0/persongroups/${personGroupId}/persons/${face.personId}/persistedFaces`,
-                body: JSON.stringify({"url": urlArray[0]})
-              }, (err, response, body) => {
-                  if (err) {
-                    console.log(err);
-                  }
-                  db.FacePhoto.create({
-                    photo: urlArray[0],
-                    faceId: face.get('id')
-                  })
-                  .then(() => {
-                    request.post({
-                      headers: microsoftHeaders,
-                      url: `https://api.projectoxford.ai/face/v1.0/persongroups/${personGroupId}/train`,
-                    }, (err, response, body) => {
-                      if (err) {
-                        console.log(err);
-                      }
-                      res.status(201).send('Person and face successfully added, train API call made');
-                    });
+      .then(face => {
+        let updateObj = audioUrl ? 
+          { name: fields.subjectName[0],
+            description: fields.description[0],
+            audio: audioUrl}
+          : { name: fields.subjectName[0],
+            description: fields.description[0]};
+        db.Face.update(
+          updateObj,
+          { where: {id: face.get('id')}}
+        )
+        .then(() => {
+          if (urlArray) {
+            request.post({
+              headers: microsoftHeaders,
+              url: `https://api.projectoxford.ai/face/v1.0/persongroups/${personGroupId}/persons/${face.personId}/persistedFaces`,
+              body: JSON.stringify({"url": urlArray[0]})
+            }, (err, response, body) => {
+                if (err) {
+                  console.log(err);
+                }
+                db.FacePhoto.create({
+                  photo: urlArray[0],
+                  faceId: face.get('id')
+                })
+                .then(() => {
+                  request.post({
+                    headers: microsoftHeaders,
+                    url: `https://api.projectoxford.ai/face/v1.0/persongroups/${personGroupId}/train`,
+                  }, (err, response, body) => {
+                    if (err) {
+                      console.log(err);
+                    }
+                    res.status(201).send('Person and face successfully added, train API call made');
                   });
-              });
-            } else {
-              res.status(201).send('Person updated');
-            }
-          });
+                });
+            });
+          } else {
+            res.status(201).send('Person updated');
+          }
         });
       });
+      
     });
   },
   retrieveFaces: (req, res) => {
-    var caregiverId = Number(urlModule.parse(req.url).query.slice(12));
     db.Face.findAll({
       where: {
-        caregiverId: caregiverId
+        caregiverId: req.user.id
       }
     })
     .then(faces => {
@@ -262,37 +267,27 @@ module.exports = {
     });
   },
   addReminder: (req, res) => {
-    uploadAudio(req, (audioUrl, fields) => {
-      let caregiverId = Number(fields.id[0]); 
-      db.Caregiver.findOne({
-        where: {
-          id: caregiverId
-        }
+    handleReminderForm(req, (audioUrl, fields) => {
+      db.Reminder.create({ 
+        date: fields.date[0],
+        type: fields.type[0],
+        note: fields.note[0],
+        recurring: fields.recurring[0], 
+        caregiverId: req.user.id,
+        audio: audioUrl,
+        title: fields.title[0],
+        registered: false,
+        patientId: req.user.patientId
       })
-      .then(caregiver => {
-        db.Reminder.create({ 
-          date: fields.date[0],
-          type: fields.type[0],
-          note: fields.note[0],
-          recurring: fields.recurring[0], 
-          recurringDays: fields.recurringDays[0],
-          caregiverId: caregiverId,
-          audio: audioUrl,
-          title: fields.title[0],
-          registered: false,
-          patientId: caregiver.get('patientId')
-        })
-        .then(reminder => {
-          res.status(201).send(JSON.stringify(reminder));
-        });
+      .then(reminder => {
+        res.status(201).send(JSON.stringify(reminder));
       });
     });
   },
   retrieveReminders: (req, res) => {
-    var caregiverId = Number(urlModule.parse(req.url).query.slice(12));
     db.Reminder.findAll({
       where: {
-        caregiverId: caregiverId,
+        caregiverId: req.user.id,
         registered: {$ne: null}
       }, 
       order: [['date']]
@@ -302,8 +297,7 @@ module.exports = {
     });
   },
   updateReminder: (req, res) => { 
-    uploadAudio(req, (audioUrl, fields) => {
-      // console.log(fields)
+    handleReminderForm(req, (audioUrl, fields) => {
       let reminderId = fields.reminderId[0];
       let updateObj = audioUrl ? 
         { date: fields.date[0],
@@ -339,7 +333,75 @@ module.exports = {
     let reminderId = req.body.reminderId;
     db.Reminder.update({registered: null}, { where: {id: reminderId}})
     .then(updatedReminder => {
-      res.status(200).send('deleted');
+      res.status(200).send('updated reminder to delete in mobile');
+    });
+  },
+  setup: (req, res) => {
+    let newPersonGroupId = `ecstatic-eels-0-${req.user.id}`
+    let patientGroupId = `ecstatic-eels-patients-1`
+    handleSetupForm(req, (patientPhotoArray, fields) => {
+      request.post({
+        headers: microsoftHeaders,
+        url: `https://api.projectoxford.ai/face/v1.0/persongroups/${patientGroupId}/persons`,
+        body: JSON.stringify({
+          "name": fields.patientName[0]
+        })
+      }, (err, response, body) => {
+        console.log(body);
+        let createdPerson = JSON.parse(body);
+        db.Patient.create({
+          name: fields.patientName[0],
+          personGroupID: newPersonGroupId,
+          personId: createdPerson.personId
+        })
+        .then(patient => {
+          let result = [];
+          patientPhotoArray.forEach(patientPhoto => {
+            request.post({
+              headers: microsoftHeaders,
+              url: `https://api.projectoxford.ai/face/v1.0/persongroups/${patientGroupId}/persons/${createdPerson.personId}/persistedFaces`,
+              body: JSON.stringify({"url": patientPhoto})
+              }, (err, response, body) => {
+                if (err) {
+                  console.log(err);
+                }
+                result.push(body);
+                db.PatientPhoto.create({
+                  photo: patientPhoto,
+                  patientId: patient.get('id')
+                })
+                .then(() => {
+                  if (patientPhotoArray.length === result.length) {
+                    request.post({
+                      headers: microsoftHeaders,
+                      url: `https://api.projectoxford.ai/face/v1.0/persongroups/${patientGroupId}/train`,
+                    }, (err, response, body) => {
+                      if (err) {
+                        console.log(err);
+                      }
+                      db.Caregiver.update(
+                        {
+                          patientId: patient.get('id'),
+                          personGroupID: newPersonGroupId
+                        }, 
+                        {
+                          where: {
+                            id: req.user.id
+                          }
+                        }
+                      )
+                      .then(caregiver => {
+                        res.status(201).send(JSON.stringify({patient: patient, caregiver: caregiver}));
+                        console.log('caregiver and patient associated');
+                      });
+                    });
+                  }
+                });
+              }
+            );
+          });
+        })
+      });
     });
   }
 }

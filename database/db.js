@@ -9,29 +9,26 @@ const sequelizeDb = new Sequelize('iremember', 'ecstaticeels', 'cool', {
 const Caregiver = sequelizeDb.define('caregiver', {
   name: {
     type: Sequelize.STRING,
-    allowNull: false,
-    unique: true
+    allowNull: false
   },
-  photo: Sequelize.STRING,
-  personGroupID: Sequelize.STRING
+  personGroupID: Sequelize.STRING, 
+  googleId: Sequelize.STRING,
+  photo: Sequelize.STRING
 });
 
 const Patient = sequelizeDb.define('patient', {
   name: {
     type: Sequelize.STRING,
     allowNull: false,
-    unique: true
   },
   token: {
     type: Sequelize.STRING,
     allowNull: true,
     unique: true
   },
-  photo: Sequelize.STRING,
   personGroupID: Sequelize.STRING,
-  personId: {
-    type: Sequelize.STRING
-  },
+  personId: Sequelize.STRING,
+  photo: Sequelize.STRING
 });
 
 const Reminder = sequelizeDb.define('reminder', {
@@ -41,7 +38,7 @@ const Reminder = sequelizeDb.define('reminder', {
   type: Sequelize.STRING,
   note: Sequelize.STRING,
   recurring: Sequelize.BOOLEAN,
-  recurringDays: Sequelize.STRING,
+  recurringDays: Sequelize.STRING(300),
   notificationId: {
     type: Sequelize.STRING(300),
     allowNull: true,
@@ -85,6 +82,7 @@ Reminder.belongsTo(Caregiver);
 Face.belongsTo(Patient);
 Face.belongsTo(Caregiver);
 FacePhoto.belongsTo(Face);
+PatientPhoto.belongsTo(Patient);
 
 sequelizeDb.sync();
 
@@ -93,5 +91,6 @@ module.exports = {
   Patient,
   Reminder,
   Face,
-  FacePhoto
+  FacePhoto,
+  PatientPhoto
 }
