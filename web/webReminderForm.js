@@ -16,6 +16,7 @@ var ReminderList = (props) => (
         <select className="type" value={props.type} onChange={props.getInput} required>
           <option value='medication'>Medication</option>
           <option value='appointment'>Appointment</option>
+          <option value='chores'>Chores</option>
           <option value='others'>Others</option>
         </select>
       </label>

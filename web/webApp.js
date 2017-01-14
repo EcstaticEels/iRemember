@@ -81,6 +81,7 @@ class App extends React.Component {
           // isLoggedIn: this.isLoggedIn.bind(this),
           // needsSetup: this.needsSetup.bind(this)
         })}
+        
       </div>
     )
   }
