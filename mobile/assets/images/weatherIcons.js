@@ -30,8 +30,8 @@ var weatherIcons = {
     mist: "https://maxcdn.icons8.com/Color/PNG/96/Weather/fog_day-96.png",
   },
   night: {
-    sunny: "https://maxcdn.icons8.com/Color/PNG/24/Cinema/moon-24.png",
-    partiallyCloudy: "https://maxcdn.icons8.com/office/PNG/16/Weather/fog_night-16.png",
+    sunny: "https://maxcdn.icons8.com/Color/PNG/96/Cinema/moon-96.png",
+    partiallyCloudy: "https://maxcdn.icons8.com/office/PNG/80/Weather/fog_night-96.png",
     cloudy: "https://maxcdn.icons8.com/Color/PNG/96/Weather/clouds-96.png",
     rainy: "https://maxcdn.icons8.com/Color/PNG/96/Weather/rain-96.png",
     storm: "https://maxcdn.icons8.com/Color/PNG/96/Weather/downpour-96.png",

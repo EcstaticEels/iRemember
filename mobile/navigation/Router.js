@@ -26,5 +26,5 @@ export default createRouter(() => ({
   person: () => PersonInfoScreen,
   failedFaceLookup: () => FailedFaceLookupScreen,
   noFaceFound: () => NoFaceFoundScreen,
-  multipleFacesFound: () => MultipleFacesFoundScreen   
+  multipleFacesFound: () => MultipleFacesFoundScreen,
 }));
