@@ -18,7 +18,7 @@ class Store {
 
   //Change observable variable value to new value
   @action update(key, value) {
-    console.log(this);
+    // console.log(this);
     // console.log('before', key, that[key]);
     that[key] = value;
     // console.log('after', key, that[key]);
@@ -35,8 +35,8 @@ class Store {
     return new Date(year, month, day, hour, minute);
   }
 
-  //Get closest Date in given dayOfWeek from setTime;
-  @action setDayofWeekTime (dayOfWeek, setTime) {
+  //Get closest Date in given dayOfWeek from setTime in milliseconds;
+  @action getDifferenceInMilliseconds (dayOfWeek, setTime) {
     var daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
     var dayOfWeekInd = daysOfWeek.indexOf(dayOfWeek);
     var setTimeInd = setTime.getDay();
@@ -44,7 +44,8 @@ class Store {
     if(differenceInDays < 0) {
       differenceInDays = 7 + differenceInDays;
     }
-    return new Date(year, month, day + differenceInDays, hour, minute)
+    differenceInMilliseconds = differenceInDays * 24 * 60 * 60 * 1000;
+    return differenceInMilliseconds;
   }
 
   

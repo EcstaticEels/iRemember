@@ -1,8 +1,6 @@
 //React & Exponent
 import React from 'react';
-import { View } from 'react-native';
 import { Notifications } from 'exponent';
-import Alerts from '../constants/Alerts';
 
 import registerForPushNotificationsAsync from './registerForPushNotificationsAsync';
 
@@ -15,29 +13,23 @@ import Store from '../store.js'
 import axios from 'axios';
 import baseUrl from '../ip.js';
 
+import Promise from 'bluebird';
+
 
 var samples = [{ "id": 1, "date": "2017-01-10T13:01:00.000Z", "type": "medication", "note": "mdsfm", "recurring": false, "recurringDays": "", "notificationId": null, "registered": false, "audio": null, "title": "sdmf,", "createdAt": "2017-01-11T00:18:58.000Z", "updatedAt": "2017-01-11T00:18:58.000Z", "patientId": 1, "caregiverId": 1 }, { "id": 2, "date": "2017-01-10T13:00:00.000Z", "type": "medication", "note": "slakj", "recurring": true, "recurringDays": "Monday,Tuesday,Wednesday", "notificationId": null, "registered": null, "audio": null, "title": "shaks", "createdAt": "2017-01-11T00:19:31.000Z", "updatedAt": "2017-01-11T19:01:13.000Z", "patientId": 1, "caregiverId": 1 }, { "id": 3, "date": "2017-01-10T09:26:00.000Z", "type": "medication", "note": "CHeck recurring", "recurring": true, "recurringDays": "Monday,Tuesday,Wednesday,Thursday", "notificationId": null, "registered": false, "audio": null, "title": "Recurring Monday,Tuesday,Wednesday", "createdAt": "2017-01-11T03:07:30.000Z", "updatedAt": "2017-01-11T03:07:30.000Z", "patientId": 1, "caregiverId": 1 }];
 var sample = { "id": 1, "date": "2017-01-10T13:01:00.000Z", "type": "medication", "note": "mdsfm", "recurring": true, "recurringDays": "Monday,Tuesday", "notificationId": null, "registered": false, "audio": null, "title": "sdmf,", "createdAt": "2017-01-11T00:18:58.000Z", "updatedAt": "2017-01-11T00:18:58.000Z", "patientId": 1, "caregiverId": 1 }
 
 @observer
-export default class NotificationComponent extends React.Component {
+export default class LocalNotification extends React.Component {
   constructor(props) {
-    super(props)
-
+    super(props);
   }
 
   componentDidMount() {
-    this.getReminders();
-    // this.cancelDeletedReminders();
-    // this.registerMultipleLocalNotifications(Store.reminders);
-    // console.log(reminders);
-    // this.registerLocalNotification(reminders[0]);
-    // this._notificationSubscription = this._registerForPushNotifications();
+    var that = this;
+    var callbacks = [this.cancelDeletedReminders.bind(this), this.registerMultipleLocalNotifications.bind(this)]
+    this.getReminders(callbacks);
   }
-
-  // componentWillUnmount() {
-  //   this._notificationSubscription && this._notificationSubscription.remove();
-  // }
 
   getReminders(callbacks) {
     axios.get(baseUrl + '/mobile/reminders', {
@@ -48,7 +40,6 @@ export default class NotificationComponent extends React.Component {
       .then(response => {
         console.log(response)
         var reminders = response.data.reminders;
-        console.log(JSON.stringify(reminders))
 
         //convert string recurringDays and notificationIds to array
         //MySQL only accept string
@@ -60,7 +51,9 @@ export default class NotificationComponent extends React.Component {
         Store.reminders = reminders;
       })
       .then(() => {
-        console.log(Store.reminders)
+        callbacks.forEach((cb) => {
+          cb(Store.reminders);
+        });
       })
       .catch(error => {
         console.log('error', error);
@@ -68,6 +61,9 @@ export default class NotificationComponent extends React.Component {
   }
 
   cancelNotifications(notificationId) {
+    if (!notificationId) {
+      return;
+    }
     notificationId.forEach(notificationid => {
       if (notificationid) {
         Notifications.cancelScheduledNotificationAsync(notificationid);
@@ -75,11 +71,16 @@ export default class NotificationComponent extends React.Component {
     })
   }
 
-  cancelDeletedReminders() {
+  cancelDeletedReminders(reminders) {
     var deleted = [];
-    Store.reminders = Store.reminders.map((reminder) => {
+    Store.reminders = reminders.map((reminder) => {
       if(reminder.registered === null) {
-        cancelNotifications(reminder.notificationId)
+        // reminder.notificationId.forEach(notificationid => {
+        //   if (notificationid) {
+        //     Notifications.cancelScheduledNotificationAsync(notificationid);
+        //   }
+        // })
+        that.cancelNotifications(reminder.notificationId)
         deleted.push(reminder.id);
       } else {
         return reminder
@@ -88,9 +89,10 @@ export default class NotificationComponent extends React.Component {
 
     //If any notifications are cancelled, delete them from the database
     if (deleted.length !== 0) {
-      axios.delete(baseUrl + '/mobile/reminders', {id: deleted})
+      axios.delete(baseUrl + '/mobile/reminders', {data: {id: deleted}})
       .then((success) => {
-        console.log('deleted');
+        console.log('deleteded?', deleted)
+        // console.log('deleted');
       })
       .catch((error) => {
         console.log('error', error)
@@ -99,16 +101,17 @@ export default class NotificationComponent extends React.Component {
   }
 
   //Used by registerLocalNotification
-  setLocalNotification(reminder, localNotification, schedulingOptions) {
+  setLocalNotification(reminder, localNotification, schedulingOptions, cb) {
     Notifications.scheduleLocalNotificationAsync(localNotification, schedulingOptions)
       .then(newNotificationId => {
-        console.log('exponent notification scheduled')
+        // console.log('exponent notification scheduled')
+        // console.log('reminder', reminder, 'localNotification', localNotification, 'schedulingOptions', schedulingOptions)
         if (!reminder.notificationId) {
           reminder.notificationId = [];
         }
         reminder.notificationId.push(newNotificationId);
-        reminder.registered = true;
-        return reminder;
+        if(!reminder.registered) reminder.registered = true;
+        cb(reminder);
       })
       .catch(function(error) {
         console.log('cannot add the reminder' + error);
@@ -118,128 +121,123 @@ export default class NotificationComponent extends React.Component {
 
   //Use setLocalNotification
   registerLocalNotification(reminder) {
-    if (reminder.registered) {
-      return;
-    }
-    var localNotification = {
-      title: reminder.title,
-      body: reminder.note || ' ',
-      data: {
-        [reminder.title]: reminder.note
-      },
-      ios: {
-        sound: true
+    var that = this;
+    return new Promise((resolve, reject) => {
+      if (!reminder || reminder.registered) {
+        return;
       }
-    }
-
-    //cancel all LocalNotifications already associated with this reminder
-    if (reminder.notificationId) {
-      this.cancelNotifications(reminder.notificationId);
-    }
-
-    var time = Store.convertDate(reminder.date);
-
-    if (reminder.recurring) {
-      reminder.recurringDays.forEach(day => {
-        if (!day) {
-          return;
+      var localNotification = {
+        title: reminder.title,
+        body: reminder.note || ' ',
+        data: {
+          [reminder.title]: reminder.note
+        },
+        ios: {
+          sound: true
         }
+      }
 
-        var reminderTime = Store.setDayofWeekTime(day, time);
+      //cancel all LocalNotifications already associated with this reminder
+      that.cancelNotifications(reminder.notificationId);
+
+      var time = Store.convertDate(reminder.date);
+
+      if (reminder.recurring) {
+        var recurringDays = mobx.toJS(reminder.recurringDays);
+        var count = 0;
+        recurringDays.forEach((day, ind) => {
+          if (!day) {
+            return;
+          }
+          var differenceInMilliseconds = Store.getDifferenceInMilliseconds(day, time);
+          var schedulingOptions = {
+            time: time.getTime() + differenceInMilliseconds,
+            repeat: 'day'
+          }
+          that.setLocalNotification(reminder, localNotification, schedulingOptions, (reminder) => {
+            count++;
+            if (count === recurringDays.length) {
+              resolve(reminder);
+            }
+          });
+        });
+      } else {
         var schedulingOptions = {
-          time: reminderTime.getTime(),
-          repeat: 'day'
+          time: time.getTime()
         }
-        reminder = this.setLocalNotification(reminder, localNotification, schedulingOptions);
-      }).bind(this);
-    } else {
-      var schedulingOptions = {
-        time: time.getTime()
+        that.setLocalNotification(reminder, localNotification, schedulingOptions, (reminder) => {
+          resolve(reminder);
+        });
       }
-      reminder = this.setLocalNotification(reminder, localNotification, schedulingOptions)
-    }
-
-    return reminder;
+    })
   }
 
   registerMultipleLocalNotifications(reminders) {
-    var promisifiedregisterLocalNotifications = reminders.map(reminder => {
-      if (reminder.registered === false) {
-        reminder = registerLocalNotification(reminder);
-        if (reminder) {
-          return new Promise((resolve, reject) => {
-            resolve(reminder);
+    console.log('registering?')
+    var that = this;
+    // var promisifiedregisterLocalNotifications = reminders.map(reminder => {
+    //   if (reminder.registered === false) {
+    //     if (reminder) {
+    //       // return Promise.promisify(that.registerLocalNotification(reminder))
+    //       return that.registerLocalNotification(reminder).bind(that);
+    //     }
+    //   }
+    // })
+
+    // Promise.all(promisifiedregisterLocalNotifications)
+    Promise.map(reminders, (reminder) => {
+    // Promise.map awaits for returned promises as well.
+      console.log('reminder in promise map', mobx.toJS(reminder))
+      return that.registerLocalNotification(reminder);
+    })
+    .then(updatedReminders => {
+      console.log('updatedReminders', updatedReminders)
+      return updatedReminders.map((updatedReminder) => {
+        return mobx.toJS(updatedReminder);
+      })
+    })
+    .then(reminders => {
+      console.log(reminders)
+      //if any new notification is registered update database
+      if (reminders.length > 0) {
+        axios.put(baseUrl + '/mobile/reminders', reminders)
+          .then(response => {
+            console.log(response);
           })
-        }
+          .catch(error => {
+            console.log(error);
+          });
       }
     })
-    Promise.all(promisifiedregisterLocalNotifications)
-      .then(updatedReminders => {
-        //if any new notification is registered update database
-        if (updatedReminders.length > 0) {
-          axios.put(baseUrl + '/mobile/reminders', updatedReminders)
-            .then(response => {
-              console.log(response);
-            })
-            .catch(error => {
-              console.log(error);
-            });
-        }
-      })
-      .catch(error => {
-        console.log('error in promise.all', error);
-      })
+    .catch(error => {
+      console.log('error in promise.all', error);
+    })
   }
 
   cancelDeletedReminders(reminders) {
     var deleted = [];
+    if (!reminders) {
+      return;
+    }
+    var that = this;
     reminders = reminders.map((reminder) => {
       if(reminder.registered === null) {
-        if(reminder.notificationId) {
-          reminder.notificationId.forEach((notificationid) => {
-            if(notificationid) Exponent.Notifications.cancelScheduledNotificationAsync(notificationid);
-          })
-        }
+        that.cancelNotifications(reminder.notificationId);
         deleted.push(reminder.id);
       } else {
         return reminders
       }
     })
     if (deleted.length !== 0) {
-      axios.delete(baseUrl + '/mobile/reminders', {id: deleted})
+      axios.delete(baseUrl + '/mobile/reminders', {data: {id: deleted}})
       .then((success) => {
-        console.log('deleted');
+        console.log('deleted', deleted);
       })
       .catch((error) => {
         console.log('error', error)
       })
     }
-    // Store.updated('reminders', reminders);
   }
-
-
-  // _registerForPushNotifications() {
-  // //   // Send our push token over to our backend so we can receive notifications
-  // //   // You can comment the following line out if you want to stop receiving
-  // //   // a notification every time you open the app. Check out the source
-  // //   // for this function in api/registerForPushNotificationsAsync.js
-  // //   registerForPushNotificationsAsync();
-
-  // //   // Watch for incoming notifications
-  //   this._notificationSubscription = Notifications.addListener(this._handleNotification);
-  // }
-
-  // _handleNotification = ({origin, data}) => {
-  //   if(origin === 'received') {
-  //     var title = Object.getOwnPropertyNames(data);
-  //     this.props.navigator.showLocalAlert(
-  //       title + ' : ' + data[title],
-  //       Alerts.notice
-  //     );
-  //   } else {
-
-  //   }
-  // }
 
   render() {
     return null;
