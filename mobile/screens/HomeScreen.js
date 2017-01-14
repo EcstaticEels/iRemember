@@ -29,7 +29,13 @@ import moment from 'moment';
 import { MonoText } from '../components/StyledText';
 import weatherIcons from '../assets/images/weatherIcons.js';
 
+import LocalNotification from '../notification/localNotification.js';
+import PushNotification from '../notification/pushNotification.js';
 
+
+import Router from '../navigation/Router.js';
+
+import Alerts from '../constants/Alerts';
 
 // import registerForPushNotificationsAsync from 'registerForPushNotificationsAsync';
 
@@ -58,16 +64,16 @@ export default class HomeScreen extends React.Component {
   //need to render something prettier
 
   componentDidMount () {
-    const {reminders, change} = Store;
-    change('reminders', 'bye');
-    var that = this;
+    // const {reminders, change} = Store;
+    // change('reminders', 'bye');
+    // var that = this;
     this.getTime();
     this.getWeather();
-    if(!this.state.notificationToken) this.allowPushNotification();
+    // if(!this.state.notificationToken) this.allowPushNotification();
 // <<<<<<< HEAD
 //     this.cancelDeletedReminders();
 //     this.getReminders();
-    setInterval(that.getTime(), 10000);
+    // setInterval(that.getTime(), 10000);
 // =======
     // console.log('getting here?')
     // this.getReminders();
@@ -97,31 +103,14 @@ export default class HomeScreen extends React.Component {
     // };
   // };
 
-  cancelDeletedReminders() {
-    var reminders = this.props.reminders;
-    var deleted = [];
-    reminders = reminders.map((reminder) => {
-      if(reminder.registered === null) {
-        if(reminder.notificationId) {
-          reminder.notificationId.forEach((notificationid) => {
-            if(notificationid) Exponent.Notifications.cancelScheduledNotificationAsync(notificationid);
-          })
-        }
-        deleted.push(reminder.id);
-      } else {
-        return reminders
-      }
-    })
-    if (deleted.length !== 0) {
-      axios.delete(baseUrl + '/mobile/reminders', {id: deleted})
-      .then((success) => {
-        console.log('deleted');
-      })
-      .catch((error) => {
-        console.log('error', error)
-      })
-    }
-    this.props.updatedReminders(reminders);
+  showPushNotification(data){
+    this.props.navigator.showLocalAlert(data, Alerts.notice);
+  }
+
+  _goToReminder = (reminder) => {
+    console.log('current', Store.current,'reminder', reminder)
+    Store.current = reminder;
+    this.props.navigator.push(Router.getRoute('reminder'))
   }
 
   allowPushNotification() {
@@ -149,12 +138,6 @@ export default class HomeScreen extends React.Component {
         console.log('Permission NOT GRANTED');
       }
     })
-  }
-
-  registerReminder(reminder, localNotification, schedulingOptions) {
-  }
-
-  pushNotification() {
   }
 
   // allowPushNotification() {
@@ -306,6 +289,8 @@ export default class HomeScreen extends React.Component {
             </Image> 
           </View>
 
+          <LocalNotification/>
+          <PushNotification _goToReminder={this._goToReminder.bind(this)} showPushNotification={this.showPushNotification.bind(this)}/>
         </ScrollView>
     );
   }
