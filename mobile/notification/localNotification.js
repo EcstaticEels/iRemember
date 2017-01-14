@@ -110,9 +110,7 @@ export default class LocalNotification extends React.Component {
           reminder.notificationId = [];
         }
         reminder.notificationId.push(newNotificationId);
-        console.log('notificationid', reminder.notificationId)
         if(!reminder.registered) reminder.registered = true;
-        console.log('registered?', reminder.registered)
         cb(reminder);
       })
       .catch(function(error) {
@@ -124,6 +122,7 @@ export default class LocalNotification extends React.Component {
   //Use setLocalNotification
   registerLocalNotification(reminder) {
     var that = this;
+    var reminderId = reminder.id || 0;
     return new Promise((resolve, reject) => {
       if (!reminder || reminder.registered) {
         resolve(false);
@@ -131,9 +130,7 @@ export default class LocalNotification extends React.Component {
       var localNotification = {
         title: reminder.title,
         body: reminder.note || ' ',
-        data: {
-          [reminder.title]: 'hi'
-        },
+        data: [reminderId, reminder.title, reminder.note],
         ios: {
           sound: true
         }
@@ -151,7 +148,7 @@ export default class LocalNotification extends React.Component {
           if (!day) {
             return;
           }
-          var differenceInMilliseconds = Store.getDifferenceInMilliseconds(day, time);
+          var differenceInMilliseconds = Store.getDifferenceInDays(day, time) * 24 * 60 * 60 * 1000;;
           var schedulingOptions = {
             time: time.getTime() + differenceInMilliseconds,
             repeat: 'day'
@@ -159,14 +156,14 @@ export default class LocalNotification extends React.Component {
           that.setLocalNotification(reminder, localNotification, schedulingOptions, (reminder) => {
             count++;
             if (count === recurringDays.length) {
-              console.log(mobx.toJS(reminder))
               resolve(reminder);
             }
           });
         });
       } else {
         var schedulingOptions = {
-          time: time.getTime()
+          time: new Date().getTime() + 3000
+          // time.getTime()
         }
         that.setLocalNotification(reminder, localNotification, schedulingOptions, (reminder) => {
           resolve(reminder);
@@ -202,7 +199,6 @@ export default class LocalNotification extends React.Component {
       })
     })
     .then(reminders => {
-      console.log('reminders', reminders)
       //if any new notification is registered update database
       if (reminders.length > 0) {
         axios.put(baseUrl + '/mobile/reminders', reminders)

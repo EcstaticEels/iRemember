@@ -12,7 +12,7 @@ class Store {
   @observable id = 1;
   @observable name = 'Bob';
   @observable reminders = [];
-  @observable currentReminder = {};
+  @observable current = {};
 
   //Accessible Actions
 
@@ -36,7 +36,7 @@ class Store {
   }
 
   //Get closest Date in given dayOfWeek from setTime in milliseconds;
-  @action getDifferenceInMilliseconds (dayOfWeek, setTime) {
+  @action getDifferenceInDays (dayOfWeek, setTime) {
     var daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
     var dayOfWeekInd = daysOfWeek.indexOf(dayOfWeek);
     var setTimeInd = setTime.getDay();
@@ -44,11 +44,8 @@ class Store {
     if(differenceInDays < 0) {
       differenceInDays = 7 + differenceInDays;
     }
-    differenceInMilliseconds = differenceInDays * 24 * 60 * 60 * 1000;
-    return differenceInMilliseconds;
-  }
-
-  
+    return differenceInDays;
+  } 
 }
 
 var MobXStore = new Store();

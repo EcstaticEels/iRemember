@@ -73,10 +73,16 @@ export default class PushNotification extends React.Component {
       // if(data.note) {
       //   message += ' : ' + data.note;
       // }
-      this.props.showPushNotification(data)
+      this.props.showPushNotification(data);
     } else {
-      var selected = JSON.parse(data.data);
-      this.props._goToReminder(selected);
+      var selectedReminder = Store.reminders.find((reminder) => {
+        return reminder.id === 7
+        // data[0];
+        // data[0];
+      })
+      console.log('selected', data, selectedReminder)
+      // Store.filter()
+      this.props._goToReminder(selectedReminder);
     }
   }
 
