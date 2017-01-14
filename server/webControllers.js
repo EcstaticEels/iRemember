@@ -26,8 +26,6 @@ const handleFaceForm = function(req, cb) {
       console.log(err);
     }
     const urlArray = [];
-    console.log('files', files);
-    console.log('fields', fields)
     if (Object.keys(files).length > 0) { //if there are files
       if (files.photo) { //if there are photo files
         files.photo.forEach(function(file) {
@@ -94,12 +92,11 @@ const handleSetupForm = function(req, cb) {
 const handleReminderForm = function(req, cb) {
   const reminderForm = new multiparty.Form();
   reminderForm.parse(req, function(err, fields, files) {
+    console.log(fields)
     if (err) {
       console.log(err);
     }
     const urlArray = [];
-    console.log('files', files);
-    console.log('fields', fields);
     if (Object.keys(files).length > 0) {
       files.file.forEach(function(file) {
         cloudinary.v2.uploader.upload(file.path,
@@ -308,13 +305,17 @@ module.exports = {
           audio: audioUrl,
           registered: false,
           title: fields.title[0],
-          recurring: fields.recurring[0]}
+          recurring: fields.recurring[0],
+          recurringDays: fields.recurringDays[0]
+        }
         : { date: fields.date[0],
           type: fields.type[0],
           note: fields.note[0],
           title: fields.title[0],
           registered: false,
-          recurring: fields.recurring[0]};
+          recurring: fields.recurring[0],
+          recurringDays: fields.recurringDays[0]
+        };
       db.Reminder.update(updateObj, 
         {
           where: {
@@ -329,9 +330,9 @@ module.exports = {
   },
   deleteReminder: (req, res) => {
     let reminderId = req.body.reminderId;
-    db.Reminder.destroy({ where: {id: reminderId}})
-    .then(reminder => {
-      res.status(200).send('deleted');
+    db.Reminder.update({registered: null}, { where: {id: reminderId}})
+    .then(updatedReminder => {
+      res.status(200).send('updated reminder to delete in mobile');
     });
   },
   setup: (req, res) => {

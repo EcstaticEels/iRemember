@@ -107,10 +107,12 @@ app.delete('/web/reminders', ensureAuthenticated, webControllers.deleteReminder)
 app.post('/web/setup', ensureAuthenticated, webControllers.setup);
 
 //Mobile
+app.post('/mobile/login', upload.single('picture'), mobileControllers.loginFace);
 app.post('/mobile/identify', upload.single('picture'), mobileControllers.identifyFace);
 app.put('mobile/token', mobileControllers.addToken);
 app.get('/mobile/reminders', mobileControllers.retrieveReminders);
 app.put('/mobile/reminders', mobileControllers.updateReminders);
+app.delete('/mobile/reminders', mobileControllers.deleteReminders);
 app.post('/mobile/pushNotification', mobileControllers.addPushNotification);
 
 //Authentication
@@ -175,6 +177,7 @@ app.get('/logout', function(req, res){
 app.get('*', function (req, res) {
   res.sendFile(path.join(__dirname, '..', 'public/webIndex.html'));
 });
+
 
 app.listen(3000, function () {
   console.log('iRemember is running on port 3000!');

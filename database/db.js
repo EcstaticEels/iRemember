@@ -26,7 +26,8 @@ const Patient = sequelizeDb.define('patient', {
     unique: true
   },
   personGroupID: Sequelize.STRING,
-  personId: Sequelize.STRING
+  personId: Sequelize.STRING,
+  photo: Sequelize.STRING
 });
 
 const Reminder = sequelizeDb.define('reminder', {
@@ -36,6 +37,7 @@ const Reminder = sequelizeDb.define('reminder', {
   type: Sequelize.STRING,
   note: Sequelize.STRING,
   recurring: Sequelize.BOOLEAN,
+  recurringDays: Sequelize.STRING,
   notificationId: {
     type: Sequelize.STRING,
     allowNull: true,
@@ -43,6 +45,7 @@ const Reminder = sequelizeDb.define('reminder', {
   },
   registered: {
     type: Sequelize.BOOLEAN,
+    allowNull: true,
     defaultValue: false
   },
   audio: Sequelize.STRING,

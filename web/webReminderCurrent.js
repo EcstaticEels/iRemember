@@ -19,6 +19,7 @@ export default class ReminderCurrent extends React.Component {
           <h1>{this.props.current.title}</h1>
           <img src={this.props.current.img} height="200" width="200"/>
           <div><h3>Time:</h3>{Moment(this.props.current.date).calendar(null, {sameElse: 'MM/DD/YYYY hh:mm a'}).toString()}</div>
+          <div><h3>RecurringDays:</h3>{this.props.current.recurringDays}</div>
           <div><h3>Description:</h3>{this.props.current.note}</div>
           <br/>
           <label><h3>Audio Reminder:</h3>

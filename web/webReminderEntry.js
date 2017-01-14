@@ -7,6 +7,7 @@ var ReminderEntry = (props) => {
   var changeCurrent = () => {
     props.updateCurrent(props.data);
   }
+
   return (
 
     <Grid>

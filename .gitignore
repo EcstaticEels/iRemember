@@ -15,5 +15,5 @@ node_modules/
 # Env Variables
 .env
 
-# IP Address file
+# Ip Address
 mobile/ip.js
