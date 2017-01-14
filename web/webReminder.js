@@ -5,6 +5,8 @@ import {Button, Grid, Row, Col} from 'react-bootstrap';
 import ReminderList from './webReminderList.js';
 import ReminderCurrent from './webReminderCurrent.js';
 import ReminderForm from './webReminderForm.js';
+import Loader from 'react-loader-advanced';
+
 
 class Reminder extends React.Component {
   constructor(props) {
@@ -30,7 +32,8 @@ class Reminder extends React.Component {
       img: '',
       title: '',
       updateAudio: '',
-      audio: ''
+      audio: '',
+      loader: false
     };
   }
 
@@ -41,6 +44,8 @@ class Reminder extends React.Component {
         return '/pill_logo1.jpg';
       } else if (type === 'appointment') {
         return '/appointment_logo3.jpg';
+      } else if (type === 'chores') {
+        return '/chores.jpg'; 
       } else {
         return '/reminder_logo.jpg';
       }
@@ -48,11 +53,11 @@ class Reminder extends React.Component {
 
     $.ajax({
       method: 'GET',
-      url: '/web/reminders' + '?caregiverId=1',
+      url: '/web/reminders',
       success: function(res) {
         var reminders = JSON.parse(res).reminders;
         reminders.forEach(function(reminder) {
-          reminder.date = reminder.date.slice(0, 16);
+          reminder.date = new Date (reminder.date);
           reminder.img = mapIcons(reminder.type);
           reminder.selectedDays = that.recurringDaysToObj(reminder.recurringDays);
           return reminder;
@@ -95,6 +100,12 @@ class Reminder extends React.Component {
             title: ''}
         });
       }
+    });
+  }
+
+  handleDateChange(date) {
+    this.setState({
+      date: date
     });
   }
 
@@ -235,30 +246,37 @@ class Reminder extends React.Component {
     })
   }
 
-  vaildForm() {
+  validForm() {
     if(this.state.date.length !== 16){
       return false;
     }
     if(this.state.title.length < 1) {
       return false;
     }
+     if(this.state.recurring && (!this.state.recurringDays || !this.state.recurringDays[0])) {
+      return false;
+    }
     return true;
   }
 
   submitForm(event) {
-    var vaild = this.vaildForm();
-    if(!vaild){
-      return window.alert("Invaild Form");
-    }
     event.preventDefault();
-    if(this.state.recurring){
+    this.setState({
+      loader: true
+    });
+    // var valid = this.validForm();
+    // if(!valid){
+    //   return window.alert("Invalid Form");
+    // }
+    if (this.state.recurring){
       var recurringDays = this.selectedDaysToArray(this.state.selectedDays);
     }
     var that = this;
     var formData = new FormData();
-    formData.append('id', this.props.id);
-    formData.append('name', this.props.name);
-    formData.append('date', this.state.date);
+    console.log('uncoverted date', this.state.date)
+    var reminderUTCdate = new Date(this.state.date).toISOString();
+    console.log('converted date', reminderUTCdate)
+    formData.append('date', reminderUTCdate);
     formData.append('recurring', this.state.recurring);
     formData.append('recurringDays', recurringDays || []);
     formData.append('type', this.state.type);
@@ -297,6 +315,9 @@ class Reminder extends React.Component {
         }
         that.editModeSwitch(false);
         that.displayForm(false, false);
+        that.setState({
+          loader: false
+        });
       },
       error: function(err) {
         console.log('error', err);
@@ -305,6 +326,7 @@ class Reminder extends React.Component {
   }
 
   render() {
+    const spinner = <span><img src={'/default.svg'} /></span>
     return (
       <Grid>
         <Row className="show-grid">
@@ -319,12 +341,14 @@ class Reminder extends React.Component {
           </Col>
           <Col xs={12} md={8}>
             <div>
+            <Loader show={this.state.loader} message={spinner} foregroundStyle={{color: 'white'}} backgroundStyle={{backgroundColor: 'white'}} className="spinner">
             {
               this.state.showForm ? 
                 <ReminderForm 
                   getInput={this.getInput.bind(this)} 
                   getBoolean={this.getBoolean.bind(this)}
                   getAudio={this.getAudio.bind(this)}
+                  handleDateChange={this.handleDateChange.bind(this)}
                   submitForm={this.submitForm.bind(this)}
                   editMode={this.state.editMode}
                   date={this.state.date}
@@ -339,6 +363,7 @@ class Reminder extends React.Component {
                 /> 
                 : <ReminderCurrent current={this.state.current} edit={this.edit.bind(this)} delete={this.delete.bind(this)} />
             }
+            </Loader>
             </div>
           </Col>
         </Row>

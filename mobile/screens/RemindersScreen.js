@@ -14,6 +14,11 @@ import {
   ExponentLinksView,
 } from '@exponent/samples';
 
+//MobX
+import mobx from 'mobx';
+import { observer } from 'mobx-react/native';
+import Store from '../store.js';
+
 import axios from 'axios';
 
 import Router from '../navigation/Router.js'
@@ -28,14 +33,15 @@ var images = {
   other: 'https://s30.postimg.org/i0l3hibr1/reminder_logo.png'
 }
 
+@observer
 export default class RemindersScreen extends React.Component {
 
   constructor (props) {
     super(props);
     this.state = {
-      upcomingReminders: [],
-      completedReminders: [],
-      dataSource: dataSource.cloneWithRows(props.reminders),
+      dataSource: dataSource.cloneWithRows(Store.reminders.map((reminder) => {
+        return mobx.toJS(reminder);
+      }))
     }
   }
 
@@ -45,8 +51,13 @@ export default class RemindersScreen extends React.Component {
     },
   }
 
+  show(data) {
+    this.props.navigator.showLocalAlert(data, Alerts.notice);
+  }
+
   _goToReminder = (reminder) => {
-    this.props.navigator.push(Router.getRoute('reminder', {reminder: reminder}))
+    Store.current = reminder;
+    this.props.navigator.push(Router.getRoute('reminder'))
   }
 
   render() {
