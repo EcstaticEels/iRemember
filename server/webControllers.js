@@ -26,8 +26,6 @@ const uploadPhoto = function(req, cb) {
       console.log(err);
     }
     const urlArray = [];
-    console.log('files', files);
-    console.log('fields', fields)
     if (Object.keys(files).length > 0) { //if there are files
       if (files.photo) { //if there are photo files
         files.photo.forEach(function(file) {
@@ -74,12 +72,11 @@ const uploadPhoto = function(req, cb) {
 const uploadAudio = function(req, cb) {
   const reminderForm = new multiparty.Form();
   reminderForm.parse(req, function(err, fields, files) {
+    console.log(fields)
     if (err) {
       console.log(err);
     }
     const urlArray = [];
-    console.log('files', files);
-    console.log('fields', fields);
     if (Object.keys(files).length > 0) {
       files.file.forEach(function(file) {
         cloudinary.v2.uploader.upload(file.path,
@@ -278,6 +275,7 @@ module.exports = {
           type: fields.type[0],
           note: fields.note[0],
           recurring: fields.recurring[0], 
+          recurringDays: fields.recurringDays[0],
           caregiverId: caregiverId,
           audio: audioUrl,
           title: fields.title[0],
@@ -294,7 +292,8 @@ module.exports = {
     var caregiverId = Number(urlModule.parse(req.url).query.slice(12));
     db.Reminder.findAll({
       where: {
-        caregiverId: caregiverId
+        caregiverId: caregiverId,
+        registered: {$ne: null}
       }, 
       order: [['date']]
     })
@@ -304,6 +303,7 @@ module.exports = {
   },
   updateReminder: (req, res) => { 
     uploadAudio(req, (audioUrl, fields) => {
+      // console.log(fields)
       let reminderId = fields.reminderId[0];
       let updateObj = audioUrl ? 
         { date: fields.date[0],
@@ -312,13 +312,17 @@ module.exports = {
           audio: audioUrl,
           registered: false,
           title: fields.title[0],
-          recurring: fields.recurring[0]}
+          recurring: fields.recurring[0],
+          recurringDays: fields.recurringDays[0]
+        }
         : { date: fields.date[0],
           type: fields.type[0],
           note: fields.note[0],
           title: fields.title[0],
           registered: false,
-          recurring: fields.recurring[0]};
+          recurring: fields.recurring[0],
+          recurringDays: fields.recurringDays[0]
+        };
       db.Reminder.update(updateObj, 
         {
           where: {
@@ -333,7 +337,7 @@ module.exports = {
   },
   deleteReminder: (req, res) => {
     let reminderId = req.body.reminderId;
-    db.Reminder.destroy({ where: {id: reminderId}})
+    db.Reminder.update({registered: null}, { where: {id: reminderId}})
     .then(updatedReminder => {
       res.status(200).send('deleted');
     });

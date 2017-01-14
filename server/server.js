@@ -60,10 +60,12 @@ app.put('/web/reminders', webControllers.updateReminder);
 app.delete('/web/reminders', webControllers.deleteReminder);
 
 //Mobile
+app.post('/mobile/login', upload.single('picture'), mobileControllers.loginFace);
 app.post('/mobile/identify', upload.single('picture'), mobileControllers.identifyFace);
 app.put('mobile/token', mobileControllers.addToken);
 app.get('/mobile/reminders', mobileControllers.retrieveReminders);
 app.put('/mobile/reminders', mobileControllers.updateReminders);
+app.delete('/mobile/reminders', mobileControllers.deleteReminders);
 app.post('/mobile/pushNotification', mobileControllers.addPushNotification);
 
 //Authentication
@@ -90,6 +92,8 @@ app.listen(3000, function () {
   //   photo: '',
   //   personGroupID: 'ecstaticeelsforever'
   // }).save();
+
+  //go into mySQL and enter update caregivers set patientId = 1 where id=1;
 
 });
 

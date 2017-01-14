@@ -17,6 +17,8 @@ import axios from 'axios';
 
 import Router from '../navigation/Router.js';
 
+import baseUrl from '../ip.js';
+
 export default class PhotosScreen extends React.Component {
 
   constructor (props) {
@@ -30,16 +32,32 @@ export default class PhotosScreen extends React.Component {
     },
   }
 
-  componentDidMount () {
+  takePhoto () {
     Exponent.ImagePicker.launchCameraAsync()
     .then((photo) => {
-      uploadImageAsync(photo.uri)
-      .then((response) => {
-        return response.json().then(responseJSON => {
-          console.log(responseJSON)
-          this._goToPersonInfoPage(responseJSON);
+      if (photo.cancelled) {
+        this.props.navigation.performAction(({ tabs }) => {
+          tabs('main').jumpToTab('home');
         })
-      });
+      } else {
+        uploadImageAsync(photo.uri)
+        .then((response) => {
+          return response.json().then(responseJSON => {
+            console.log(responseJSON)
+            if(responseJSON.message === 'No faces detected') {
+              this._goToNoFacesFoundPage()
+            }
+            else if (responseJSON.message === 'Multiple faces detected') {
+              this._goToMultipleFacesFoundPage()
+            }
+            else if (responseJSON.message === 'Failed DB lookup') {
+              this._goToFailedFaceLookupPage()
+            } else {
+              this._goToPersonInfoPage(responseJSON);
+            }
+          })
+        });
+      }
     })
   }
 
@@ -47,7 +65,21 @@ export default class PhotosScreen extends React.Component {
     this.props.navigator.push(Router.getRoute('person', {person: person}))
   }
 
+  _goToFailedFaceLookupPage () {
+    this.props.navigator.push(Router.getRoute('failedFaceLookup'))    
+  }
+
+   _goToNoFacesFoundPage () {
+    this.props.navigator.push(Router.getRoute('noFaceFound'))    
+  }
+
+  _goToMultipleFacesFoundPage () {
+    this.props.navigator.push(Router.getRoute('multipleFacesFound'))    
+  }
+
+
   render() {
+  this.takePhoto()
     return (
       <ScrollView
         style={styles.container}
@@ -67,7 +99,7 @@ const styles = StyleSheet.create({
 async function uploadImageAsync(uri) {
   let date = Date.now();
   let patientId = 1;
-  let apiUrl = `http://54.202.107.224:3000/mobile/identify?date=${date}&patientId=${patientId}`;
+  let apiUrl = `${baseUrl}/mobile/identify?date=${date}&patientId=${patientId}`;
 
   let uriParts = uri.split('.');
   let fileType = uriParts[uri.length - 1];

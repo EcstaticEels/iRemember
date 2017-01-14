@@ -6,11 +6,7 @@ import {
   Notifications,
 } from 'exponent';
 
-// Example server, implemented in Rails: https://git.io/vKHKv
-
-import ipAdress from '../ip.js';
-
-var baseUrl = 'http://' + ipAdress;
+import baseUrl from '../ip.js';
 
 export default async function registerForPushNotificationsAsync() {
   // Android remote notification permissions are granted during the app
