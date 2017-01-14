@@ -12,7 +12,8 @@ const Caregiver = sequelizeDb.define('caregiver', {
     allowNull: false
   },
   personGroupID: Sequelize.STRING, 
-  googleId: Sequelize.STRING
+  googleId: Sequelize.STRING,
+  photo: Sequelize.STRING
 });
 
 const Patient = sequelizeDb.define('patient', {
@@ -37,7 +38,7 @@ const Reminder = sequelizeDb.define('reminder', {
   type: Sequelize.STRING,
   note: Sequelize.STRING,
   recurring: Sequelize.BOOLEAN,
-  recurringDays: Sequelize.STRING,
+  recurringDays: Sequelize.STRING(300),
   notificationId: {
     type: Sequelize.STRING,
     allowNull: true,

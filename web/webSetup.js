@@ -4,9 +4,9 @@ import ImagesUpload from './webImagesUpload.js';
 import $ from 'jquery';
 
 import {observer} from 'mobx-react';
-import {caregiverName, needsSetup} from './webMobxStore';
+import {caregiverName, needsSetup, patientName} from './webMobxStore';
 import {browserHistory} from 'react-router';
-
+import Loader from 'react-loader-advanced';
 
 @observer
 export default class Setup extends React.Component {
@@ -15,6 +15,7 @@ export default class Setup extends React.Component {
     this.state = {
       updatePatientPhotos: '',
       patientName: '',
+      loader: false
     }
   }
 
@@ -42,6 +43,9 @@ export default class Setup extends React.Component {
 
   submitForm(event) {
     event.preventDefault();
+    this.setState({
+      loader: true
+    });
     var that = this;
     var formData = new FormData();
     formData.append('patientName', this.state.patientName);
@@ -55,12 +59,25 @@ export default class Setup extends React.Component {
       processData: false,
       contentType: false,
       success: function(res) {
-        console.log(res);
         var parsedData = JSON.parse(res);
+        console.log('patient', parsedData);
         needsSetup.set(false);
         console.log('needsSetup now', needsSetup.get())
-        browserHistory.push('/reminders');
-      },
+        this.props.getUserInfo(() => {
+          if (res) {
+            var parsed = JSON.parse(res);
+            caregiverName.set(parsed.caregiver.name);
+            if (parsed.patient) {
+              patientName.set(parsed.patient.name);
+            }
+          }
+        })
+        that.setState({
+          loader: false
+        }, () => {
+          browserHistory.push('/reminders');
+        });
+      }.bind(this),
       error: function(err) {
         console.log('error', err);
       }
@@ -68,8 +85,10 @@ export default class Setup extends React.Component {
   }
 
   render() {
+    const spinner = <span><img src={'/default.svg'} /></span>
     return (
       <Grid>
+        <Loader show={this.state.loader} message={spinner} foregroundStyle={{color: 'white'}} backgroundStyle={{backgroundColor: 'white'}} className="spinner">
         <form>
           <Row className="show-grid">
             <h1>Setup Your Account</h1>
@@ -89,6 +108,7 @@ export default class Setup extends React.Component {
           </Row>
           <input type="submit" value="Submit" onClick={this.submitForm.bind(this)} />
         </form>
+        </Loader>
       </Grid>
     );
   }
