@@ -17,7 +17,7 @@ import {
 //MobX
 import mobx from 'mobx';
 import { observer } from 'mobx-react/native';
-import Store from '../store.js'
+import Store from '../store.js';
 
 import axios from 'axios';
 
