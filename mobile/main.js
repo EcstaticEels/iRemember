@@ -18,8 +18,6 @@ import {
 import Router from './navigation/Router';
 import cacheAssetsAsync from './utilities/cacheAssetsAsync';
 
-import NotificationComponent from './notification/notification.js';
-
 class AppContainer extends React.Component {
   state = {
     appIsReady: false,
@@ -61,7 +59,6 @@ class AppContainer extends React.Component {
           </NavigationProvider>
           {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
           {Platform.OS === 'android' && <View style={styles.statusBarUnderlay} />}
-          <NotificationComponent/>
         </View>
       );
     } else {
