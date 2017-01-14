@@ -30,6 +30,9 @@ import { MonoText } from '../components/StyledText';
 import weatherIcons from '../assets/images/weatherIcons.js';
 
 import LocalNotification from '../notification/localNotification.js';
+import PushNotification from '../notification/pushNotification.js';
+
+import Alerts from '../constants/Alerts';
 
 // import registerForPushNotificationsAsync from 'registerForPushNotificationsAsync';
 
@@ -96,6 +99,15 @@ export default class HomeScreen extends React.Component {
     //   console.log('notification!!', notification)
     // };
   // };
+
+  showPushNotification(data){
+    this.props.navigator.showLocalAlert(data, Alerts.notice);
+  }
+
+  _goToReminder = (reminder) => {
+    Store.current = reminder;
+    this.props.navigator.push(Router.getRoute('reminder'))
+  }
 
   allowPushNotification() {
     Exponent.Permissions.askAsync(Exponent.Permissions.REMOTE_NOTIFICATIONS)
@@ -274,6 +286,7 @@ export default class HomeScreen extends React.Component {
           </View>
 
           <LocalNotification/>
+          <PushNotification _goToReminder={this._goToReminder.bind(this)} showPushNotification={this.showPushNotification.bind(this)}/>
         </ScrollView>
     );
   }

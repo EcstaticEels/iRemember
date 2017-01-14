@@ -16,8 +16,8 @@ import baseUrl from '../ip.js';
 import Promise from 'bluebird';
 
 
-var samples = [{ "id": 1, "date": "2017-01-10T13:01:00.000Z", "type": "medication", "note": "mdsfm", "recurring": false, "recurringDays": "", "notificationId": null, "registered": false, "audio": null, "title": "sdmf,", "createdAt": "2017-01-11T00:18:58.000Z", "updatedAt": "2017-01-11T00:18:58.000Z", "patientId": 1, "caregiverId": 1 }, { "id": 2, "date": "2017-01-10T13:00:00.000Z", "type": "medication", "note": "slakj", "recurring": true, "recurringDays": "Monday,Tuesday,Wednesday", "notificationId": null, "registered": null, "audio": null, "title": "shaks", "createdAt": "2017-01-11T00:19:31.000Z", "updatedAt": "2017-01-11T19:01:13.000Z", "patientId": 1, "caregiverId": 1 }, { "id": 3, "date": "2017-01-10T09:26:00.000Z", "type": "medication", "note": "CHeck recurring", "recurring": true, "recurringDays": "Monday,Tuesday,Wednesday,Thursday", "notificationId": null, "registered": false, "audio": null, "title": "Recurring Monday,Tuesday,Wednesday", "createdAt": "2017-01-11T03:07:30.000Z", "updatedAt": "2017-01-11T03:07:30.000Z", "patientId": 1, "caregiverId": 1 }];
-var sample = { "id": 1, "date": "2017-01-10T13:01:00.000Z", "type": "medication", "note": "mdsfm", "recurring": true, "recurringDays": "Monday,Tuesday", "notificationId": null, "registered": false, "audio": null, "title": "sdmf,", "createdAt": "2017-01-11T00:18:58.000Z", "updatedAt": "2017-01-11T00:18:58.000Z", "patientId": 1, "caregiverId": 1 }
+// var samples = [{ "id": 1, "date": "2017-01-10T13:01:00.000Z", "type": "medication", "note": "mdsfm", "recurring": false, "recurringDays": "", "notificationId": null, "registered": false, "audio": null, "title": "sdmf,", "createdAt": "2017-01-11T00:18:58.000Z", "updatedAt": "2017-01-11T00:18:58.000Z", "patientId": 1, "caregiverId": 1 }, { "id": 2, "date": "2017-01-10T13:00:00.000Z", "type": "medication", "note": "slakj", "recurring": true, "recurringDays": "Monday,Tuesday,Wednesday", "notificationId": null, "registered": null, "audio": null, "title": "shaks", "createdAt": "2017-01-11T00:19:31.000Z", "updatedAt": "2017-01-11T19:01:13.000Z", "patientId": 1, "caregiverId": 1 }, { "id": 3, "date": "2017-01-10T09:26:00.000Z", "type": "medication", "note": "CHeck recurring", "recurring": true, "recurringDays": "Monday,Tuesday,Wednesday,Thursday", "notificationId": null, "registered": false, "audio": null, "title": "Recurring Monday,Tuesday,Wednesday", "createdAt": "2017-01-11T03:07:30.000Z", "updatedAt": "2017-01-11T03:07:30.000Z", "patientId": 1, "caregiverId": 1 }];
+// var sample = { "id": 1, "date": "2017-01-10T13:01:00.000Z", "type": "medication", "note": "mdsfm", "recurring": true, "recurringDays": "Monday,Tuesday", "notificationId": null, "registered": false, "audio": null, "title": "sdmf,", "createdAt": "2017-01-11T00:18:58.000Z", "updatedAt": "2017-01-11T00:18:58.000Z", "patientId": 1, "caregiverId": 1 }
 
 @observer
 export default class LocalNotification extends React.Component {
@@ -110,7 +110,9 @@ export default class LocalNotification extends React.Component {
           reminder.notificationId = [];
         }
         reminder.notificationId.push(newNotificationId);
+        console.log('notificationid', reminder.notificationId)
         if(!reminder.registered) reminder.registered = true;
+        console.log('registered?', reminder.registered)
         cb(reminder);
       })
       .catch(function(error) {
@@ -124,13 +126,13 @@ export default class LocalNotification extends React.Component {
     var that = this;
     return new Promise((resolve, reject) => {
       if (!reminder || reminder.registered) {
-        return;
+        resolve(false);
       }
       var localNotification = {
         title: reminder.title,
         body: reminder.note || ' ',
         data: {
-          [reminder.title]: reminder.note
+          [reminder.title]: 'hi'
         },
         ios: {
           sound: true
@@ -157,6 +159,7 @@ export default class LocalNotification extends React.Component {
           that.setLocalNotification(reminder, localNotification, schedulingOptions, (reminder) => {
             count++;
             if (count === recurringDays.length) {
+              console.log(mobx.toJS(reminder))
               resolve(reminder);
             }
           });
@@ -173,7 +176,6 @@ export default class LocalNotification extends React.Component {
   }
 
   registerMultipleLocalNotifications(reminders) {
-    console.log('registering?')
     var that = this;
     // var promisifiedregisterLocalNotifications = reminders.map(reminder => {
     //   if (reminder.registered === false) {
@@ -187,17 +189,20 @@ export default class LocalNotification extends React.Component {
     // Promise.all(promisifiedregisterLocalNotifications)
     Promise.map(reminders, (reminder) => {
     // Promise.map awaits for returned promises as well.
-      console.log('reminder in promise map', mobx.toJS(reminder))
       return that.registerLocalNotification(reminder);
     })
     .then(updatedReminders => {
-      console.log('updatedReminders', updatedReminders)
-      return updatedReminders.map((updatedReminder) => {
-        return mobx.toJS(updatedReminder);
+      return updatedReminders.filter(updatedReminder => {
+        return updatedReminder ? true : false;
+      })
+    })
+    .then(filteredReminders => {
+      return filteredReminders.map(filteredReminder => {
+        return mobx.toJS(filteredReminder);
       })
     })
     .then(reminders => {
-      console.log(reminders)
+      console.log('reminders', reminders)
       //if any new notification is registered update database
       if (reminders.length > 0) {
         axios.put(baseUrl + '/mobile/reminders', reminders)
