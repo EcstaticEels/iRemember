@@ -272,7 +272,7 @@ class Reminder extends React.Component {
     var formData = new FormData();
     console.log('uncoverted date', this.state.date)
     var reminderUTCdate = new Date(this.state.date).toISOString();
-    console.log('coverted date', reminderUTCdate)
+    console.log('converted date', reminderUTCdate)
     formData.append('date', reminderUTCdate);
     formData.append('recurring', this.state.recurring);
     formData.append('recurringDays', recurringDays || []);
