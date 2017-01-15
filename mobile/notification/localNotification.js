@@ -38,7 +38,6 @@ export default class LocalNotification extends React.Component {
         }
       })
       .then(response => {
-        console.log(response)
         var reminders = response.data.reminders;
 
         //convert string recurringDays and notificationIds to array
@@ -75,11 +74,11 @@ export default class LocalNotification extends React.Component {
     var deleted = [];
     Store.reminders = reminders.map((reminder) => {
       if(reminder.registered === null) {
-        // reminder.notificationId.forEach(notificationid => {
-        //   if (notificationid) {
-        //     Notifications.cancelScheduledNotificationAsync(notificationid);
-        //   }
-        // })
+        reminder.notificationId.forEach(notificationid => {
+          if (notificationid) {
+            Notifications.cancelScheduledNotificationAsync(notificationid);
+          }
+        })
         that.cancelNotifications(reminder.notificationId)
         deleted.push(reminder.id);
       } else {
@@ -102,6 +101,9 @@ export default class LocalNotification extends React.Component {
 
   //Used by registerLocalNotification
   setLocalNotification(reminder, localNotification, schedulingOptions, cb) {
+    console.log('scheduled', mobx.toJS(reminder))
+    // Notifications.presentLocalNotificationAsync(localNotification)
+    console.log('scheduledTime', new Date(schedulingOptions.time))
     Notifications.scheduleLocalNotificationAsync(localNotification, schedulingOptions)
       .then(newNotificationId => {
         // console.log('exponent notification scheduled')
@@ -126,48 +128,47 @@ export default class LocalNotification extends React.Component {
     return new Promise((resolve, reject) => {
       if (!reminder || reminder.registered) {
         resolve(false);
-      }
-      var localNotification = {
-        title: reminder.title,
-        body: reminder.note || ' ',
-        data: [reminderId, reminder.title, reminder.note],
-        ios: {
-          sound: true
-        }
-      }
-
-      //cancel all LocalNotifications already associated with this reminder
-      that.cancelNotifications(reminder.notificationId);
-
-      var time = Store.convertDate(reminder.date);
-
-      if (reminder.recurring) {
-        var recurringDays = mobx.toJS(reminder.recurringDays);
-        var count = 0;
-        recurringDays.forEach((day, ind) => {
-          if (!day) {
-            return;
+      } else {
+        var localNotification = {
+          title: reminder.title,
+          body: reminder.note || ' ',
+          data: [reminderId, reminder.title, reminder.note],
+          ios: {
+            sound: true
           }
-          var differenceInMilliseconds = Store.getDifferenceInDays(day, time) * 24 * 60 * 60 * 1000;;
+        }
+
+        //cancel all LocalNotifications already associated with this reminder
+        that.cancelNotifications(reminder.notificationId);
+        var time = new Date(reminder.date);
+
+        if (reminder.recurring) {
+          var recurringDays = mobx.toJS(reminder.recurringDays);
+          var count = 0;
+          recurringDays.forEach((day, ind) => {
+            if (!day) {
+              return;
+            }
+            var differenceInMilliseconds = Store.getDifferenceInDays(day, time) * 24 * 60 * 60 * 1000;
+            var schedulingOptions = {
+              time: time.getTime() + differenceInMilliseconds,
+              repeat: 'day'
+            }
+            that.setLocalNotification(reminder, localNotification, schedulingOptions, (reminder) => {
+              count++;
+              if (count === recurringDays.length) {
+                resolve(reminder);
+              }
+            });
+          });
+        } else {
           var schedulingOptions = {
-            time: time.getTime() + differenceInMilliseconds,
-            repeat: 'day'
+            time: time.getTime()
           }
           that.setLocalNotification(reminder, localNotification, schedulingOptions, (reminder) => {
-            count++;
-            if (count === recurringDays.length) {
-              resolve(reminder);
-            }
+            resolve(reminder);
           });
-        });
-      } else {
-        var schedulingOptions = {
-          time: new Date().getTime() + 3000
-          // time.getTime()
         }
-        that.setLocalNotification(reminder, localNotification, schedulingOptions, (reminder) => {
-          resolve(reminder);
-        });
       }
     })
   }

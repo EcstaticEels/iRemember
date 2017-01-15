@@ -37,8 +37,7 @@ export default class ReminderInfoScreen extends React.Component {
     }
   }
   
-  render() {
-    console.log(Store.current.audio)
+  render() {s
     var audio = <Text>''</Text>;
     if (Store.current.audio) {
       audio = <Components.Video source={{uri: Store.current.audio}}/>;
@@ -58,7 +57,7 @@ export default class ReminderInfoScreen extends React.Component {
           <Image style={styles.reminderImage} source={{uri: images[Store.current.type || 'other']}} /> 
         </View>
         <View style={styles.reminderInfoContainer}>
-          <Text style={styles.reminderTimeDate}>{Moment(Store.current.date.slice(0, 16)).calendar().toString()}</Text>       
+          <Text style={styles.reminderTimeDate}>{Moment(new Date(Store.current.date).toString()).calendar().toString()}</Text>       
         </View>
       </ScrollView>
     );
