@@ -28,7 +28,8 @@ export default class PushNotification extends React.Component {
   }
 
   componentWillUnmount() {
-    this._notificationSubscription && this._notificationSubscription.remove();
+    this._notificationSubscription 
+    // && this._notificationSubscription.remove();
   }
 
   allowPushNotification() {
@@ -76,9 +77,7 @@ export default class PushNotification extends React.Component {
       this.props.showPushNotification(data);
     } else {
       var selectedReminder = Store.reminders.find((reminder) => {
-        return reminder.id === 7
-        // data[0];
-        // data[0];
+        return reminder.id === data[0];
       })
       console.log('selected', data, selectedReminder)
       // Store.filter()

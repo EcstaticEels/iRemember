@@ -21,12 +21,13 @@ export default class ReminderList extends React.Component {
             Time:
             <DateField
               forceValidDate
-              dateFormat={"MM/DD/YYYY HH:mm:ss"}
+              dateFormat={"MM/DD/YYYY HH:mm"}
               defaultValue={Moment()}
               className= 'date'
             > 
               <Calendar style={{padding: 10}} weekNumbers={false} defaultDate={Moment()}
                 onChange={(dateString, { dateMoment, timestamp}) => {
+                  // console.log(dateString, dateMoment, timestamp)
                   console.log('converted: ', Moment.utc(dateMoment).format(), 'unconverted: ', dateMoment.format());
                   this.props.handleDateChange(Moment.utc(dateMoment).format());
                 }}

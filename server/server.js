@@ -135,7 +135,7 @@ passport.deserializeUser(function(id, done) {
 });
 
 app.get('/auth/google',
-  passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/plus.login'] })
+  passport.authenticate('google', { scope: ['profile'] })
 );
 
 app.get('/user', function(req, res) {

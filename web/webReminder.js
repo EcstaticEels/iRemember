@@ -104,6 +104,7 @@ class Reminder extends React.Component {
   }
 
   handleDateChange(date) {
+    console.log('date', date)
     this.setState({
       date: date
     });
@@ -197,6 +198,7 @@ class Reminder extends React.Component {
   }
 
   recurringDaysToObj(str) {
+  if(!str) return;
     var arr = str.split(',');
     var selectedDays = {};
     var daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
@@ -246,18 +248,18 @@ class Reminder extends React.Component {
     })
   }
 
-  validForm() {
-    if(this.state.date.length !== 16){
-      return false;
-    }
-    if(this.state.title.length < 1) {
-      return false;
-    }
-     if(this.state.recurring && (!this.state.recurringDays || !this.state.recurringDays[0])) {
-      return false;
-    }
-    return true;
-  }
+  // validForm() {
+  //   if(this.state.date.length !== 16){
+  //     return false;
+  //   }
+  //   if(this.state.title.length < 1) {
+  //     return false;
+  //   }
+  //    if(this.state.recurring && (!this.state.recurringDays || !this.state.recurringDays[0])) {
+  //     return false;
+  //   }
+  //   return true;
+  // }
 
   submitForm(event) {
     event.preventDefault();
@@ -274,7 +276,7 @@ class Reminder extends React.Component {
     var that = this;
     var formData = new FormData();
     console.log('uncoverted date', this.state.date)
-    var reminderUTCdate = new Date(this.state.date).toISOString();
+    var reminderUTCdate = this.state.date ? new Date(this.state.date).toISOString() : new Date().toISOString();
     console.log('converted date', reminderUTCdate)
     formData.append('date', reminderUTCdate);
     formData.append('recurring', this.state.recurring);
