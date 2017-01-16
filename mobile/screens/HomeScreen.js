@@ -8,15 +8,9 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TouchableOpacity,
-  View,
-  DeviceEventEmitter
+  View
 } from 'react-native';
 import * as Exponent from 'exponent';
-
-//MobX
-import {observer} from 'mobx-react/native';
-import Store from '../store.js'
 
 //Server connection
 import axios from 'axios';
@@ -29,17 +23,8 @@ import moment from 'moment';
 import { MonoText } from '../components/StyledText';
 import weatherIcons from '../assets/images/weatherIcons.js';
 
-import LocalNotification from '../notification/localNotification.js';
-import PushNotification from '../notification/pushNotification.js';
-
-
-import Router from '../navigation/Router.js';
-
-import Alerts from '../constants/Alerts';
-
 // import registerForPushNotificationsAsync from 'registerForPushNotificationsAsync';
 
-@observer
 export default class HomeScreen extends React.Component {
   constructor (props) {
     super (props);
@@ -58,117 +43,16 @@ export default class HomeScreen extends React.Component {
   static route = {
     navigationBar: {
       visible: false,
-    },
+    }
   }
 
   //need to render something prettier
 
   componentDidMount () {
-    // const {reminders, change} = Store;
-    // change('reminders', 'bye');
-    // var that = this;
     this.getTime();
     this.getWeather();
-    // if(!this.state.notificationToken) this.allowPushNotification();
-// <<<<<<< HEAD
-//     this.cancelDeletedReminders();
-//     this.getReminders();
-    // setInterval(that.getTime(), 10000);
-// =======
-    // console.log('getting here?')
-    // this.getReminders();
-    // console.log(this.props.navigator)
-    // setInterval(() => {that.polling()}, 10000);
-// >>>>>>> upstream/master
   }
 
-  // componentWillMount() {
-    // Exponent.Notifications.cancelAllScheduledNotificationsAsync()
-    // registerForPushNotificationsAsync();
-
-    // Handle notifications that are received or selected while the app
-    // is open
-    // this._notificationSubscription = DeviceEventEmitter.addListener(
-    //   'Exponent.Notification', this._handleNotification
-    // );
-
-    // Handle notifications that are received or selected while the app
-    // is closed, and selected in order to open the app
-    // if (this.props.exp.notification) {
-    //   this._handleNotification(this.props.exp.notification);
-    // }
-
-    // _handleNotification = (notification) => {
-    //   console.log('notification!!', notification)
-    // };
-  // };
-
-  showPushNotification(data){
-    this.props.navigator.showLocalAlert(data, Alerts.notice);
-  }
-
-  _goToReminder = (reminder) => {
-    console.log('current', Store.current,'reminder', reminder)
-    Store.current = reminder;
-    this.props.navigator.push(Router.getRoute('reminder'))
-  }
-
-  allowPushNotification() {
-    Exponent.Permissions.askAsync(Exponent.Permissions.REMOTE_NOTIFICATIONS)
-    .then((response) => {
-      if (response.status === "granted") {
-        Exponent.Notifications.getExponentPushTokenAsync()
-        .then((token) => {
-          this.setState({
-            notificationToken: token
-          });
-
-          axios.post(baseUrl + '/mobile/pushNotification', {
-            token:  token,
-            id: 1,
-          })
-            .then(function (response) {
-              // console.log(response);
-            })
-            .catch(function (error) {
-              // console.log(error);
-            });
-        })
-      } else {
-        console.log('Permission NOT GRANTED');
-      }
-    })
-  }
-
-  // allowPushNotification() {
-  //   Exponent.Permissions.askAsync(Exponent.Permissions.REMOTE_NOTIFICATIONS)
-  //   .then((response) => {
-  //     // console.log(response);
-  //     if (response.status === "granted") {
-  //       Exponent.Notifications.getExponentPushTokenAsync()
-  //       .then((token) => {
-  //         axios.post('http://10.6.19.25:3000/mobile/pushNotification', {
-  //           token:  token,
-  //           username: 'Bob'
-  //         })
-  //           .then(function (response) {
-  //             console.log(response);
-  //           })
-  //           .catch(function (error) {
-  //             console.log(error);
-  //           });
-
-  //       })
-  //     } else {
-  //       console.log('Permission NOT GRANTED');
-  //     }
-  //   });
-  // }
-
-  // polling() {
-  //   this.time();
-  //   this.getReminders();
-  // }
 
   getTime() {
     var date = new Date();
@@ -229,36 +113,14 @@ export default class HomeScreen extends React.Component {
         })
       } else {
         console.log('PLEASE ALLOW US TO USE YOUR LOCATION');
-        this.setState({weatherDescription: 'PLEASE ALLOW US TO USE YOUR LOCATION'});
+        this.setState({
+          weatherDescription: 'PLEASE ALLOW US TO USE YOUR LOCATION'
+        });
       }
     });
   }
 
-  getReminders() {
-    // var that = this;
-    // // console.log('getting reminders', baseUrl + '/mobile/reminders')
-    // axios.get(baseUrl + '/mobile/reminders', {
-    //   params: {
-    //     patientId: 1
-    //   }
-    // })
-    //   .then((response) => {
-    //     var reminders = response.data.reminders;
-    //     that.props.updateReminders(reminders);
-    //     that.setState({
-    //       reminders: reminders
-    //     })
-    //   })
-    //   .then(() => {
-    //     that.pushNotification();
-    //   })
-    //   .catch(function (error) {
-    //   //   console.log('error', error);
-    //   });
-  }
-
   render() {
-    // console.log(this.state)
     return (
 
         <ScrollView
@@ -288,9 +150,6 @@ export default class HomeScreen extends React.Component {
             <Image style={styles.homepageContentIcon} source={{uri: "" + this.state.weatherIcon}}>
             </Image> 
           </View>
-
-          <LocalNotification/>
-          <PushNotification _goToReminder={this._goToReminder.bind(this)} showPushNotification={this.showPushNotification.bind(this)}/>
         </ScrollView>
     );
   }

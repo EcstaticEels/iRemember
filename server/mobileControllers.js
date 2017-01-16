@@ -253,23 +253,24 @@ module.exports = {
     });
   },
   addToken: (req, res) => {
-    db.Caregiver.update({token: req.body.token},{ where: { id: req.body.id}})
+    db.Patient.update({token: req.body.token},{ where: { id: req.body.id}})
     .then(() => {
       res.status(200).send('Token added!');
     })
   },
   addPushNotification: function(req, res) {
     // console.log(req.body)
+    console.log(req.body.token)
 
-    // let isPushToken = sdk.isExponentPushToken(somePushToken);
+    let isPushToken = sdk.isExponentPushToken(req.body.token);
  
     // To send a push notification 
     // (async function () {
-    // sdk.sendPushNotificationAsync({
-    //   exponentPushToken: req.body.token, // The push token for the app user you want to send the notification to 
-    //   message: "This is a test notification",
-    //   data: {withSome: 'data'},
-    // });
+    sdk.sendPushNotificationAsync({
+      exponentPushToken: 'ExponentPushToken[uLzPfmKf9566YbVGdrC-_O]', // The push token for the app user you want to send the notification to 
+      message: "This is a test notification",
+      data: { content: "" }
+    });
     // })();
     res.send('got it')
   }

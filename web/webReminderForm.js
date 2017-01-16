@@ -2,16 +2,14 @@ import React from 'react';
 import {Button, Row, Col, Grid} from 'react-bootstrap';
 import AudioUpload from './webAudioUpload.js';
 import Moment from 'moment';
-import { TransitionView, Calendar, DateField, DatePicker } from 'react-date-picker';
+// import { TransitionView, Calendar, DateField, DatePicker } from 'react-date-picker';
+import Datetime from 'react-datetime';
 
 export default class ReminderList extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      date: Moment()
-    }
   }
-
+  
   render() {
     return (
       <div className="reminder-form">
@@ -19,20 +17,10 @@ export default class ReminderList extends React.Component {
         <form>
           <label>
             Time:
-            <DateField
-              forceValidDate
-              dateFormat={"MM/DD/YYYY HH:mm"}
-              defaultValue={Moment()}
-              className= 'date'
-            > 
-              <Calendar style={{padding: 10}} weekNumbers={false} defaultDate={Moment()}
-                onChange={(dateString, { dateMoment, timestamp}) => {
-                  // console.log(dateString, dateMoment, timestamp)
-                  console.log('converted: ', Moment.utc(dateMoment).format(), 'unconverted: ', dateMoment.format());
-                  this.props.handleDateChange(Moment.utc(dateMoment).format());
-                }}
-                />
-            </DateField>
+            <Datetime className='date' value={this.props.date}
+            onChange={(dateMoment) => {
+              this.props.handleDateChange(dateMoment);
+            }}/>
           </label>
           <br/>
           <label>
