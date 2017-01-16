@@ -197,13 +197,15 @@ class Reminder extends React.Component {
   }
 
   recurringDaysToObj(str) {
-    var arr = str.split(',');
-    var selectedDays = {};
-    var daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-    daysOfWeek.forEach((day) => {
-      selectedDays[day] = arr.indexOf(day) === -1 ? false : true;
-    })
-    return selectedDays;
+    if (str) {
+      var arr = str.split(',');
+      var selectedDays = {};
+      var daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+      daysOfWeek.forEach((day) => {
+        selectedDays[day] = arr.indexOf(day) === -1 ? false : true;
+      })
+      return selectedDays;
+    }
   }
 
   editModeSwitch(bool) {
