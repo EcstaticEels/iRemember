@@ -3,7 +3,7 @@ import {Button, Row, Col, Grid} from 'react-bootstrap';
 import ImagesUpload from './webImagesUpload.js';
 import AudioUpload from './webAudioUpload.js';
 import ReactModal from 'react-modal';
-import ImagePreviewCrop from './webImagePreviewCrop';
+import ImagePreview from './webImagePreviewCrop';
 import ReactAudioPlayer from 'react-audio-player';
 
 
@@ -11,16 +11,16 @@ export default class FaceForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      showPreviewModal: false, 
-      cropInfo: []
+      showPreviewModal: false 
     }
-    this.openModal = this.openModal.bind(this);
+    this.handleOpenModal = this.handleOpenModal.bind(this);
+    this.handleCloseModal = this.handleCloseModal.bind(this);
     // this.submitCropPhotos = this.submitCropPhotos.bind(this);
   } 
 
   componentWillReceiveProps(nextProps) { //need to remember to del final crop info if discarded changes
     console.log(nextProps);
-    if (nextProps.imagePreviewUrls.length > 0) {
+    if (nextProps.imagePreviewUrls.length > 0 && nextProps.fieldBeingEdited === 'photos') {
       this.setState({
         showPreviewModal: true
       });
@@ -38,17 +38,26 @@ export default class FaceForm extends React.Component {
   // }
 
   // submitCropPhotos() {
-    // this.setState({
-    //   imagePreviewRerender: true
-    // }, () => {
-    //   this.setState({
-    //     showPreviewModal: false
-    //   }, () => {
-    //     this.props.handleCropInfoUpdate(this.state.cropInfo);
-    //     console.log('final crop photo obj', this.state)
-    //   });
-    // })
+  //   this.setState({
+  //     imagePreviewRerender: true
+  //   }, () => {
+  //     this.setState({
+  //       showPreviewModal: false
+  //     }, () => {
+  //       this.props.handleCropInfoUpdate(this.state.cropInfo);
+  //       console.log('final crop photo obj', this.state)
+  //     });
+  //   })
   // }
+
+  handleOpenModal () {
+    this.setState({ showPreviewModal: true });
+  }
+  
+  handleCloseModal () {
+    this.setState({ showPreviewModal: false });
+  }
+ 
 
   openModal(bool) {
     this.setState({
@@ -57,7 +66,6 @@ export default class FaceForm extends React.Component {
   }
 
   render() {
-
     var cloudinaryUrls = this.props.photos.map(function(photoObj) {
       return photoObj.photo;
     });
@@ -77,6 +85,8 @@ export default class FaceForm extends React.Component {
         <br />
       </label>) : null;
 
+
+// <button onClick={() => this.openModal(true)}>Update default or delete face photos</button>
 
 
     return (
@@ -100,8 +110,22 @@ export default class FaceForm extends React.Component {
             </label>
           </Row>
           <Row className="show-grid">
+            <ReactModal 
+             isOpen={this.state.showPreviewModal}
+             contentLabel="Preview Modal">
+              <h2>Image Preview</h2>
+              <div>
+                <p>Don't worry, photos will be automatically resized and rotated! To discard photos, proceed back to the previous form and select new photos.</p>
+                <div>
+                  {this.props.imagePreviewUrls.length > 0 ? this.props.imagePreviewUrls.map((imagePreview, ind) => <img src={imagePreview} key={ind} className='preview-images'/>) : <h1>hi</h1>} 
+                </div>
+              </div>
+              <button onClick={this.handleCloseModal}>Close Modal</button>
+            </ReactModal>
+
+          </Row>
+          <Row className="show-grid">
             {uploadedPhotos}
-            <button onClick={() => this.openModal.call(this, true)}>Update default or delete face photos</button>
           </Row>
           <Row className="show-grid">
             <label>Upload Audio Message:
@@ -120,22 +144,6 @@ export default class FaceForm extends React.Component {
           </Row>
             <Button bsSize='small' className="btn-submit" onClick={this.props.submitForm}>Submit</Button>
           </form>
-
-
-          <ReactModal 
-           isOpen={this.state.showPreviewModal}
-           contentLabel="Preview Modal">
-            <h2>Image Preview</h2>
-            <div>
-              <p>Don't worry, photos will be automatically resized and rotated! To discard photos, proceed back to the previous form and select new photos.</p>
-              <ImagePreviewCrop 
-                imagePreviewUrls={this.props.imagePreviewUrls}
-              />
-            </div>
-            <button onClick={() => this.openModal.call(this, false)}>Exit preview</button>
-          </ReactModal>
-
-
         </div>
       </Grid>
     );

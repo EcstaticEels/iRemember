@@ -23,7 +23,8 @@ class Face extends React.Component {
       imagePreviewUrls: [],
       updateAudio: '',
       audio: '',
-      loader: false
+      loader: false,
+      fieldBeingEdited: ''
     };
   }
 
@@ -120,12 +121,14 @@ class Face extends React.Component {
     var value = event.target.value;
     var obj = {};
     obj[key] = value;
+    obj['fieldBeingEdited'] = key;
     this.setState(obj);
   }
 
   getAudio(event){
     this.setState({
-      updateAudio: event.target.files
+      updateAudio: event.target.files,
+      fieldBeingEdited: 'audio'
     });
   }
 
@@ -156,7 +159,10 @@ class Face extends React.Component {
     var updateTest = function(files, data) {
       this.setState({
         updatePhotos: files,
-        imagePreviewUrls: data
+        imagePreviewUrls: data,
+        fieldBeingEdited: 'photos'
+      }, () => {
+        console.log('after upload', this.state)
       });
     }
     updateTest = updateTest.bind(this)
@@ -178,13 +184,13 @@ class Face extends React.Component {
   }
 
 
-  getPhotoCrops(cropObj) {
-    this.setState({
-      updatePhotosInfo: cropObj
-    }, () => {
-      console.log(this.state.updatePhotosInfo);
-    });
-  }
+  // getPhotoCrops(cropObj) {
+  //   this.setState({
+  //     updatePhotosInfo: cropObj
+  //   }, () => {
+  //     console.log(this.state.updatePhotosInfo);
+  //   });
+  // }
 
   handleUpdate() {
     var updatedId = this.state.current.dbId;
@@ -315,6 +321,7 @@ class Face extends React.Component {
                   description={this.state.description}
                   imagePreviewUrls={this.state.imagePreviewUrls}
                   handleCloudinaryUrl={this.handleCloudinaryUrl.bind(this)}
+                  fieldBeingEdited={this.state.fieldBeingEdited}
                 /> 
                 : <FaceCurrent
                     current={this.state.current}

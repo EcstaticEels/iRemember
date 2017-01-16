@@ -1,7 +1,7 @@
 import React from 'react';
 
 
-export default class ImagePreviewCrop extends React.Component {
+export default class ImagePreview extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -24,15 +24,11 @@ export default class ImagePreviewCrop extends React.Component {
     // var crop = {
     //   width: 60,
     //   aspect: 16/12
-    // }
-    var that = this;
+    // } 
     return (
       <div>
-        {this.props.imagePreviewUrls.map(function(imagePreview, ind) {
-          return (
-            <img src={imagePreview} key={ind} className='preview-images'/>
-          )})
-        }
+        <h1>Hi</h1>
+        {this.props.imagePreviewUrls.length > 0 ? this.props.imagePreviewUrls.map((imagePreview, ind) => <img src={imagePreview} key={ind} className='preview-images'/>) : <h1>hi</h1>} 
       </div>
     );
   }
