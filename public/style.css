@@ -19,11 +19,21 @@
 }
 
 .facePic {
-  height: 75%;
-  width: 75%;
+  height: 100%;
+  width: 100%;
+  margin-top: 10px;
 }
 
-.pace {
+.face-name {
+  margin-top: 35px;
+}
+
+
+.face-entry {
+  height: 100px;
+  text-align: center;
+}
+/*.pace {
   -webkit-pointer-events: none;
   pointer-events: none;
   -webkit-user-select: none;
@@ -98,7 +108,7 @@
 @keyframes pace-spinner {
   0% { transform: rotate(0deg); transform: rotate(0deg); }
   100% { transform: rotate(360deg); transform: rotate(360deg); }
-}
+}*/
 
 .loader {
   position: fixed;

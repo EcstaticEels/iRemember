@@ -2,13 +2,82 @@ import React from 'react';
 import {Button, Row, Col, Grid} from 'react-bootstrap';
 import ImagesUpload from './webImagesUpload.js';
 import AudioUpload from './webAudioUpload.js';
+import ReactModal from 'react-modal';
+import ImagePreviewCrop from './webImagePreviewCrop';
 
 export default class FaceForm extends React.Component {
   constructor(props) {
     super(props);
-  }
+    this.state = {
+      showModal: false, 
+      cropInfo: [],
+      imagePreviewRerender: true
+    }
+    // this.openModal = this.openModal.bind(this);
+    // this.submitCropPhotos = this.submitCropPhotos.bind(this);
+  } 
+  ////////!!!!!!!!!!!!!!!!!!!!!!!!
+  ////////!!!!!!!!!!!!!!!!!!!!!!!!
+    ////////!!!!!!!!!!!!!!!!!!!!!!!!
+      ////////!!!!!!!!!!!!!!!!!!!!!!!!
+  // componentWillReceiveProps(nextProps) { //need to remember to del final crop info if discarded changes
+  //   console.log(nextProps);
+  //   if (!nextProps.finalCropInfo && nextProps.imagePreviewUrls.length > 0) {
+  //     this.setState({
+  //       showModal: true,
+  //       imagePreviewRerender: false
+  //     });
+  //   }
+  // }
+
+  // handleCropUpdate(index, cropInfo) {
+  //   var newCropInfoArray = JSON.parse(JSON.stringify(this.state.cropInfo));
+  //   newCropInfoArray[index] = cropInfo;
+  //   this.setState({
+  //     cropInfo: newCropInfoArray
+  //   }, () => {
+  //     console.log('crop info updated', this.state);
+  //   });
+  // }
+
+  // submitCropPhotos() {
+  //   this.setState({
+  //     imagePreviewRerender: true
+  //   }, () => {
+  //     this.setState({
+  //       showModal: false
+  //     }, () => {
+  //       this.props.handleCropInfoUpdate(this.state.cropInfo);
+  //       console.log('final crop photo obj', this.state)
+  //     });
+  //   })
+  // }
+
+  // openModal(bool) {
+  //   this.setState({
+  //     showModal: bool
+  //   });
+  // }
+          //     <ReactModal 
+          //  isOpen={this.state.showModal}
+          //  contentLabel="Crop Modal">
+          //   <p>Please crop this image, keeping the image as focused on the person's face as possible.</p>
+          //   <div>
+          //     <h2>Images should be here</h2>
+          //     <div>
+          //       <ImagePreviewCrop 
+          //         imagePreviewUrls={this.props.imagePreviewUrls}
+          //         handleCropUpdate={this.handleCropUpdate.bind(this)}
+          //         imagePreviewRerender={this.state.imagePreviewRerender}
+          //       />
+          //     </div>
+          //     <button onClick={this.submitCropPhotos}>Submit cropped images</button>
+          //   </div>
+          // </ReactModal>
 
   render() {
+
+
     var uploadedPhotos = this.props.editMode ?       
       (<label>Current Uploaded Photos:
         <div>
@@ -16,7 +85,6 @@ export default class FaceForm extends React.Component {
         </div>
         <br />
       </label>) : null;
-
     var uploadedAudio = this.props.editMode ? 
       (<label>Current Uploaded Audio Reminder:
         <br />
@@ -24,6 +92,8 @@ export default class FaceForm extends React.Component {
         <br />
       </label>) : null;
 
+
+// <button onClick={() => this.openModal.call(this, true)}>Open Modal</button>
     return (
       <Grid>
         <div className="face-form">

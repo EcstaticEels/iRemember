@@ -3,7 +3,6 @@ import ReactAudioPlayer from 'react-audio-player';
 import Gallery from './webGallery.js';
 import { observable } from 'mobx';
 import {caregiverName, patientName} from './webMobxStore';
-import Masonry from 'react-masonry-component';
 
 export default class FaceCurrent extends React.Component {
   constructor(props) {
@@ -15,7 +14,7 @@ export default class FaceCurrent extends React.Component {
   }
 
   render() {
-    var galleryView = this.props.current.photos.length > 0 ? <Gallery photos={this.props.current.photos}/> : null;
+    var galleryView = this.props.current.photos.length > 0 ? <Gallery photos={this.props.current.photos} handleCloudinaryUrl={this.props.handleCloudinaryUrl}/> : null;
     var currentView;
     var audioView = this.props.current.audio ? <ReactAudioPlayer src={this.props.current.audio} /> : <h4>No audio set for this face</h4>;
     if (!!this.props.current.subjectName) {

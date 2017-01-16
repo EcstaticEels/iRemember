@@ -18,6 +18,15 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET 
 });
 
+// const handleCloudinaryUrls = function(urlArray) {
+//   var newCloudinaryUrlArray = [];
+//   for (var i = 0; i < urlArray.length; i++) {
+//     var newUrl = urlArray[i].slice(0, 49) + 'w_640,h_450,c_fill,g_face/' + urlArray[i].slice(49);
+//     newCloudinaryUrlArray.push(newUrl);
+//   }
+//   return newCloudinaryUrlArray;
+// }
+
 //Helper function to upload photos to cloudinary
 const handleFaceForm = function(req, cb) {
   const faceForm = new multiparty.Form();
@@ -26,8 +35,11 @@ const handleFaceForm = function(req, cb) {
       console.log(err);
     }
     const urlArray = [];
+    console.log('fields', fields);
+    console.log('files', files);
     if (Object.keys(files).length > 0) { //if there are files
       if (files.photo) { //if there are photo files
+        console.log('photos', files.photo)
         files.photo.forEach(function(file) {
           cloudinary.uploader.upload(file.path, function(result) { 
             urlArray.push(result.url);
@@ -337,7 +349,7 @@ module.exports = {
     });
   },
   setup: (req, res) => {
-    let newPersonGroupId = `ecstatic-eels-0-${req.user.id}`
+    let newPersonGroupId = `ecstatic-eels-2-${req.user.id}`
     let patientGroupId = `ecstatic-eels-patients-1`
     handleSetupForm(req, (patientPhotoArray, fields) => {
       request.post({
