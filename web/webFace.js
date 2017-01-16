@@ -12,18 +12,29 @@ class Face extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      list: [{subjectName:"", photos:[{photo: ''}], description:""}],
+      list: [],
       current: {subjectName:"", photos:[{}], description:""},
       showForm: false,
       editMode: false,
       subjectName: '',
       photos: [{}],
       description: '',
-      updatePhotos: '',
+      updatePhotos: [],
+      finalCropInfo: '',
+      imagePreviewUrls: [],
       updateAudio: '',
       audio: '',
       loader: false
     };
+  }
+
+  handleCloudinaryUrl(urlArray, w, h, type) {
+    var newCloudinaryUrlArray = [];
+    for (var i = 0; i < urlArray.length; i++) {
+      var newUrl = urlArray[i].slice(0, 49) + `w_${w},h_${h},c_${type},g_face/` + urlArray[i].slice(49);
+      newCloudinaryUrlArray.push(newUrl);
+    }
+    return newCloudinaryUrlArray;
   }
 
   getFaces(func) {
@@ -52,6 +63,14 @@ class Face extends React.Component {
           current: {subjectName:"", photos:[], description:"", audio: ""}
         });
       }
+    });
+  }
+
+  handleCropInfoUpdate(cropObj) {
+    this.setState({
+      finalCropInfo: cropObj
+    }, () => {
+      console.log('after crop, state:', this.state)
     });
   }
 
@@ -111,9 +130,43 @@ class Face extends React.Component {
     this.displayForm(true, true);
   }
 
-  getPhotos(event){
+  getPhotos(e){
+    e.preventDefault();
+    e.persist();
+
+    var data = [];      // The results
+    var pending = 0;    // How many outstanding operations we have
+
+    var updateTest = function(files, data) {
+      this.setState({
+        updatePhotos: files,
+        imagePreviewUrls: data
+      });
+    }
+    updateTest = updateTest.bind(this)
+
+    Array.prototype.forEach.call(e.target.files, function(file, index) {
+        // Read this file, remember it in `data` using the same index
+        // as the file entry
+        var fr = new FileReader();
+        fr.onload = function() {
+          data[index] = fr.result;
+          --pending;
+          if (pending == 0) {
+            updateTest(e.target.files, data)
+          }
+        }
+        fr.readAsDataURL(file);
+        ++pending;
+    });
+  }
+
+
+  getPhotoCrops(cropObj) {
     this.setState({
-      updatePhotos: event.target.files
+      updatePhotosInfo: cropObj
+    }, () => {
+      console.log(this.state.updatePhotosInfo);
     });
   }
 
@@ -166,6 +219,9 @@ class Face extends React.Component {
     for (var key in this.state.updateAudio) {
       formData.append('audio', this.state.updateAudio[key]);
     }
+    // for (var i = 0; i < this.state.finalCropInfo.length; i++) {
+    //   formData.append(`cropInfo_${i}`, JSON.stringify(this.state.finalCropInfo[i]));
+    // }
     var that = this;
     $.ajax({
       url: '/web/identify',
@@ -221,7 +277,9 @@ class Face extends React.Component {
             <FaceList 
               list={this.state.list}
               getInput={this.getInput.bind(this)}
-              updateCurrent={this.updateCurrent.bind(this)}/>
+              updateCurrent={this.updateCurrent.bind(this)}
+              handleCloudinaryUrl={this.handleCloudinaryUrl.bind(this)}
+            />
           </div>
         </Col>
         <Col xs={12} md={8}>
@@ -238,10 +296,13 @@ class Face extends React.Component {
                   audio={this.state.audio}
                   subjectName={this.state.subjectName}
                   photos={this.state.photos} 
-                  description={this.state.description}/> 
+                  description={this.state.description}
+                /> 
                 : <FaceCurrent
                     current={this.state.current}
-                    edit={this.edit.bind(this)} />
+                    edit={this.edit.bind(this)} 
+                    handleCloudinaryUrl={this.handleCloudinaryUrl.bind(this)}
+                  />
             }
           </Loader>
           </div>
