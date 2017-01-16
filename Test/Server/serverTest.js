@@ -7,23 +7,44 @@ var expect = chai.expect;
 
 chai.use(chaiHttp);
 
-describe ('Server', function () {
-  it('should connect to localhost', function(done) {
+server.request.isAuthenticated = function() {
+  return true;
+}
+
+// describe ('Server', function () {
+//   it('should connect to localhost', function(done) {
+//     chai.request(server)
+//       .get('localhost:3000')
+//       .end(function(err, res) {
+//         res.should.have.status(200);
+//         done();
+//       });
+//   });
+// });
+
+describe('test user', function () {
+  it('should return a user', function(done) {
     chai.request(server)
-      .get('localhost:3000')
-      .end(function(err, res) {
-        res.should.have.status(200);
-        done();
-      });
-  });
-});
+      .get('http://localhost:3000/user?caregiverId=1')
+      .end(function(error, response, body){
+        expect(response.statusCode).to.equal(200);
+        done()
+      })
+  })
+})
+
+
 
 describe('test endpoint', function() {
   it('should respond to GET requests to /web/identify with a 200 status code', function(done) {
-    request('http://localhost:3000/web/identify?caregiverId=1', function(error, response, body) {
-      expect(response.statusCode).to.equal(200);
-      done();
-    });
+    chai.request(server)
+      .get('http://localhost:3000/web/identify?caregiverId=1')
+      // .send({user: {id: 1}})
+      .end(function(error, response, body) {
+        expect(response.statusCode).to.equal(200);
+        done();
+      })
+
   });
 
   it('should send back parsable stringified JSON', function(done) {
