@@ -20,7 +20,6 @@ class Face extends React.Component {
       photos: [{}],
       description: '',
       updatePhotos: [],
-      finalCropInfo: '',
       imagePreviewUrls: [],
       updateAudio: '',
       audio: '',
@@ -83,13 +82,13 @@ class Face extends React.Component {
     });
   }
 
-  handleCropInfoUpdate(cropObj) {
-    this.setState({
-      finalCropInfo: cropObj
-    }, () => {
-      console.log('after crop, state:', this.state)
-    });
-  }
+  // handleCropInfoUpdate(cropObj) {
+  //   this.setState({
+  //     finalCropInfo: cropObj
+  //   }, () => {
+  //     console.log('after crop, state:', this.state)
+  //   });
+  // }
 
   displayForm(bool, editMode) {
     if (editMode) {
@@ -315,7 +314,6 @@ class Face extends React.Component {
                   photos={this.state.photos} 
                   description={this.state.description}
                   imagePreviewUrls={this.state.imagePreviewUrls}
-                  handleCropInfoUpdate={this.handleCropInfoUpdate.bind(this)}
                   handleCloudinaryUrl={this.handleCloudinaryUrl.bind(this)}
                 /> 
                 : <FaceCurrent

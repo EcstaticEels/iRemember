@@ -28,6 +28,10 @@
   margin-top: 35px;
 }
 
+.preview-images {
+  height: 25%;
+  width: 25%;
+}
 
 .face-entry {
   height: 100px;
