@@ -6,7 +6,7 @@ import ReminderList from './webReminderList.js';
 import ReminderCurrent from './webReminderCurrent.js';
 import ReminderForm from './webReminderForm.js';
 import Loader from 'react-loader-advanced';
-
+import Moment from 'moment';
 
 class Reminder extends React.Component {
   constructor(props) {
@@ -16,7 +16,7 @@ class Reminder extends React.Component {
       current: {time: "", recurring: false, type: '', audio: "", note: "", title: ''},
       showForm: false,
       editMode: false,
-      date: '',
+      date: Moment().format(),
       type: 'medication',
       recurring: false,
       selectedDays: {
@@ -57,7 +57,7 @@ class Reminder extends React.Component {
       success: function(res) {
         var reminders = JSON.parse(res).reminders;
         reminders.forEach(function(reminder) {
-          reminder.date = new Date (reminder.date);
+          reminder.date = new Date(reminder.date);
           reminder.img = mapIcons(reminder.type);
           reminder.selectedDays = that.recurringDaysToObj(reminder.recurringDays);
           return reminder;
@@ -107,6 +107,8 @@ class Reminder extends React.Component {
     console.log('date', date)
     this.setState({
       date: date
+    }, () => {
+      console.log('date change', this.state.date)
     });
   }
 
@@ -276,9 +278,9 @@ class Reminder extends React.Component {
     var that = this;
     var formData = new FormData();
     console.log('uncoverted date', this.state.date)
-    var reminderUTCdate = this.state.date ? new Date(this.state.date).toISOString() : new Date().toISOString();
-    console.log('converted date', reminderUTCdate)
-    formData.append('date', reminderUTCdate);
+    var convertedMomentDate = Moment.utc(this.state.date).format()
+    console.log('converted date', convertedMomentDate)
+    formData.append('date', convertedMomentDate);
     formData.append('recurring', this.state.recurring);
     formData.append('recurringDays', recurringDays || []);
     formData.append('type', this.state.type);

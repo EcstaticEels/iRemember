@@ -5,6 +5,8 @@ const urlModule = require('url')
 
 const db = require('../database/db.js');
 
+const sdk = require('exponent-server-sdk');
+
 //headers for the Microsoft Face API
 const microsoftHeaders = {
   "Content-Type": "application/json", 
@@ -278,6 +280,20 @@ module.exports = {
         title: fields.title[0],
         registered: false,
         patientId: req.user.patientId
+      })
+      .then(reminder => {
+        db.Patient.findOne({
+          where: {
+            id: reminder.patientId
+          }
+        })
+        .then(patient => {
+          sdk.sendPushNotificationAsync({
+            exponentPushToken: 'ExponentPushToken[vKtJn3Et16bGEDvhFpx4xk]', // The push token for the app user you want to send the notification to 
+            message: "From your server",
+            data: {server: true}
+          });
+        })
       })
       .then(reminder => {
         res.status(201).send(JSON.stringify(reminder));
