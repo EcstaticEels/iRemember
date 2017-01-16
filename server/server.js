@@ -100,11 +100,14 @@ const mobileControllers = require('./mobileControllers.js');
 app.post('/web/identify', ensureAuthenticated, webControllers.addFace);
 app.put('/web/identify', ensureAuthenticated, webControllers.updateFace);
 app.get('/web/identify', ensureAuthenticated, webControllers.retrieveFaces);
+app.delete('/web/identify', ensureAuthenticated, webControllers.deleteFace);
+
 app.post('/web/reminders', ensureAuthenticated, webControllers.addReminder);
 app.get('/web/reminders', ensureAuthenticated, webControllers.retrieveReminders);
 app.put('/web/reminders', ensureAuthenticated, webControllers.updateReminder);
 app.delete('/web/reminders', ensureAuthenticated, webControllers.deleteReminder);
 app.post('/web/setup', ensureAuthenticated, webControllers.setup);
+
 
 //Mobile
 app.post('/mobile/login', upload.single('picture'), mobileControllers.loginFace);
