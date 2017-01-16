@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactCrop from 'react-image-crop';
 
 
 export default class ImagePreviewCrop extends React.Component {
@@ -7,9 +6,9 @@ export default class ImagePreviewCrop extends React.Component {
     super(props);
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    return nextProps.imagePreviewRerender;  
-  }
+  // shouldComponentUpdate(nextProps, nextState) {
+  //   return nextProps.imagePreviewRerender;  
+  // }
 
   // <ReactCrop 
   //   src={imagePreview} 
@@ -29,14 +28,11 @@ export default class ImagePreviewCrop extends React.Component {
     var that = this;
     return (
       <div>
-        <h1>ImagePreviewCrop</h1>
-        <div>
         {this.props.imagePreviewUrls.map(function(imagePreview, ind) {
           return (
-            <img src={imagePreview} />
+            <img src={imagePreview} key={ind} className='preview-images'/>
           )})
         }
-        </div>
       </div>
     );
   }
