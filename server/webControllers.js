@@ -278,6 +278,53 @@ module.exports = {
       });
     });
   },
+  deleteFace: (req, res) => {
+    console.log(req.body);
+    let faceId = req.body.faceId;
+    db.Face.findOne({
+      where: {
+        id: faceId
+      }
+    })
+    .then(face => {
+      let personId = face.get('personId');
+      let personGroupId = req.user.personGroupID;
+      request.delete({
+          headers: microsoftHeaders,
+          url: `https://api.projectoxford.ai/face/v1.0/persongroups/${personGroupId}/persons/${personId}`
+        }, (err, response, body) => {
+          console.log('delete from mic', response);
+          request.post({
+            headers: microsoftHeaders,
+            url: `https://api.projectoxford.ai/face/v1.0/persongroups/${personGroupId}/train`,
+          }, (err, response, body) => {
+            if (err) {
+              console.log(err);
+            }
+            console.log('trained person group call made');
+            db.FacePhoto.destroy({
+              where: {
+                faceId: faceId
+              }
+            })
+            .then( (resp) => {
+              console.log('facephoto destroy', resp)
+              db.Face.destroy({
+                where: {
+                  id: faceId
+                }
+              })
+              .then( (resp) => {
+                console.log('face destroy', resp);
+                res.status(200).send('face and facephotos deleted');
+              });
+            })
+          });
+        }
+      );
+    })
+
+  },
   addReminder: (req, res) => {
     handleReminderForm(req, (audioUrl, fields) => {
       db.Reminder.create({ 
@@ -349,8 +396,8 @@ module.exports = {
     });
   },
   setup: (req, res) => {
-    let newPersonGroupId = `ecstatic-eels-2-${req.user.id}`
-    let patientGroupId = `ecstatic-eels-patients-1`
+    let newPersonGroupId = `ecstatic-eels-2-${req.user.id}` //why is this not working
+    let patientGroupId = `ecstatic-eels-patients-1` //we don't need to change this much
     handleSetupForm(req, (patientPhotoArray, fields) => {
       request.post({
         headers: microsoftHeaders,
@@ -403,8 +450,17 @@ module.exports = {
                         }
                       )
                       .then(caregiver => {
-                        res.status(201).send(JSON.stringify({patient: patient, caregiver: caregiver}));
-                        console.log('caregiver and patient associated');
+                        request.put({
+                          headers: microsoftHeaders,
+                          url: `https://api.projectoxford.ai/face/v1.0/persongroups/${newPersonGroupId}`,
+                          body: JSON.stringify({"name": newPersonGroupId})
+                        }, (err, response, body) => {
+                          if (err) {
+                            console.log(err);
+                          }
+                          console.log('caregiver and patient associated');
+                          res.status(201).send(JSON.stringify({patient: patient, caregiver: caregiver}));
+                        })
                       });
                     });
                   }

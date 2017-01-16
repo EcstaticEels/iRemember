@@ -28,10 +28,27 @@ class Face extends React.Component {
     };
   }
 
+  delete() {
+    var that = this;
+    $.ajax({
+      method: 'DELETE',
+      url: '/web/identify',
+      data: JSON.stringify({faceId: this.state.current.dbId}),
+      contentType: 'application/json',
+      success: function(res) {
+        console.log('success', res);
+        that.componentDidMount();
+      },
+      error: function(err) {
+        console.log('error', err);
+      }
+    })
+  }
+
   handleCloudinaryUrl(urlArray, w, h, type) {
     var newCloudinaryUrlArray = [];
     for (var i = 0; i < urlArray.length; i++) {
-      var newUrl = urlArray[i].slice(0, 49) + `w_${w},h_${h},c_${type},g_face/` + urlArray[i].slice(49);
+      var newUrl = urlArray[i].slice(0, 49) + `w_${w},h_${h},c_${type},g_face/a_auto_right/` + urlArray[i].slice(49);
       newCloudinaryUrlArray.push(newUrl);
     }
     return newCloudinaryUrlArray;
@@ -55,7 +72,7 @@ class Face extends React.Component {
     this.getFaces((faces) => {
       if (faces.length > 0) {
         this.setState({list: faces, current: faces[0]}, () => {
-          console.log('mounted', this.state);
+          console.log('mounted webFace', this.state);
         });
       } else {
         this.setState({
@@ -297,11 +314,15 @@ class Face extends React.Component {
                   subjectName={this.state.subjectName}
                   photos={this.state.photos} 
                   description={this.state.description}
+                  imagePreviewUrls={this.state.imagePreviewUrls}
+                  handleCropInfoUpdate={this.handleCropInfoUpdate.bind(this)}
+                  handleCloudinaryUrl={this.handleCloudinaryUrl.bind(this)}
                 /> 
                 : <FaceCurrent
                     current={this.state.current}
                     edit={this.edit.bind(this)} 
                     handleCloudinaryUrl={this.handleCloudinaryUrl.bind(this)}
+                    delete={this.delete.bind(this)}
                   />
             }
           </Loader>

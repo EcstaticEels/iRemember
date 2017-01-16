@@ -11,11 +11,21 @@ export default class ImagePreviewCrop extends React.Component {
     return nextProps.imagePreviewRerender;  
   }
 
+  // <ReactCrop 
+  //   src={imagePreview} 
+  //   crop={crop}
+  //   onComplete={(crop, pixelCrop) => {
+  //     console.log(ind, crop);
+  //     console.log(ind, pixelCrop);
+  //     that.props.handleCropUpdate(ind, pixelCrop)
+  //   }} 
+  //   key={ind}
+  // />
   render() {
-    var crop = {
-      width: 60,
-      aspect: 16/12
-    }
+    // var crop = {
+    //   width: 60,
+    //   aspect: 16/12
+    // }
     var that = this;
     return (
       <div>
@@ -23,16 +33,7 @@ export default class ImagePreviewCrop extends React.Component {
         <div>
         {this.props.imagePreviewUrls.map(function(imagePreview, ind) {
           return (
-            <ReactCrop 
-              src={imagePreview} 
-              crop={crop}
-              onComplete={(crop, pixelCrop) => {
-                console.log(ind, crop);
-                console.log(ind, pixelCrop);
-                that.props.handleCropUpdate(ind, pixelCrop)
-              }} 
-              key={ind}
-            />
+            <img src={imagePreview} />
           )})
         }
         </div>

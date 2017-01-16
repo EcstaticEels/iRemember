@@ -3,6 +3,7 @@ import ReactAudioPlayer from 'react-audio-player';
 import Gallery from './webGallery.js';
 import { observable } from 'mobx';
 import {caregiverName, patientName} from './webMobxStore';
+import {Button} from 'react-bootstrap';
 
 export default class FaceCurrent extends React.Component {
   constructor(props) {
@@ -27,7 +28,8 @@ export default class FaceCurrent extends React.Component {
             {audioView}
           </label>
           <br />
-          <button onClick={this.edit.bind(this)}>Edit</button>
+          <Button bsSize='small' className="btn-edit" onClick={this.edit.bind(this)}>Edit</Button>
+          <Button bsSize='small' className="btn-delete" onClick={this.props.delete}>Delete</Button>
         </div>
       );
     } else {
