@@ -1,7 +1,5 @@
 import React from 'react';
 
-var FileUpload = require('NativeModules').FileUpload;
-
 import {
   ScrollView,
   StyleSheet,
@@ -12,9 +10,7 @@ import {
   ExponentConfigView,
 } from '@exponent/samples';
 
-import * as Exponent from 'exponent';
-
-import axios from 'axios';
+import Exponent, {ImagePicker} from 'exponent';
 
 import Router from '../navigation/Router.js';
 
@@ -42,7 +38,7 @@ export default class PhotosScreen extends React.Component {
   }
 
   takePhoto () {
-    Exponent.ImagePicker.launchCameraAsync()
+    ImagePicker.launchCameraAsync()
     .then((photo) => {
       if (photo.cancelled === true) {
         this.props.navigation.performAction(({ tabs }) => {
@@ -154,5 +150,5 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-around',
     flex: 1
-  },x
+  },
 });

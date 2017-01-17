@@ -63,6 +63,8 @@ export default class RootNavigation extends React.Component {
       patientName: this.state.name
     };
 
+    console.log('UPLOADING IMAGE')
+
     return fetch(apiUrl, options);
   }
 

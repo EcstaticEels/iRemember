@@ -10,7 +10,6 @@ import ReminderInfoScreen from '../screens/ReminderInfoScreen';
 import PersonInfoScreen from '../screens/PersonInfoScreen';
 import LoginScreen from '../screens/LoginScreen';
 import FailedLoginScreen from '../screens/FailedLoginScreen';
-import TouchIDScreen from '../screens/TouchIDScreen';
 import FailedFaceLookupScreen from '../screens/FailedFaceLookupScreen';
 import NoFaceFoundScreen from '../screens/NoFaceFoundScreen';
 import MultipleFacesFoundScreen from '../screens/MultipleFacesFoundScreen';

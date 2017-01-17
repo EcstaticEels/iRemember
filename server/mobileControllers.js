@@ -152,7 +152,7 @@ module.exports = {
       }
       const parsedDetectBody = JSON.parse(body);
       console.log('detection results', parsedDetectBody);
-      const personGroupId = 'ecstatic-eels-forever' //CHANGE TO PATIENT
+      const personGroupId = 'ecstatic-eels-patients-1' //CHANGE TO PATIENT
       if (parsedDetectBody.length === 1) { 
         var bodyForIdentification = {    
           "personGroupId": personGroupId, 
