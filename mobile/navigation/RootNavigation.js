@@ -3,6 +3,7 @@ import React from 'react';
 import {
   StyleSheet,
   View,
+  NativeModules
 } from 'react-native';
 import {
   Notifications, 
@@ -41,11 +42,15 @@ export default class RootNavigation extends React.Component {
     super(props)
     this.state = {
       authenticated: false,
-      name: ''
+      name: '',
+      id: '',
+      loading: false,
+      fingerprint: false
     }
 
     this.handleTextChange = this.handleTextChange.bind(this);
     this.handleTextSubmit = this.handleTextSubmit.bind(this);
+    this.authFunction = this.authFunction.bind(this);
 
   }
 
@@ -124,6 +129,7 @@ export default class RootNavigation extends React.Component {
   }
 
   uploadImageAsync(uri) {
+    console.log(this.state)
     let date = Date.now();
     let apiUrl = `${baseUrl}/mobile/login?date=${date}`
 
@@ -146,6 +152,8 @@ export default class RootNavigation extends React.Component {
       },
       patientName: this.state.name
     };
+
+    console.log('UPLOADING IMAGE')
 
     return fetch(apiUrl, options);
   }
@@ -170,25 +178,36 @@ export default class RootNavigation extends React.Component {
           } else {
             this._failedLogin()
           }
+        .catch((err) => {
+          console.log('BRO WE CANT AUTHENTICATE U')
+          console.log('ERROR', err)
+          this._failedLogin()
         })
       })
-      .catch((err) => {
-        console.log('BRO WE CANT AUTHENTICATE U')
-        console.log('ERROR', err)
-        this._failedLogin()
-      })
+    })
+  }  
+
+  authFunction () {
+    NativeModules.ExponentFingerprint.authenticateAsync('Show me your finger!')
+    .then((result) => {
+      console.log(result)
+      if (result.success) {
+        this.setState({fingerprint: true})
+      } else {
+        alert('Try again!');
+      }
     })
   }
 
   render() {
 
-    // if (!this.state.authenticated) {
-    //   return (
-    //     <StackNavigation
-    //       initialRoute={Router.getRoute('login', {handleTextChange: this.handleTextChange, handleTextSubmit: this.handleTextSubmit})}/>
-    //       // initialRoute='login' />
-    //   )
-    // } else {
+    if (!this.state.fingerprint || !this.state.authenticated) {
+      return (
+        <StackNavigation
+          initialRoute={Router.getRoute('login', {authFunction: this.authFunction, state:this.state, handleTextChange: this.handleTextChange, handleTextSubmit: this.handleTextSubmit})}/>
+          // initialRoute='login' />
+      )
+    } else {
       return (
         <TabNavigation
           id="main"
@@ -198,23 +217,23 @@ export default class RootNavigation extends React.Component {
           <TabNavigationItem
             id="home"
             renderIcon={isSelected => this._renderIcon('home', isSelected)}>
-            <StackNavigation initialRoute="home"/>
+            <StackNavigation initialRoute={Router.getRoute('home', {state: this.state})}/>
           </TabNavigationItem>
           <TabNavigationItem
             id="reminders"
             renderIcon={isSelected => this._renderIcon('bell', isSelected)}>
-            <StackNavigation initialRoute="reminders"/>
+            <StackNavigation initialRoute={Router.getRoute('reminders', {state: this.state})}/>
           </TabNavigationItem>
 
           <TabNavigationItem
             id="photos"
             renderIcon={isSelected => this._renderIcon('camera', isSelected)}>
-            <StackNavigation initialRoute="photos"/>
+            <StackNavigation initialRoute={Router.getRoute('photos', {state: this.state})}/>
           </TabNavigationItem>
         </TabNavigation>
       );
 
-    // }
+    }
   }
 
   _renderIcon(name, isSelected) {
