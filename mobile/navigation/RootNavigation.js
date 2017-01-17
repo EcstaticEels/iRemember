@@ -50,20 +50,31 @@ export default class RootNavigation extends React.Component {
   }
 
   componentWillMount () {
-    this._registerForPushNotifications();
+    this._notificationSubscription = this._registerForPushNotifications();
   }
 
   componentDidMount() {
+    //Testing
+    // var getReminders = Store.getReminders();
+    // getReminders.then((reminder)=> {
+    //   Notifications.scheduleLocalNotificationAsync({title: 'title', body: 'body'}, {
+    //     time: (new Date()).getTime() + 3000
+    //   })
+    //     .then(newNotificationId => {
+    //       console.log('exponent notification scheduled')
+    //       // console.log('reminder', reminder, 'localNotification', localNotification, 'schedulingOptions', schedulingOptions)
+    //     })
+    // })
+
     this.setUpReminders();
-    // this._notificationSubscription = this._registerForPushNotifications();
   }
 
   componentWillUnmount() {
-    // this._notificationSubscription 
-    // && this._notificationSubscription.remove();
+    this._notificationSubscription && this._notificationSubscription.remove();
   }
 
   setUpReminders () {
+    console.log('getReminders?')
     var getReminders = Store.getReminders();
     getReminders.then((reminders)=> {
       this.cancelDeletedReminders(reminders);
@@ -86,6 +97,20 @@ export default class RootNavigation extends React.Component {
     console.log('origin', origin, 'data', data, 'remote', remote)
     if (origin === 'received' && data.server) {
       console.log('setting up reminders?')
+
+
+    //Testing
+    // var getReminders = Store.getReminders();
+    //   getReminders.then((reminders)=> {
+    //     Notifications.scheduleLocalNotificationAsync({title: 'title', body: 'body'}, {
+    //       time: (new Date()).getTime() + 3000
+    //     })
+    //       .then(newNotificationId => {
+    //         console.log('exponent notification scheduled')
+    //         // console.log('reminder', reminder, 'localNotification', localNotification, 'schedulingOptions', schedulingOptions)
+    //       })
+    //   })
+
       this.setUpReminders();
     } else if(origin === 'received') {
       this.props.navigator.showLocalAlert('hi', Alerts.notice);
@@ -101,7 +126,6 @@ export default class RootNavigation extends React.Component {
   uploadImageAsync(uri) {
     let date = Date.now();
     let apiUrl = `${baseUrl}/mobile/login?date=${date}`
-    console.log(apiUrl)
 
     let uriParts = uri.split('.');
     let fileType = uriParts[uri.length - 1];
@@ -127,7 +151,6 @@ export default class RootNavigation extends React.Component {
   }
 
   handleTextChange (text) {
-    console.log(text)
     this.setState({name: text});
   }
 
@@ -140,10 +163,8 @@ export default class RootNavigation extends React.Component {
     .then((photo) => {
       this.uploadImageAsync(photo.uri)
       .then((person) => {
-        console.log(person)
         return person.json()
         .then((person) => {
-          console.log(person)
           if (person.name === this.state.name) {
             this.setState({authenticated: true})
           } else {
@@ -252,21 +273,19 @@ export default class RootNavigation extends React.Component {
     console.log('scheduled', schedulingOptions)
 
     //Testing
-      var year = reminder.date.slice(0, 4);
-      var month = reminder.date.slice(5, 7) - 1;
-      var day = reminder.date.slice(8, 10);
-      var hour = reminder.date.slice(11, 13);
-      var minute = reminder.date.slice(14, 16);
+      // var year = reminder.date.slice(0, 4);
+      // var month = reminder.date.slice(5, 7) - 1;
+      // var day = reminder.date.slice(8, 10);
+      // var hour = reminder.date.slice(11, 13);
+      // var minute = reminder.date.slice(14, 16);
 
-      var schedulingOptions = {
-        time: (new Date(year, month, day, hour, minute)).getTime()
-      }
+      // var schedulingOptions = {
+      //   time: (new Date(year, month, day, hour, minute)).getTime()
+      // }
 
-    Notifications.presentLocalNotificationAsync(localNotification)
+    // Notifications.presentLocalNotificationAsync(localNotification)
     // console.log('scheduledTime', schedulingOptions.time)
-    // Notifications.scheduleLocalNotificationAsync(localNotification, {
-    //   time: (new Date()).getTime() + 3000
-    // })
+    Notifications.scheduleLocalNotificationAsync(localNotification, schedulingOptions)
       .then(newNotificationId => {
         // console.log('exponent notification scheduled')
         // console.log('reminder', reminder, 'localNotification', localNotification, 'schedulingOptions', schedulingOptions)
@@ -312,7 +331,7 @@ export default class RootNavigation extends React.Component {
             if (!day) {
               return;
             }
-            // var differenceInMilliseconds = Store.getDifferenceInDays(day, time) * 24 * 60 * 60 * 1000;
+            var differenceInMilliseconds = Store.getDifferenceInDays(day, time) * 24 * 60 * 60 * 1000;
             var schedulingOptions = {
               time: time.getTime() + differenceInMilliseconds,
               repeat: 'day'
@@ -326,8 +345,7 @@ export default class RootNavigation extends React.Component {
           });
         } else {
           var schedulingOptions = {
-            time: time,
-            repeat: 'minute'
+            time: time
           }
           that.setLocalNotification(reminder, localNotification, schedulingOptions, (reminder) => {
             resolve(reminder);

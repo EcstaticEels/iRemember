@@ -8,9 +8,16 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  View
+  TouchableOpacity,
+  View,
+  DeviceEventEmitter,
+  ActivityIndicator
 } from 'react-native';
 import * as Exponent from 'exponent';
+
+//MobX
+import {observer} from 'mobx-react/native';
+import Store from '../store.js'
 
 //Server connection
 import axios from 'axios';
@@ -23,8 +30,19 @@ import moment from 'moment';
 import { MonoText } from '../components/StyledText';
 import weatherIcons from '../assets/images/weatherIcons.js';
 
+// import SunCalc from 'suncalc';
+
+// import LocalNotification from '../notification/localNotification.js';
+// import PushNotification from '../notification/pushNotification.js';
+
+
+import Router from '../navigation/Router.js';
+
+import Alerts from '../constants/Alerts';
+
 // import registerForPushNotificationsAsync from 'registerForPushNotificationsAsync';
 
+@observer
 export default class HomeScreen extends React.Component {
   constructor (props) {
     super (props);
@@ -35,40 +53,136 @@ export default class HomeScreen extends React.Component {
       currentLongitude: '',
       dateTime: {
         time: '',
-        dayNight: ''
-      }
+        hour: ''
+      },
+      loading: true
     }
   }
 
   static route = {
     navigationBar: {
       visible: false,
-    }
+    },
   }
 
   //need to render something prettier
 
   componentDidMount () {
+
+
+    // const {reminders, change} = Store;
+    // change('reminders', 'bye');
+    var that = this;
+    this.getTime();
+    this.getWeather();
+
+    if(!this.state.notificationToken) this.allowPushNotification();
+//     this.cancelDeletedReminders();
+//     this.getReminders();
+    // setInterval(that.getTime(), 10000);
+    // const {reminders, change} = Store;
+    // change('reminders', 'bye');
+    // var that = this;
     this.getTime();
     this.getWeather();
   }
 
+  // componentWillMount() {
+    // Exponent.Notifications.cancelAllScheduledNotificationsAsync()
+    // registerForPushNotificationsAsync();
+
+    // Handle notifications that are received or selected while the app
+    // is open
+    // this._notificationSubscription = DeviceEventEmitter.addListener(
+    //   'Exponent.Notification', this._handleNotification
+    // );
+
+    // Handle notifications that are received or selected while the app
+    // is closed, and selected in order to open the app
+    // if (this.props.exp.notification) {
+    //   this._handleNotification(this.props.exp.notification);
+    // }
+
+    // _handleNotification = (notification) => {
+    //   console.log('notification!!', notification)
+    // };
+  // };
+
+  showPushNotification(data){
+    this.props.navigator.showLocalAlert(data, Alerts.notice);
+  }
+
+  _goToReminder = (reminder) => {
+    console.log('current', Store.current,'reminder', reminder)
+    Store.current = reminder;
+    this.props.navigator.push(Router.getRoute('reminder'))
+  }
+
+  allowPushNotification() {
+    Exponent.Permissions.askAsync(Exponent.Permissions.REMOTE_NOTIFICATIONS)
+    .then((response) => {
+      if (response.status === "granted") {
+        Exponent.Notifications.getExponentPushTokenAsync()
+        .then((token) => {
+          this.setState({
+            notificationToken: token
+          });
+
+          axios.post(baseUrl + '/mobile/pushNotification', {
+            token:  token,
+            id: 1,
+          })
+            .then(function (response) {
+              // console.log(response);
+            })
+            .catch(function (error) {
+              // console.log(error);
+            });
+        })
+      } else {
+        console.log('Permission NOT GRANTED');
+      }
+    })
+  }
+
+  // allowPushNotification() {
+  //   Exponent.Permissions.askAsync(Exponent.Permissions.REMOTE_NOTIFICATIONS)
+  //   .then((response) => {
+  //     // console.log(response);
+  //     if (response.status === "granted") {
+  //       Exponent.Notifications.getExponentPushTokenAsync()
+  //       .then((token) => {
+  //         axios.post('http://10.6.19.25:3000/mobile/pushNotification', {
+  //           token:  token,
+  //           username: 'Bob'
+  //         })
+  //           .then(function (response) {
+  //             console.log(response);
+  //           })
+  //           .catch(function (error) {
+  //             console.log(error);
+  //           });
+
+  //       })
+  //     } else {
+  //       console.log('Permission NOT GRANTED');
+  //     }
+  //   });
+  // }
+
+  // polling() {
+  //   this.time();
+  //   this.getReminders();
+  // }
 
   getTime() {
     var date = new Date();
 
     var hours = date.getHours();
 
-    if (hours > 18) {
-      var dayNight = 'night';
-    } else {
-      var dayNight = 'day';
-    }
-
-
     this.setState({dateTime: {
       time: moment().format('LT'),
-      dayNight: dayNight
+      hour: hours
     }});
   }
 
@@ -99,30 +213,64 @@ export default class HomeScreen extends React.Component {
               801: 'partiallyCloudy'
 
             }
+            // var sunlightTimes = SunCalc.getTimes(new Date(), this.state.currentLatitude, this.state.currentLongitude);
             var ind = Math.floor(weather.id/100);
             var iconKey = iconReference[ind];
             if (weather.id === 800 || weather.id === 801) {
               iconKey = iconReference[weather.id];
             }
             var description = weather.description;
+            // console.log(this.state.dateTime.hour)
+            // console.log(sunlightTimes.sunrise.getHours())
+            // console.log(sunlightTimes.sunset.getHours())
+            // if (this.state.dateTime.hour >= sunlightTimes.sunrise.getHours() && this.state.dateTime.hour <= sunlightTimes.sunset.getHours()) {
+            //   var dayNight = 'day'
+            // } else {
+            //   var dayNight = 'night'
+            // }
+
             this.setState({
               weatherDescription: description.charAt(0).toUpperCase() + description.slice(1),
-              weatherIcon: weatherIcons[iconKey]
+              // weatherIcon: weatherIcons[dayNight][iconKey],
+              loading: false
             });
           })
         })
       } else {
         console.log('PLEASE ALLOW US TO USE YOUR LOCATION');
-        this.setState({
-          weatherDescription: 'PLEASE ALLOW US TO USE YOUR LOCATION'
-        });
+        this.setState({weatherDescription: 'PLEASE ALLOW US TO USE YOUR LOCATION'});
       }
     });
   }
 
-  render() {
-    return (
+  getReminders() {
+    // var that = this;
+    // // console.log('getting reminders', baseUrl + '/mobile/reminders')
+    // axios.get(baseUrl + '/mobile/reminders', {
+    //   params: {
+    //     patientId: 1
+    //   }
+    // })
+    //   .then((response) => {
+    //     var reminders = response.data.reminders;
+    //     that.props.updateReminders(reminders);
+    //     that.setState({
+    //       reminders: reminders
+    //     })
+    //   })
+    //   .then(() => {
+    //     that.pushNotification();
+    //   })
+    //   .catch(function (error) {
+    //   //   console.log('error', error);
+    //   });
+  }
 
+  render() {
+    console.log(this.state.weatherIcon)
+
+    if (!this.state.loading) {
+      return (
         <ScrollView
           style={styles.container}
           contentContainerStyle={styles.contentContainer}>
@@ -135,11 +283,6 @@ export default class HomeScreen extends React.Component {
           </View>
 
           <View style={styles.homepageContentContainer}>
-            <Text style={styles.commentText}>
-              {'WOULD LIKE TO PUT SOME SORT OF DAYLIGHT / SUNMOON SPECTRUM HERE'}
-            </Text>
-          </View>
-          <View style={styles.homepageContentContainer}>
             <Text style={styles.dateText}>{moment().format('dddd, MMMM DD YYYY')}</Text>
           </View>
 
@@ -151,7 +294,24 @@ export default class HomeScreen extends React.Component {
             </Image> 
           </View>
         </ScrollView>
-    );
+      ) 
+    } else {
+      return (
+
+        <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+          <View style={styles.homepageContentContainer}>
+            <Text style={styles.timeText}>
+              {this.state.dateTime.time}
+            </Text>
+          </View>
+
+          <View style={styles.homepageContentContainer}>
+            <Text style={styles.dateText}>{moment().format('dddd, MMMM DD YYYY')}</Text>
+          </View>
+          <ActivityIndicator size='large' />
+        </ScrollView>
+      );
+    }
   }
 }
 
@@ -174,23 +334,22 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   homepageContentIcon: {
-    height: 100,
-    width: 100
+    height: 120,
+    width: 120
   },
   weatherText: {
     color: '#ECECEC',
-    fontSize: 24
+    fontSize: 30
   },
   timeText: {
-    fontSize: 60, 
+    fontSize: 70, 
     color: '#ECECEC',
   }, 
   dateText: {
     color: '#ECECEC',
-    fontSize: 36,
+    fontSize: 40,
   },
-  commentText: {
-    color: '#ECECEC',
-    fontSize: 12
+  activityIndicator: {
+    alignSelf: 'center',
   }
 });
