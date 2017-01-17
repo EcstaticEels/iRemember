@@ -24,7 +24,8 @@ class Face extends React.Component {
       updateAudio: '',
       audio: '',
       loader: false,
-      fieldBeingEdited: ''
+      fieldBeingEdited: '',
+      errorText: ''
     };
   }
 
@@ -116,10 +117,31 @@ class Face extends React.Component {
     });
   }
 
+  // validateForm(key, value) {
+
+  //   if (key === 'subjectName' && value !== '') {
+  //     value = value.split('');
+  //     value[0] = value[0].toUpperCase();
+  //     value = value.join('');
+  //     console.log(value)
+  //   }
+
+  //   if (key === 'subjectName' && value === '') {
+  //     this.setState({errorText: 'Name is a required field'})
+  //   } else {
+  //     this.setState({errorText: ''})
+  //   }
+
+  // }
+
   getInput(event) {
-    var key = event.target.getAttribute('class');
+    var key = event.target.getAttribute('id');
+    console.log('KEY', key)
     var value = event.target.value;
     var obj = {};
+
+    // this.validateForm(key, value)
+
     obj[key] = value;
     obj['fieldBeingEdited'] = key;
     this.setState(obj);
@@ -322,6 +344,7 @@ class Face extends React.Component {
                   imagePreviewUrls={this.state.imagePreviewUrls}
                   handleCloudinaryUrl={this.handleCloudinaryUrl.bind(this)}
                   fieldBeingEdited={this.state.fieldBeingEdited}
+                  errorText={this.state.errorText}
                 /> 
                 : <FaceCurrent
                     current={this.state.current}
