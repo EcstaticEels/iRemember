@@ -267,6 +267,7 @@ export default class HomeScreen extends React.Component {
   }
 
   render() {
+    console.log(this.state.weatherIcon)
 
     if (!this.state.loading) {
       return (
@@ -336,24 +337,20 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   homepageContentIcon: {
-    height: 100,
-    width: 100
+    height: 120,
+    width: 120
   },
   weatherText: {
     color: '#ECECEC',
-    fontSize: 24
+    fontSize: 30
   },
   timeText: {
-    fontSize: 60, 
+    fontSize: 70, 
     color: '#ECECEC',
   }, 
   dateText: {
     color: '#ECECEC',
-    fontSize: 36,
-  },
-  commentText: {
-    color: '#ECECEC',
-    fontSize: 12
+    fontSize: 40,
   },
   activityIndicator: {
     alignSelf: 'center',
