@@ -47,6 +47,12 @@ class Face extends React.Component {
   removePhotos(itemsToSplice) {
     var arrayStateCopy = Array.prototype.slice.call(this.state.updatePhotos);
     itemsToSplice.forEach(function(index) {
+      console.log('index', index)
+      if (index === 0) {
+        index = null;
+      } else {
+        index--;
+      }
       arrayStateCopy.splice(index, 1);
     });
     this.setState({
