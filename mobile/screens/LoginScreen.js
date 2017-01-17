@@ -28,8 +28,6 @@ export default class LoginScreen extends React.Component {
 
   render () {
     this.props.route.params.authFunction()
-
-    if (!this.props.route.params.state.loading) {
       return (
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
           <TextInput
@@ -38,27 +36,11 @@ export default class LoginScreen extends React.Component {
             placeholder={'Enter your first name here'}
             placeholderTextColor={'#95a5a6'}
             style={styles.nameTextInput} />
-          <Text style={styles.infoText}> 
-            On the next screen, you will take a photo of yourself. Please make sure that only your face is in the photo
-          </Text>
-        </ScrollView>
-      );
-    } else {
-      return (
-        <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-          <TextInput
-            onSubmitEditing={this.props.route.params.handleTextSubmit}
-            onChangeText={this.props.route.params.handleTextChange}
-            placeholder={'Enter your first name here'}
-            placeholderTextColor={'#95a5a6'}
-            style={styles.nameTextInput} />
-          <ActivityIndicator size='large' />
           <Text style={styles.infoText}> 
             On the next screen, you will take a photo of yourself. Please make sure that only your face is in the photo
           </Text>
         </ScrollView>
       )
-    }
   }
 }
 
@@ -76,9 +58,9 @@ const styles = StyleSheet.create({
   nameTextInput: {
     height: 40,
     fontSize: 36,
-    borderColor: 'gray',
+    borderColor: '#7f8c8d',
     borderWidth: 1,
-    color: '#ECECEC',
+    color: '#7f8c8d',
   },
   infoText: {
     color: '#ECECEC',
