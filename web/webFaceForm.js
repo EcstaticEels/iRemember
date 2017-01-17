@@ -21,11 +21,15 @@ export default class FaceForm extends React.Component {
   } 
 
   componentWillReceiveProps(nextProps) { //need to remember to del final crop info if discarded changes
-    if (nextProps.imagePreviewUrls.length > 0 && nextProps.fieldBeingEdited === 'photos') {
+    if (nextProps.imagePreviewUrls.length > 0 && nextProps.fieldBeingEdited === 'photos' && this.state.itemsToSplice.length === 0) {
       this.setState({
         showPreviewModal: true
       });
       this.detectFaces(nextProps);
+    } else if (nextProps.imagePreviewUrls.length > 0 && nextProps.fieldBeingEdited === 'photos' && this.state.itemsToSplice.length > 0) {
+      this.setState({
+        itemsToSplice: []
+      });
     }
   }
 
@@ -45,15 +49,16 @@ export default class FaceForm extends React.Component {
         this.setState({
           detectArr: parsedDetectResults
         }, () => {
-          console.log('state is now...after detect', this.state);
           var spliceArray = [];
           this.state.detectArr.forEach(function(item, index) {
-            if (!item) {
+            if (item !== true) {
               spliceArray.push(index);
             }
           });
           this.setState({
             itemsToSplice: spliceArray
+          }, () => {
+            console.log('set splicing arr', this.state.itemsToSplice)
           });
         })
       }.bind(this),
@@ -88,7 +93,9 @@ export default class FaceForm extends React.Component {
   
   handleCloseModal () {
     this.setState({ showPreviewModal: false, detectArr: []  }, () => {
-      this.props.removePhotos(this.state.itemsToSplice);
+      if (this.state.itemsToSplice.length > 0) {
+        this.props.removePhotos(this.state.itemsToSplice);
+      }
     });
   }
 
@@ -136,7 +143,7 @@ export default class FaceForm extends React.Component {
           </Row>
           <Row className="show-grid">
             <label>Upload image:
-              <ImagesUpload getPhotos={this.props.getPhotos}/>
+              <ImagesUpload getPhotos={this.props.getPhotos} numFiles={this.props.updatePhotos.length}/>
               <br />
             </label>
           </Row>
@@ -156,9 +163,12 @@ export default class FaceForm extends React.Component {
                 <p>
                   Frontal and near-frontal face images yield ideal results with face identification. To improve the accuracy of our application's face 
                   recognition function, please avoid images in dim light or images in which the subject's face is obscured (eg. by clothing, headwear, the environment, 
-                  or face position).
+                  or face position). 
+                </p>
                   <br />
-                  Photos will be automatically resized and rotated. To discard photos, proceed back to the previous form and select new photos.
+                <p>
+                  Photos that do not contain exactly one face will be removed and accepted photos will be automatically resized and rotated. 
+                  To discard photos, proceed back to the previous form and select new photos.
                 </p>
 
                 <div>
