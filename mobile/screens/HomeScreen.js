@@ -70,8 +70,8 @@ export default class HomeScreen extends React.Component {
   componentDidMount () {
 
 
-    const {reminders, change} = Store;
-    change('reminders', 'bye');
+    // const {reminders, change} = Store;
+    // change('reminders', 'bye');
     var that = this;
     this.getTime();
     this.getWeather();
