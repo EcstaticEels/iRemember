@@ -28,9 +28,16 @@
   margin-top: 35px;
 }
 
-.preview-images {
-  height: 25%;
-  width: 25%;
+.preview-image {
+  height: 50%;
+  width: 50%;
+  max-width: 400px;
+  max-height: 400px;
+  margin: 50px 60px;
+}
+
+.image-preview-info {
+  margin: 60px;
 }
 
 .face-entry {

@@ -5,26 +5,62 @@ import AudioUpload from './webAudioUpload.js';
 import ReactModal from 'react-modal';
 import ImagePreview from './webImagePreviewCrop';
 import ReactAudioPlayer from 'react-audio-player';
-
+import ImagePreviewEntry from './webImagePreviewEntry.js';
+import $ from 'jquery';
 
 export default class FaceForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      showPreviewModal: false 
+      showPreviewModal: false,
+      detectArr: [],
+      itemsToSplice: []
     }
-    this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
-    // this.submitCropPhotos = this.submitCropPhotos.bind(this);
+    this.detectFaces = this.detectFaces.bind(this);
   } 
 
   componentWillReceiveProps(nextProps) { //need to remember to del final crop info if discarded changes
-    console.log(nextProps);
     if (nextProps.imagePreviewUrls.length > 0 && nextProps.fieldBeingEdited === 'photos') {
       this.setState({
         showPreviewModal: true
       });
+      this.detectFaces(nextProps);
     }
+  }
+
+  detectFaces(nextProps) {
+    var formData = new FormData();
+    for (var key in nextProps.updatePhotos) {
+      formData.append('detectPhoto', nextProps.updatePhotos[key]);
+    }
+    $.ajax({
+      url: '/web/detect',
+      method: 'POST',
+      data: formData,
+      processData: false, // tells jQuery not to process data
+      contentType: false, // tells jQuery not to set contentType
+      success: function (res) {
+        var parsedDetectResults = JSON.parse(res);
+        this.setState({
+          detectArr: parsedDetectResults
+        }, () => {
+          console.log('state is now...after detect', this.state);
+          var spliceArray = [];
+          this.state.detectArr.forEach(function(item, index) {
+            if (!item) {
+              spliceArray.push(index);
+            }
+          });
+          this.setState({
+            itemsToSplice: spliceArray
+          });
+        })
+      }.bind(this),
+      error: function (err) {
+        console.log('error', err);
+      }
+    });
   }
 
   // handleCropUpdate(index, cropInfo) {
@@ -49,21 +85,18 @@ export default class FaceForm extends React.Component {
   //     });
   //   })
   // }
-
-  handleOpenModal () {
-    this.setState({ showPreviewModal: true });
-  }
   
   handleCloseModal () {
-    this.setState({ showPreviewModal: false });
-  }
- 
-
-  openModal(bool) {
-    this.setState({
-      showPreviewModal: bool
+    this.setState({ showPreviewModal: false, detectArr: []  }, () => {
+      this.props.removePhotos(this.state.itemsToSplice);
     });
   }
+
+  // openModal(bool) {
+  //   this.setState({
+  //     showPreviewModal: bool
+  //   });
+  // }
 
   render() {
     var cloudinaryUrls = this.props.photos.map(function(photoObj) {
@@ -86,8 +119,6 @@ export default class FaceForm extends React.Component {
       </label>) : null;
 
 
-// <button onClick={() => this.openModal(true)}>Update default or delete face photos</button>
-
 
     return (
       <Grid>
@@ -104,24 +135,44 @@ export default class FaceForm extends React.Component {
             </label>
           </Row>
           <Row className="show-grid">
-            <label>Image:
+            <label>Upload image:
               <ImagesUpload getPhotos={this.props.getPhotos}/>
               <br />
             </label>
           </Row>
           <Row className="show-grid">
+
             <ReactModal 
              isOpen={this.state.showPreviewModal}
              contentLabel="Preview Modal">
               <h2>Image Preview</h2>
               <div>
-                <p>Don't worry, photos will be automatically resized and rotated! To discard photos, proceed back to the previous form and select new photos.</p>
+                
+                <p>Images submitted for each subject here will be used to train our application to recognize each subject's face. Please verify that each submitted image:</p>
+                  <ul>
+                    <li>depicts only the subject's face, keeping in mind that photos, televisions, or mirrors in frame may also display faces</li>
+                    <li>represents the subject as closely as possible as he or she appears today</li>
+                  </ul>
+                <p>
+                  Frontal and near-frontal face images yield ideal results with face identification. To improve the accuracy of our application's face 
+                  recognition function, please avoid images in dim light or images in which the subject's face is obscured (eg. by clothing, headwear, the environment, 
+                  or face position).
+                  <br />
+                  Photos will be automatically resized and rotated. To discard photos, proceed back to the previous form and select new photos.
+                </p>
+
                 <div>
-                  {this.props.imagePreviewUrls.length > 0 ? this.props.imagePreviewUrls.map((imagePreview, ind) => <img src={imagePreview} key={ind} className='preview-images'/>) : <h1>hi</h1>} 
+                  {this.props.imagePreviewUrls.length > 0 ? 
+                    this.props.imagePreviewUrls.map((imagePreview, ind) => {
+                      return (<ImagePreviewEntry photo={imagePreview} index={ind} key={ind} success={this.state.detectArr[ind]} />);
+                    }) 
+                    : <h1>No Image Preview Urls</h1>
+                  } 
                 </div>
               </div>
               <button onClick={this.handleCloseModal}>Close Modal</button>
             </ReactModal>
+
 
           </Row>
           <Row className="show-grid">

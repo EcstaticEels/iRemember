@@ -79,6 +79,30 @@ const handleFaceForm = function(req, cb) {
   });
 };
 
+const handleDetect = function(req, cb) {
+  const detectForm = new multiparty.Form();
+  detectForm.parse(req, function(err, fields, files) {
+    console.log('files in detect', files);
+    console.log('fields in detect', fields);
+    if (err) {
+      console.log(err);
+    }
+    const detectArr = [];
+    var count= 0;
+    if (files.detectPhoto) { //if there are photo files
+      files.detectPhoto.forEach(function(photo, index) {
+        cloudinary.uploader.upload(photo.path, function(result) { 
+          detectArr[index] = result.url
+          count++;
+          if (count === files.detectPhoto.length) {
+            cb(detectArr);
+          }
+        });
+      })
+    }
+  });
+}
+
 const handleSetupForm = function(req, cb) {
   const setupForm = new multiparty.Form();
   setupForm.parse(req, function(err, fields, files) {
@@ -240,7 +264,6 @@ module.exports = {
           }
         });
       });
-      
     });
   },
   retrieveFaces: (req, res) => {
@@ -323,7 +346,49 @@ module.exports = {
         }
       );
     })
+  },
+  detectFaces: (req, res) => {
+    handleDetect(req, detectArr => {
+      console.log('in detect faces controller', detectArr);
+      var newCloudinaryUrlArray = [];
+      for (var i = 0; i < detectArr.length; i++) {
+        var newUrl = detectArr[i].slice(0, 49) + `a_auto_right/` + detectArr[i].slice(49);
+        newCloudinaryUrlArray.push(newUrl);
+      }
+      const detectParams = {
+        "returnFaceId": "true",
+        "returnFaceLandmarks": "false"
+      }
+      var resultArr = [];
+      var count = 0;
+      newCloudinaryUrlArray.forEach(function(detectUrl, index) {
+        const bodyForDetection = { "url": detectUrl}; 
+        request.post({
+          headers: microsoftHeaders, 
+          url: "https://api.projectoxford.ai/face/v1.0/detect",
+          qs: detectParams,
+          body: JSON.stringify(bodyForDetection)
+        }, function(err, response, body) {
+          if (err) {
+            console.log(err);
+          }
+          var parsedData = JSON.parse(body);
+          if (parsedData.length === 0) {
+            resultArr[index] = null;
+          } else if (parsedData.length === 1) {
+            resultArr[index] = true;
+          } else if (parsedData.length > 1) {
+            resultArr[index] = false;
+          }
+          count++;
+          console.log(resultArr, detectArr)
+          if (count === detectArr.length) {
+            res.status(200).send(JSON.stringify(resultArr));
+          }
+        });        
+      });
 
+    });
   },
   addReminder: (req, res) => {
     handleReminderForm(req, (audioUrl, fields) => {
