@@ -1,22 +1,23 @@
 import React from 'react';
 
 import {
+  ActivityIndicator,
   ScrollView,
   StyleSheet,
   View,
   TextInput,
-  Text
+  Text,
+  NativeModules,
+  Button
 } from 'react-native';
-
-import * as Exponent from 'exponent';
-
-import baseUrl from '../ip.js';
 
 export default class LoginScreen extends React.Component {
   constructor (props) {
     super (props);
 
-    console.log(this.props.route.params)
+    this.state = {
+      waiting: false
+    }
   }
 
   static route = {
@@ -26,10 +27,9 @@ export default class LoginScreen extends React.Component {
   }
 
   render () {
-    return (
-      <ScrollView 
-        style={styles.container}
-        contentContainerStyle={styles.contentContainer}>
+    this.props.route.params.authFunction()
+      return (
+        <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
           <TextInput
             onSubmitEditing={this.props.route.params.handleTextSubmit}
             onChangeText={this.props.route.params.handleTextChange}
@@ -39,8 +39,8 @@ export default class LoginScreen extends React.Component {
           <Text style={styles.infoText}> 
             On the next screen, you will take a photo of yourself. Please make sure that only your face is in the photo
           </Text>
-      </ScrollView>
-    )
+        </ScrollView>
+      )
   }
 }
 
@@ -58,13 +58,16 @@ const styles = StyleSheet.create({
   nameTextInput: {
     height: 40,
     fontSize: 36,
-    borderColor: 'gray',
+    borderColor: '#7f8c8d',
     borderWidth: 1,
-    color: '#ECECEC',
+    color: '#7f8c8d',
   },
   infoText: {
     color: '#ECECEC',
     fontSize: 24,
     alignSelf: 'center'
+  },
+  activityIndicator: {
+    alignSelf: 'center',
   }
 });

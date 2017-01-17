@@ -19,8 +19,6 @@ import mobx from 'mobx';
 import { observer } from 'mobx-react/native';
 import Store from '../store.js';
 
-import axios from 'axios';
-
 import Router from '../navigation/Router.js'
 
 var dataSource = new ListView.DataSource({rowHasChanged: function (r1, r2) {

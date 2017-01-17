@@ -36,12 +36,12 @@ module.exports = {
     const date = qParams[0].slice(5);
     const patientId = qParams[1].slice(10);
     console.log('name of file', date, 'patientid ', patientId);
-    db.Patient.findOne({
+    db.Caregiver.findOne({
       where: {
         id: Number(patientId)
       }
     })
-    .then(patient => {
+    .then(caregiver => {
       const detectParams = {
         "returnFaceId": "true",
         "returnFaceLandmarks": "false"
@@ -58,7 +58,7 @@ module.exports = {
         }
         const parsedDetectBody = JSON.parse(body);
         console.log('detection results', parsedDetectBody);
-        const personGroupId = patient.get('personGroupID');
+        const personGroupId = caregiver.get('personGroupID');
         if (parsedDetectBody.length === 1) { 
           var bodyForIdentification = {    
             "personGroupId": personGroupId, 
@@ -152,7 +152,7 @@ module.exports = {
       }
       const parsedDetectBody = JSON.parse(body);
       console.log('detection results', parsedDetectBody);
-      const personGroupId = 'ecstatic-eels-forever' //CHANGE TO PATIENT
+      const personGroupId = 'ecstatic-eels-patients-1' //CHANGE TO PATIENT
       if (parsedDetectBody.length === 1) { 
         var bodyForIdentification = {    
           "personGroupId": personGroupId, 
@@ -216,6 +216,7 @@ module.exports = {
           res.sendStatus(404)      }
     });
   },
+
   retrieveReminders: function(req, res) {
     var patientId = Number(urlModule.parse(req.url).query.slice(10));
     patientId = 1;

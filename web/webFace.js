@@ -12,18 +12,47 @@ class Face extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      list: [{subjectName:"", photos:[{photo: ''}], description:""}],
+      list: [],
       current: {subjectName:"", photos:[{}], description:""},
       showForm: false,
       editMode: false,
       subjectName: '',
       photos: [{}],
       description: '',
-      updatePhotos: '',
+      updatePhotos: [],
+      imagePreviewUrls: [],
       updateAudio: '',
       audio: '',
-      loader: false
+      loader: false,
+      fieldBeingEdited: '',
+      errorText: ''
     };
+  }
+
+  delete() {
+    var that = this;
+    $.ajax({
+      method: 'DELETE',
+      url: '/web/identify',
+      data: JSON.stringify({faceId: this.state.current.dbId}),
+      contentType: 'application/json',
+      success: function(res) {
+        console.log('success', res);
+        that.componentDidMount();
+      },
+      error: function(err) {
+        console.log('error', err);
+      }
+    })
+  }
+
+  handleCloudinaryUrl(urlArray, w, h, type) {
+    var newCloudinaryUrlArray = [];
+    for (var i = 0; i < urlArray.length; i++) {
+      var newUrl = urlArray[i].slice(0, 49) + `w_${w},h_${h},c_${type},g_face/a_auto_right/` + urlArray[i].slice(49);
+      newCloudinaryUrlArray.push(newUrl);
+    }
+    return newCloudinaryUrlArray;
   }
 
   getFaces(func) {
@@ -44,7 +73,7 @@ class Face extends React.Component {
     this.getFaces((faces) => {
       if (faces.length > 0) {
         this.setState({list: faces, current: faces[0]}, () => {
-          console.log('mounted', this.state);
+          console.log('mounted webFace', this.state);
         });
       } else {
         this.setState({
@@ -54,6 +83,14 @@ class Face extends React.Component {
       }
     });
   }
+
+  // handleCropInfoUpdate(cropObj) {
+  //   this.setState({
+  //     finalCropInfo: cropObj
+  //   }, () => {
+  //     console.log('after crop, state:', this.state)
+  //   });
+  // }
 
   displayForm(bool, editMode) {
     if (editMode) {
@@ -80,17 +117,40 @@ class Face extends React.Component {
     });
   }
 
+  // validateForm(key, value) {
+
+  //   if (key === 'subjectName' && value !== '') {
+  //     value = value.split('');
+  //     value[0] = value[0].toUpperCase();
+  //     value = value.join('');
+  //     console.log(value)
+  //   }
+
+  //   if (key === 'subjectName' && value === '') {
+  //     this.setState({errorText: 'Name is a required field'})
+  //   } else {
+  //     this.setState({errorText: ''})
+  //   }
+
+  // }
+
   getInput(event) {
-    var key = event.target.getAttribute('class');
+    var key = event.target.getAttribute('id');
+    console.log('KEY', key)
     var value = event.target.value;
     var obj = {};
+
+    // this.validateForm(key, value)
+
     obj[key] = value;
+    obj['fieldBeingEdited'] = key;
     this.setState(obj);
   }
 
   getAudio(event){
     this.setState({
-      updateAudio: event.target.files
+      updateAudio: event.target.files,
+      fieldBeingEdited: 'audio'
     });
   }
 
@@ -111,11 +171,48 @@ class Face extends React.Component {
     this.displayForm(true, true);
   }
 
-  getPhotos(event){
-    this.setState({
-      updatePhotos: event.target.files
+  getPhotos(e){
+    e.preventDefault();
+    e.persist();
+
+    var data = [];      // The results
+    var pending = 0;    // How many outstanding operations we have
+
+    var updateTest = function(files, data) {
+      this.setState({
+        updatePhotos: files,
+        imagePreviewUrls: data,
+        fieldBeingEdited: 'photos'
+      }, () => {
+        console.log('after upload', this.state)
+      });
+    }
+    updateTest = updateTest.bind(this)
+
+    Array.prototype.forEach.call(e.target.files, function(file, index) {
+        // Read this file, remember it in `data` using the same index
+        // as the file entry
+        var fr = new FileReader();
+        fr.onload = function() {
+          data[index] = fr.result;
+          --pending;
+          if (pending == 0) {
+            updateTest(e.target.files, data)
+          }
+        }
+        fr.readAsDataURL(file);
+        ++pending;
     });
   }
+
+
+  // getPhotoCrops(cropObj) {
+  //   this.setState({
+  //     updatePhotosInfo: cropObj
+  //   }, () => {
+  //     console.log(this.state.updatePhotosInfo);
+  //   });
+  // }
 
   handleUpdate() {
     var updatedId = this.state.current.dbId;
@@ -166,6 +263,9 @@ class Face extends React.Component {
     for (var key in this.state.updateAudio) {
       formData.append('audio', this.state.updateAudio[key]);
     }
+    // for (var i = 0; i < this.state.finalCropInfo.length; i++) {
+    //   formData.append(`cropInfo_${i}`, JSON.stringify(this.state.finalCropInfo[i]));
+    // }
     var that = this;
     $.ajax({
       url: '/web/identify',
@@ -221,7 +321,9 @@ class Face extends React.Component {
             <FaceList 
               list={this.state.list}
               getInput={this.getInput.bind(this)}
-              updateCurrent={this.updateCurrent.bind(this)}/>
+              updateCurrent={this.updateCurrent.bind(this)}
+              handleCloudinaryUrl={this.handleCloudinaryUrl.bind(this)}
+            />
           </div>
         </Col>
         <Col xs={12} md={8}>
@@ -238,10 +340,18 @@ class Face extends React.Component {
                   audio={this.state.audio}
                   subjectName={this.state.subjectName}
                   photos={this.state.photos} 
-                  description={this.state.description}/> 
+                  description={this.state.description}
+                  imagePreviewUrls={this.state.imagePreviewUrls}
+                  handleCloudinaryUrl={this.handleCloudinaryUrl.bind(this)}
+                  fieldBeingEdited={this.state.fieldBeingEdited}
+                  errorText={this.state.errorText}
+                /> 
                 : <FaceCurrent
                     current={this.state.current}
-                    edit={this.edit.bind(this)} />
+                    edit={this.edit.bind(this)} 
+                    handleCloudinaryUrl={this.handleCloudinaryUrl.bind(this)}
+                    delete={this.delete.bind(this)}
+                  />
             }
           </Loader>
           </div>
