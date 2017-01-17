@@ -27,8 +27,7 @@ export default class PushNotification extends React.Component {
   }
 
   componentWillUnmount() {
-    this._notificationSubscription 
-    // && this._notificationSubscription.remove();
+    this._notificationSubscription && this._notificationSubscription.remove();
   }
 
   allowPushNotification() {

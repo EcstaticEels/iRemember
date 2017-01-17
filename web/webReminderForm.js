@@ -5,10 +5,20 @@ import Moment from 'moment';
 // import { TransitionView, Calendar, DateField, DatePicker } from 'react-date-picker';
 import Datetime from 'react-datetime';
 
+import Recorder from 'react-recorder'
+import AudioRecorder from 'react-audio-recorder';
+
+import MSR from 'msr';
+
 export default class ReminderList extends React.Component {
   constructor(props) {
     super(props);
   }
+
+  onStop (blob) {
+    console.log(blob)
+  }
+ 
   
   render() {
     return (
@@ -71,7 +81,7 @@ export default class ReminderList extends React.Component {
           }</div>
           <br/>
           <label>Current Uploaded Audio Reminder:
-            <br />
+            <br/>
             <audio src={this.props.audio} controls></audio>
           </label>
           <br />
