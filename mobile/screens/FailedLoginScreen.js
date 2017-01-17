@@ -11,8 +11,6 @@ import {
 export default class FailedLoginScreen extends React.Component {
   constructor (props) {
     super (props);
-
-    console.log(this.props.route.params)
   }
 
   static route = {

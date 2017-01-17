@@ -37,6 +37,10 @@
   height: 100px;
   text-align: center;
 }
+
+.error {
+  color: 'red';
+}
 /*.pace {
   -webkit-pointer-events: none;
   pointer-events: none;
