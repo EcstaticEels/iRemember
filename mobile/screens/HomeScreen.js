@@ -213,18 +213,13 @@ export default class HomeScreen extends React.Component {
               801: 'partiallyCloudy'
 
             }
-<<<<<<< HEAD
             // var sunlightTimes = SunCalc.getTimes(new Date(), this.state.currentLatitude, this.state.currentLongitude);
-=======
-            var sunlightTimes = SunCalc.getTimes(new Date(), this.state.currentLatitude, this.state.currentLongitude);
->>>>>>> upstream/master
             var ind = Math.floor(weather.id/100);
             var iconKey = iconReference[ind];
             if (weather.id === 800 || weather.id === 801) {
               iconKey = iconReference[weather.id];
             }
             var description = weather.description;
-<<<<<<< HEAD
             // console.log(this.state.dateTime.hour)
             // console.log(sunlightTimes.sunrise.getHours())
             // console.log(sunlightTimes.sunset.getHours())
@@ -237,20 +232,6 @@ export default class HomeScreen extends React.Component {
             this.setState({
               weatherDescription: description.charAt(0).toUpperCase() + description.slice(1),
               // weatherIcon: weatherIcons[dayNight][iconKey],
-=======
-            console.log(this.state.dateTime.hour)
-            console.log(sunlightTimes.sunrise.getHours())
-            console.log(sunlightTimes.sunset.getHours())
-            if (this.state.dateTime.hour >= sunlightTimes.sunrise.getHours() && this.state.dateTime.hour <= sunlightTimes.sunset.getHours()) {
-              var dayNight = 'day'
-            } else {
-              var dayNight = 'night'
-            }
-
-            this.setState({
-              weatherDescription: description.charAt(0).toUpperCase() + description.slice(1),
-              weatherIcon: weatherIcons[dayNight][iconKey],
->>>>>>> upstream/master
               loading: false
             });
           })
@@ -329,25 +310,6 @@ export default class HomeScreen extends React.Component {
           </View>
           <ActivityIndicator size='large' />
         </ScrollView>
-<<<<<<< HEAD
-=======
-      ) 
-    } else {
-      return (
-
-        <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-          <View style={styles.homepageContentContainer}>
-            <Text style={styles.timeText}>
-              {this.state.dateTime.time}
-            </Text>
-          </View>
-
-          <View style={styles.homepageContentContainer}>
-            <Text style={styles.dateText}>{moment().format('dddd, MMMM DD YYYY')}</Text>
-          </View>
-          <ActivityIndicator size='large' />
-        </ScrollView>
->>>>>>> upstream/master
       );
     }
   }
