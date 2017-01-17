@@ -36,13 +36,24 @@ class Face extends React.Component {
       data: JSON.stringify({faceId: this.state.current.dbId}),
       contentType: 'application/json',
       success: function(res) {
-        console.log('success', res);
         that.componentDidMount();
       },
       error: function(err) {
         console.log('error', err);
       }
     })
+  }
+
+  removePhotos(itemsToSplice) {
+    var arrayStateCopy = Array.prototype.slice.call(this.state.updatePhotos);
+    itemsToSplice.forEach(function(index) {
+      arrayStateCopy.splice(index, 1);
+    });
+    this.setState({
+      updatePhotos: arrayStateCopy
+    }, () => {
+      console.log('new update photo list', this.state.updatePhotos)
+    });
   }
 
   handleCloudinaryUrl(urlArray, w, h, type) {
@@ -104,7 +115,9 @@ class Face extends React.Component {
         description: '',
         updatePhotos: '',
         updateAudio: '',
-        audio: ''
+        audio: '',
+        imagePreviewUrls: [],
+        fieldBeingEdited: ''
       });
     }
   }
@@ -144,7 +157,11 @@ class Face extends React.Component {
       subjectName: current.subjectName,
       photos: current.photos,
       description: current.description,
-      audio: current.audio
+      audio: current.audio, 
+      updatePhotos: '',
+      updateAudio: '',
+      imagePreviewUrls: '',
+      fieldBeingEdited: ''
     });
     this.displayForm(true, true);
   }
@@ -162,7 +179,7 @@ class Face extends React.Component {
         imagePreviewUrls: data,
         fieldBeingEdited: 'photos'
       }, () => {
-        console.log('after upload', this.state)
+        console.log('update preview', this.state)
       });
     }
     updateTest = updateTest.bind(this)
@@ -210,11 +227,9 @@ class Face extends React.Component {
 
   validForm() {
     if(this.state.subjectName.length < 3){
-      console.log('name')
       return false;
     }
     if(!this.state.editMode && this.state.updatePhotos.length < 1) {
-      console.log('photo')
       return false;
     }
     return true;
@@ -252,8 +267,7 @@ class Face extends React.Component {
       processData: false, // tells jQuery not to process data
       contentType: false, // tells jQuery not to set contentType
       success: function (res) {
-        console.log('success', res);
-        if (that.state.editMode) {
+        if (that.state.editMode) { //if we are editing information for a face
           that.handleUpdate();
         } else {
           var createdId = JSON.parse(res).id;
@@ -319,9 +333,11 @@ class Face extends React.Component {
                   subjectName={this.state.subjectName}
                   photos={this.state.photos} 
                   description={this.state.description}
+                  updatePhotos={this.state.updatePhotos}
                   imagePreviewUrls={this.state.imagePreviewUrls}
                   handleCloudinaryUrl={this.handleCloudinaryUrl.bind(this)}
                   fieldBeingEdited={this.state.fieldBeingEdited}
+                  removePhotos={this.removePhotos.bind(this)}
                 /> 
                 : <FaceCurrent
                     current={this.state.current}
