@@ -117,7 +117,7 @@ app.put('mobile/token', mobileControllers.addToken);
 app.get('/mobile/reminders', mobileControllers.retrieveReminders);
 app.put('/mobile/reminders', mobileControllers.updateReminders);
 app.delete('/mobile/reminders', mobileControllers.deleteReminders);
-app.post('/mobile/pushNotification', mobileControllers.addPushNotification);
+app.post('/mobile/pushNotification', mobileControllers.addToken);
 
 //Authentication
 passport.serializeUser(function(user, done) {
@@ -178,7 +178,6 @@ app.get('/logout', function(req, res){
 app.get('*', function (req, res) {
   res.sendFile(path.join(__dirname, '..', 'public/webIndex.html'));
 });
-
 
 app.listen(3000, function () {
   console.log('iRemember is running on port 3000!');
