@@ -1,6 +1,7 @@
 import React from 'react';
 import $ from 'jquery';
-import { browserHistory } from 'react-router'
+import {Button, Row, Col, Grid} from 'react-bootstrap';
+
 
 export default class Signin extends React.Component {
   constructor(props) {
@@ -9,10 +10,12 @@ export default class Signin extends React.Component {
   
   render() {
     return (
-      <div>
-        <h1>Sign In</h1>
-        <a href='auth/google'>Sign In with Google</a>
-      </div>
+      <Grid>
+        <div>
+          <h1>Sign In</h1>
+          <a href='auth/google'>Sign In with Google</a>
+        </div>
+      </Grid>
     )
   }
 }

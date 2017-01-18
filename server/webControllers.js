@@ -35,11 +35,10 @@ const handleFaceForm = function(req, cb) {
       console.log(err);
     }
     const urlArray = [];
-    console.log('fields', fields);
-    console.log('files', files);
+    console.log('fields in face form', fields);
+    console.log('files in face form', files);
     if (Object.keys(files).length > 0) { //if there are files
       if (files.photo) { //if there are photo files
-        console.log('photos', files.photo)
         files.photo.forEach(function(file) {
           cloudinary.uploader.upload(file.path, function(result) { 
             urlArray.push(result.url);
@@ -110,8 +109,8 @@ const handleSetupForm = function(req, cb) {
       console.log(err);
     }
     const patientPhotoArray = [];
-    console.log('files', files);
-    console.log('fields', fields);
+    console.log('files in setup', files);
+    console.log('fields in setup', fields);
     if (Object.keys(files).length > 0) {
       files.patientPhoto.forEach(function(file) {
         cloudinary.uploader.upload(file.path, function(result) { 
@@ -234,30 +233,36 @@ module.exports = {
           { where: {id: face.get('id')}}
         )
         .then(() => {
+          var result = [];
           if (urlArray) {
-            request.post({
-              headers: microsoftHeaders,
-              url: `https://api.projectoxford.ai/face/v1.0/persongroups/${personGroupId}/persons/${face.personId}/persistedFaces`,
-              body: JSON.stringify({"url": urlArray[0]})
-            }, (err, response, body) => {
-                if (err) {
-                  console.log(err);
-                }
-                db.FacePhoto.create({
-                  photo: urlArray[0],
-                  faceId: face.get('id')
-                })
-                .then(() => {
-                  request.post({
-                    headers: microsoftHeaders,
-                    url: `https://api.projectoxford.ai/face/v1.0/persongroups/${personGroupId}/train`,
-                  }, (err, response, body) => {
-                    if (err) {
-                      console.log(err);
+            urlArray.forEach(url => {
+              request.post({
+                headers: microsoftHeaders,
+                url: `https://api.projectoxford.ai/face/v1.0/persongroups/${personGroupId}/persons/${face.personId}/persistedFaces`,
+                body: JSON.stringify({"url": url})
+              }, (err, response, body) => {
+                  if (err) {
+                    console.log(err);
+                  }
+                  result.push(body);
+                  db.FacePhoto.create({
+                    photo: url,
+                    faceId: face.get('id')
+                  })
+                  .then(() => {
+                    if (urlArray.length === result.length) {
+                      request.post({
+                        headers: microsoftHeaders,
+                        url: `https://api.projectoxford.ai/face/v1.0/persongroups/${personGroupId}/train`,
+                      }, (err, response, body) => {
+                        if (err) {
+                          console.log(err);
+                        }
+                        res.status(201).send('Person and face successfully updated, train API call made');
+                      });
                     }
-                    res.status(201).send('Person and face successfully added, train API call made');
                   });
-                });
+              });
             });
           } else {
             res.status(201).send('Person updated');
@@ -381,7 +386,6 @@ module.exports = {
             resultArr[index] = false;
           }
           count++;
-          console.log(resultArr, detectArr)
           if (count === detectArr.length) {
             res.status(200).send(JSON.stringify(resultArr));
           }
