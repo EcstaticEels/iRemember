@@ -30,17 +30,11 @@ import moment from 'moment';
 import { MonoText } from '../components/StyledText';
 import weatherIcons from '../assets/images/weatherIcons.js';
 
-// import SunCalc from 'suncalc';
-
-// import LocalNotification from '../notification/localNotification.js';
-// import PushNotification from '../notification/pushNotification.js';
-
+import SunCalc from 'suncalc';
 
 import Router from '../navigation/Router.js';
 
 import Alerts from '../constants/Alerts';
-
-// import registerForPushNotificationsAsync from 'registerForPushNotificationsAsync';
 
 @observer
 export default class HomeScreen extends React.Component {
@@ -145,36 +139,6 @@ export default class HomeScreen extends React.Component {
     })
   }
 
-  // allowPushNotification() {
-  //   Exponent.Permissions.askAsync(Exponent.Permissions.REMOTE_NOTIFICATIONS)
-  //   .then((response) => {
-  //     // console.log(response);
-  //     if (response.status === "granted") {
-  //       Exponent.Notifications.getExponentPushTokenAsync()
-  //       .then((token) => {
-  //         axios.post('http://10.6.19.25:3000/mobile/pushNotification', {
-  //           token:  token,
-  //           username: 'Bob'
-  //         })
-  //           .then(function (response) {
-  //             console.log(response);
-  //           })
-  //           .catch(function (error) {
-  //             console.log(error);
-  //           });
-
-  //       })
-  //     } else {
-  //       console.log('Permission NOT GRANTED');
-  //     }
-  //   });
-  // }
-
-  // polling() {
-  //   this.time();
-  //   this.getReminders();
-  // }
-
   getTime() {
     var date = new Date();
 
@@ -213,7 +177,7 @@ export default class HomeScreen extends React.Component {
               801: 'partiallyCloudy'
 
             }
-            // var sunlightTimes = SunCalc.getTimes(new Date(), this.state.currentLatitude, this.state.currentLongitude);
+            var sunlightTimes = SunCalc.getTimes(new Date(), this.state.currentLatitude, this.state.currentLongitude);
             var ind = Math.floor(weather.id/100);
             var iconKey = iconReference[ind];
             if (weather.id === 800 || weather.id === 801) {
