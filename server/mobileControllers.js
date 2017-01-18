@@ -259,20 +259,16 @@ module.exports = {
       res.status(200).send('Token added!');
     })
   },
-  addPushNotification: function(req, res) {
-    // console.log(req.body)
-    console.log(req.body.token)
-
-    let isPushToken = sdk.isExponentPushToken(req.body.token);
+  // addPushNotification: function(req, res) {
+  //   let isPushToken = sdk.isExponentPushToken(req.body.token);
  
-    // To send a push notification 
-    // (async function () {
-    sdk.sendPushNotificationAsync({
-      exponentPushToken: 'ExponentPushToken[uLzPfmKf9566YbVGdrC-_O]', // The push token for the app user you want to send the notification to 
-      message: "This is a test notification",
-      data: { content: "" }
-    });
-    // })();
-    res.send('got it')
-  }
+  //   // To send a push notification 
+  //   // (async function () {
+  //   sdk.sendPushNotificationAsync({
+  //     exponentPushToken: req.body.token, // The push token for the app user you want to send the notification to 
+  //     message: "Reminders updated"
+  //   });
+  //   // })();
+  //   res.send('got it')
+  // }
 }
