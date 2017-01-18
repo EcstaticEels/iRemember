@@ -6,8 +6,6 @@ import { Notifications, Permissions } from 'exponent';
 
 //MobX
 import mobx from 'mobx';
-import { observer } from 'mobx-react/native';
-import Store from '../store.js'
 
 //Server connection
 import axios from 'axios';
@@ -24,6 +22,7 @@ export default class PushNotification extends React.Component {
   }
 
   componentDidMount() {
+
     this._notificationSubscription = this._registerForPushNotifications();
   }
 
@@ -31,28 +30,7 @@ export default class PushNotification extends React.Component {
     this._notificationSubscription && this._notificationSubscription.remove();
   }
 
-  allowPushNotification() {
-    Permissions.askAsync(Permissions.REMOTE_NOTIFICATIONS)
-    .then((response) => {
-      if (response.status === "granted") {
-        Notifications.getExponentPushTokenAsync()
-        .then((token) => {
-          axios.post(baseUrl + '/mobile/pushNotification', {
-            token:  token,
-            id: Store.id,
-          })
-            .then(function (response) {
-              console.log(response);
-            })
-            .catch(function (error) {
-              console.log(error);
-            });
-        })
-      } else {
-        console.log('Permission NOT GRANTED');
-      }
-    })
-  }
+  
 
   _registerForPushNotifications() {
     // Send our push token over to our backend so we can receive notifications
@@ -76,9 +54,7 @@ export default class PushNotification extends React.Component {
       this.props.showPushNotification(data);
     } else {
       var selectedReminder = Store.reminders.find((reminder) => {
-        return reminder.id === 7
-        // data[0];
-        // data[0];
+        return reminder.id === data[0];
       })
       console.log('selected', data, selectedReminder)
       // Store.filter()
@@ -86,6 +62,110 @@ export default class PushNotification extends React.Component {
     }
   }
 
+      // const {reminders, change} = Store;
+    // change('reminders', 'bye');
+    // var that = this;
+    // this.getTs
+    // if(!this.state.notificationToken) this.allowPushNotification();
+// <<<<<<< HEAD
+//     this.cancelDeletedReminders();
+//     this.getReminders();
+    // setInterval(that.getTime(), 10000);
+// =======
+    // console.log('getting here?')
+    // this.getReminders();
+    // console.log(this.props.navigator)
+    // setInterval(() => {that.polling()}, 10000);
+// >>>>>>> upstream/master
+  }
+
+  // componentWillMount() {
+    // Exponent.Notifications.cancelAllScheduledNotificationsAsync()
+    // registerForPushNotificationsAsync();
+
+    // Handle notifications that are received or selected while the app
+    // is open
+    // this._notificationSubscription = DeviceEventEmitter.addListener(
+    //   'Exponent.Notification', this._handleNotification
+    // );
+
+    // Handle notifications that are received or selected while the app
+    // is closed, and selected in order to open the app
+    // if (this.props.exp.notification) {
+    //   this._handleNotification(this.props.exp.notification);
+    // }
+
+    // _handleNotification = (notification) => {
+    //   console.log('notification!!', notification)
+    // };
+  // };
+
+  // showPushNotification(data){
+  //   this.props.navigator.showLocalAlert(data, Alerts.notice);
+  // }
+
+  // _goToReminder = (reminder) => {
+  //   console.log('current', Store.current,'reminder', reminder)
+  //   Store.current = reminder;
+  //   this.props.navigator.push(Router.getRoute('reminder'))
+  // }
+
+  allowPushNotification() {
+    Exponent.Permissions.askAsync(Exponent.Permissions.REMOTE_NOTIFICATIONS)
+    .then((response) => {
+      if (response.status === "granted") {
+        Exponent.Notifications.getExponentPushTokenAsync()
+        .then((token) => {
+          this.setState({
+            notificationToken: token
+          });
+
+          axios.post(baseUrl + '/mobile/pushNotification', {
+            token:  token,
+            id: 1,
+          })
+            .then(function (response) {
+              // console.log(response);
+            })
+            .catch(function (error) {
+              // console.log(error);
+            });
+        })
+      } else {
+        console.log('Permission NOT GRANTED');
+      }
+    })
+  }
+
+  // allowPushNotification() {
+  //   Exponent.Permissions.askAsync(Exponent.Permissions.REMOTE_NOTIFICATIONS)
+  //   .then((response) => {
+  //     // console.log(response);
+  //     if (response.status === "granted") {
+  //       Exponent.Notifications.getExponentPushTokenAsync()
+  //       .then((token) => {
+  //         axios.post('http://10.6.19.25:3000/mobile/pushNotification', {
+  //           token:  token,
+  //           username: 'Bob'
+  //         })
+  //           .then(function (response) {
+  //             console.log(response);
+  //           })
+  //           .catch(function (error) {
+  //             console.log(error);
+  //           });
+
+  //       })
+  //     } else {
+  //       console.log('Permission NOT GRANTED');
+  //     }
+  //   });
+  // }
+
+  // polling() {
+  //   this.time();
+  //   this.getReminders();
+  // }
   render() {
     return null;
   }
