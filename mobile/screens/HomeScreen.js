@@ -32,15 +32,9 @@ import weatherIcons from '../assets/images/weatherIcons.js';
 
 import SunCalc from 'suncalc';
 
-import LocalNotification from '../notification/localNotification.js';
-import PushNotification from '../notification/pushNotification.js';
-
-
 import Router from '../navigation/Router.js';
 
 import Alerts from '../constants/Alerts';
-
-// import registerForPushNotificationsAsync from 'registerForPushNotificationsAsync';
 
 @observer
 export default class HomeScreen extends React.Component {
@@ -145,36 +139,6 @@ export default class HomeScreen extends React.Component {
     })
   }
 
-  // allowPushNotification() {
-  //   Exponent.Permissions.askAsync(Exponent.Permissions.REMOTE_NOTIFICATIONS)
-  //   .then((response) => {
-  //     // console.log(response);
-  //     if (response.status === "granted") {
-  //       Exponent.Notifications.getExponentPushTokenAsync()
-  //       .then((token) => {
-  //         axios.post('http://10.6.19.25:3000/mobile/pushNotification', {
-  //           token:  token,
-  //           username: 'Bob'
-  //         })
-  //           .then(function (response) {
-  //             console.log(response);
-  //           })
-  //           .catch(function (error) {
-  //             console.log(error);
-  //           });
-
-  //       })
-  //     } else {
-  //       console.log('Permission NOT GRANTED');
-  //     }
-  //   });
-  // }
-
-  // polling() {
-  //   this.time();
-  //   this.getReminders();
-  // }
-
   getTime() {
     var date = new Date();
 
@@ -231,7 +195,7 @@ export default class HomeScreen extends React.Component {
 
             this.setState({
               weatherDescription: description.charAt(0).toUpperCase() + description.slice(1),
-              weatherIcon: weatherIcons[dayNight][iconKey],
+              // weatherIcon: weatherIcons[dayNight][iconKey],
               loading: false
             });
           })
@@ -310,9 +274,6 @@ export default class HomeScreen extends React.Component {
             <Image style={styles.homepageContentIcon} source={{uri: "" + this.state.weatherIcon}}>
             </Image> 
           </View>
-
-          <LocalNotification/>
-          <PushNotification _goToReminder={this._goToReminder.bind(this)} showPushNotification={this.showPushNotification.bind(this)}/>
         </ScrollView>
       ) 
     } else {

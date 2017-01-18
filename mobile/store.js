@@ -1,39 +1,67 @@
 import {observable, autorun, action} from "mobx";
 
-var that
+//Server connection
+import axios from 'axios';
+import baseUrl from './ip.js';
 
 class Store {
   constructor () {
-    that = this;
     this.update = this.update.bind(this);
+    this.getReminders = this.getReminders.bind(this);
   }
 
   //Observable variables
   @observable id = 1;
   @observable name = 'Bob';
   @observable reminders = [];
-  @observable current = {};
+  @observable current = { "id": 1, "date": "2017-01-10T13:01:00.000Z", "type": "medication", "note": "mdsfm", "recurring": true, "recurringDays": "Monday,Tuesday", "notificationId": null, "registered": false, "audio": null, "title": "sdmf,", "createdAt": "2017-01-11T00:18:58.000Z", "updatedAt": "2017-01-11T00:18:58.000Z", "patientId": 1, "caregiverId": 1 };
 
   //Accessible Actions
 
   //Change observable variable value to new value
   @action update(key, value) {
-    // console.log(this);
     // console.log('before', key, that[key]);
-    that[key] = value;
+    this[key] = value;
     // console.log('after', key, that[key]);
   }
 
-  //Change date from database to JS Date instance
-  @action convertDate (date) {
-    var year = date.slice(0, 4);
-    var month = date.slice(5, 7) - 1;
-    var day = date.slice(8, 10);
-    var hour = date.slice(11, 13);
-    var minute = date.slice(14, 16);
+  //Reminder Actions
+  @action getReminders() {
+    var patientId = this.id;
+    return new Promise((resolve, reject) => {
+      axios.get(baseUrl + '/mobile/reminders', {
+        params: {
+          patientId: patientId
+        }
+      })
+      .then(response => {
+        var reminders = response.data.reminders;
 
-    return new Date(year, month, day, hour, minute);
+        //convert string recurringDays and notificationIds to array
+        //MySQL only accept string
+        reminders.forEach(reminder => {
+          if (reminder.recurringDays) reminder.recurringDays = reminder.recurringDays.split(',');
+          if (reminder.notificationId) reminder.notificationId = reminder.notificationId.split(',');
+        })
+        
+        this.reminders = reminders;
+        resolve(reminders);
+      })
+      .catch(error => {
+        reject(error);
+      });
+    })
   }
+
+  //Change date from database to JS Date instance
+  // @action convertDate (date) {
+  //   var year = date.slice(0, 4);
+  //   var month = date.slice(5, 7) - 1;
+  //   var day = date.slice(8, 10);
+  //   var hour = date.slice(11, 13);
+  //   var minute = date.slice(14, 16);
+  //   return new Date(year, month, day, hour, minute);
+  // }
 
   //Get closest Date in given dayOfWeek from setTime in milliseconds;
   @action getDifferenceInDays (dayOfWeek, setTime) {

@@ -64,6 +64,7 @@
     "mobx-react": "^4.0.4",
     "moment": "^2.17.1",
     "morgan": "^1.7.0",
+    "msr": "^1.3.4",
     "multer": "^1.2.1",
     "multer-s3": "^2.5.0",
     "multiparty": "^4.1.2",

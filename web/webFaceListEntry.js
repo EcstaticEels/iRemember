@@ -8,18 +8,18 @@ var FaceEntry = (props) => {
   var photoView = props.data ? <img src={props.pic} className='facePic'/> : null;
 
   return (
-    <Grid>
       <Row className="show-grid">
-        <div className="face-entry" onClick={changeCurrent}>
-          <Col xs={12} md={4}>
+        <div className="face-list-image" onClick={changeCurrent}>
+          <Col md={6}>
             {photoView}
           </Col>
-          <Col xs={12} md={8}>
-            <h3 className='face-name'>{props.data.subjectName}</h3>
-          </Col>
         </div>
+        <Col md={6}>
+          <div>
+            <h3 className='face-list-name'>{props.data.subjectName}</h3>
+          </div>
+        </Col>
       </Row>
-    </Grid>
   )
 };
 
