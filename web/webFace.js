@@ -30,7 +30,7 @@ class Face extends React.Component {
       fieldBeingEdited: '',
       detectArr: [],
       itemsToSplice: [],
-      spliced: false
+      spliced: false,
       errorText: ''
     };
   }
