@@ -11,7 +11,7 @@ import {
   TouchableOpacity,
   View,
   DeviceEventEmitter,
-  ActivityIndicator
+  ActivityIndicator,
 } from 'react-native';
 import * as Exponent from 'exponent';
 
@@ -219,15 +219,15 @@ export default class HomeScreen extends React.Component {
             if (weather.id === 800 || weather.id === 801) {
               iconKey = iconReference[weather.id];
             }
-            var description = weather.description;
-            // console.log(this.state.dateTime.hour)
-            // console.log(sunlightTimes.sunrise.getHours())
-            // console.log(sunlightTimes.sunset.getHours())
-            // if (this.state.dateTime.hour >= sunlightTimes.sunrise.getHours() && this.state.dateTime.hour <= sunlightTimes.sunset.getHours()) {
-            //   var dayNight = 'day'
-            // } else {
-            //   var dayNight = 'night'
-            // }
+            var description = weather.main;
+            console.log(this.state.dateTime.hour)
+            console.log(sunlightTimes.sunrise.getHours())
+            console.log(sunlightTimes.sunset.getHours())
+            if (this.state.dateTime.hour >= sunlightTimes.sunrise.getHours() && this.state.dateTime.hour <= sunlightTimes.sunset.getHours()) {
+              var dayNight = 'day'
+            } else {
+              var dayNight = 'night'
+            }
 
             this.setState({
               weatherDescription: description.charAt(0).toUpperCase() + description.slice(1),
@@ -266,6 +266,16 @@ export default class HomeScreen extends React.Component {
     //   });
   }
 
+  _renderIcon(name, isSelected) {
+    return (
+      <FontAwesome
+        name={name}
+        size={80}
+        color={'#777'}
+      />
+    );
+  }
+
   render() {
     console.log(this.state.weatherIcon)
 
@@ -274,19 +284,26 @@ export default class HomeScreen extends React.Component {
         <ScrollView
           style={styles.container}
           contentContainerStyle={styles.contentContainer}>
-         
 
-          <View style={styles.homepageContentContainer}>
+          <View style={styles.timeContainer}>
             <Text style={styles.timeText}>
               {this.state.dateTime.time}
             </Text>
           </View>
 
-          <View style={styles.homepageContentContainer}>
-            <Text style={styles.dateText}>{moment().format('dddd, MMMM DD YYYY')}</Text>
+          <View style={styles.dateContainer}>
+
+            <View style={styles.innerDateContainer}>
+              <Text style={styles.dateText}> {moment().format('dddd')} </Text>
+            </View>
+
+            <View style={styles.innerDateContainer}>
+              <Text style={styles.dateText}>{moment().format('MMMM DD, YYYY')}</Text>
+            </View>
+
           </View>
 
-          <View style={styles.homepageContentContainer}>
+          <View style={styles.weatherContainer}>
             <Text style={styles.weatherText}>
               {this.state.weatherDescription}
             </Text>
@@ -299,14 +316,18 @@ export default class HomeScreen extends React.Component {
       return (
 
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-          <View style={styles.homepageContentContainer}>
+          <View style={styles.timeContainer}>
             <Text style={styles.timeText}>
               {this.state.dateTime.time}
             </Text>
           </View>
 
-          <View style={styles.homepageContentContainer}>
-            <Text style={styles.dateText}>{moment().format('dddd, MMMM DD YYYY')}</Text>
+          <View style={styles.dateContainer}>
+            <Text style={styles.dateText}> {moment().format('dddd')} </Text>
+          </View>
+
+          <View style={styles.dateContainer}>
+            <Text style={styles.dateText}>{moment().format('MMMM DD, YYYY')}</Text>
           </View>
           <ActivityIndicator size='large' />
         </ScrollView>
@@ -315,41 +336,70 @@ export default class HomeScreen extends React.Component {
   }
 }
 
-//WOULD STILL LIKE TO RENDER DIFFERENT COLOR SCHEME BASED ON DAY VS. NIGHT
 
+//hide top bar in exponent?
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#2c3e50',
+    backgroundColor: '#5897B2',
   },
   contentContainer: {
-    paddingTop: 40,
+    paddingTop: 0,
     height: 300,
     flexDirection: 'column',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     flex: 1
   },
-  homepageContentContainer: {
+  dateContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#5897B2',
+    paddingTop: 10,
+    paddingBottom: 10
+  },
+  timeContainer : {
+    backgroundColor: '#FF8A9C',
     flexDirection: 'row',
     justifyContent: 'space-around',
-    alignItems: 'center'
+    alignItems: 'center',
+    paddingTop: 10,
+    paddingBottom: 10
+  },
+  weatherContainer : {
+    backgroundColor: '#FF8A9C',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: 10,
+    paddingBottom: 10
   },
   homepageContentIcon: {
     height: 120,
     width: 120
   },
   weatherText: {
-    color: '#ECECEC',
-    fontSize: 30
+    color: '#FBFBF2',
+    fontSize: 70,
+    paddingRight: 40,
+    fontFamily: 'quicksand-regular'
   },
   timeText: {
     fontSize: 70, 
-    color: '#ECECEC',
+    color: '#FBFBF2',
+    fontFamily: 'quicksand-regular'
   }, 
   dateText: {
-    color: '#ECECEC',
-    fontSize: 40,
+    color: '#FBFBF2',
+    fontSize: 50,
+    fontFamily: 'quicksand-regular'
   },
   activityIndicator: {
     alignSelf: 'center',
-  }
+  },
+  innerDateContainer: {
+    alignItems: 'center',
+    backgroundColor: '#5897B2',
+    paddingTop: 5,
+  },
 });

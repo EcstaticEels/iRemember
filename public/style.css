@@ -2,10 +2,6 @@
   height: auto;
 }
 
-.container {
-  width: 98%;
-}
-
 .tabNav {
   margin-bottom: 30px;
 }
@@ -19,104 +15,61 @@
 }
 
 .facePic {
-  height: 100%;
-  width: 100%;
   margin-top: 10px;
 }
 
-.face-name {
+.face-current-heading {
+  text-align: center;
+}
+
+.face-current {
+  padding: 10px 20px;
+}
+
+.face-list {
+  padding: 10px 20px;
+}
+
+.list-group-item:first-child,
+.list-group-item {
+  border: none;
+  margin: 10px 0;
+  }
+
+.list-group-item:first-child {
+  margin: 0;
+}
+
+.face-list-name {
   margin-top: 35px;
 }
 
-.preview-images {
-  height: 25%;
-  width: 25%;
+.preview-image {
+  height: 50%;
+  width: 50%;
+  max-width: 400px;
+  max-height: 400px;
+  margin: 50px 60px;
 }
 
-.face-entry {
-  height: 100px;
-  text-align: center;
+.image-preview-info {
+  margin: 60px;
+}
+
+.image-gallery {
+  width: 562px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.container-fluid {
+  padding: 0;
 }
 
 .error {
   color: 'red';
 }
-/*.pace {
-  -webkit-pointer-events: none;
-  pointer-events: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  user-select: none;
-}
 
-.pace-inactive {
-  display: none;
-}
-
-.pace .pace-progress {
-  background: #b0d8ca;
-  position: fixed;
-  z-index: 2000;
-  top: 0;
-  right: 100%;
-  width: 100%;
-  height: 2px;
-}
-
-.pace .pace-progress-inner {
-  display: block;
-  position: absolute;
-  right: 0px;
-  width: 100px;
-  height: 100%;
-  box-shadow: 0 0 10px #b0d8ca, 0 0 5px #b0d8ca;
-  opacity: 1.0;
-  -webkit-transform: rotate(3deg) translate(0px, -4px);
-  -moz-transform: rotate(3deg) translate(0px, -4px);
-  -ms-transform: rotate(3deg) translate(0px, -4px);
-  -o-transform: rotate(3deg) translate(0px, -4px);
-  transform: rotate(3deg) translate(0px, -4px);
-}
-
-.pace .pace-activity {
-  display: block;
-  position: fixed;
-  z-index: 2000;
-  top: 15px;
-  right: 15px;
-  width: 14px;
-  height: 14px;
-  border: solid 2px transparent;
-  border-top-color: #b0d8ca;
-  border-left-color: #b0d8ca;
-  border-radius: 10px;
-  -webkit-animation: pace-spinner 400ms linear infinite;
-  -moz-animation: pace-spinner 400ms linear infinite;
-  -ms-animation: pace-spinner 400ms linear infinite;
-  -o-animation: pace-spinner 400ms linear infinite;
-  animation: pace-spinner 400ms linear infinite;
-}
-
-@-webkit-keyframes pace-spinner {
-  0% { -webkit-transform: rotate(0deg); transform: rotate(0deg); }
-  100% { -webkit-transform: rotate(360deg); transform: rotate(360deg); }
-}
-@-moz-keyframes pace-spinner {
-  0% { -moz-transform: rotate(0deg); transform: rotate(0deg); }
-  100% { -moz-transform: rotate(360deg); transform: rotate(360deg); }
-}
-@-o-keyframes pace-spinner {
-  0% { -o-transform: rotate(0deg); transform: rotate(0deg); }
-  100% { -o-transform: rotate(360deg); transform: rotate(360deg); }
-}
-@-ms-keyframes pace-spinner {
-  0% { -ms-transform: rotate(0deg); transform: rotate(0deg); }
-  100% { -ms-transform: rotate(360deg); transform: rotate(360deg); }
-}
-@keyframes pace-spinner {
-  0% { transform: rotate(0deg); transform: rotate(0deg); }
-  100% { transform: rotate(360deg); transform: rotate(360deg); }
-}*/
 
 .loader {
   position: fixed;
