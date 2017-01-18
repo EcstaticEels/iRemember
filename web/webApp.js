@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
 import {Route, Router, browserHistory, IndexRoute, IndexRedirect} from 'react-router';
-import { Jumbotron, Button} from 'react-bootstrap';
+import { Button, Grid} from 'react-bootstrap';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
 import {caregiverName, needsSetup, patientName} from './webMobxStore';
@@ -67,24 +67,31 @@ class App extends React.Component {
     });
   }
 
-  handleLogout() {
+  handleLogout(cb) {
     caregiverName.set('');
     needsSetup.set(false);
     console.log('logging out, caregiver name: ', caregiverName.get(), ' needssetup: ', needsSetup.get())
+    cb();
   }
 
   render() {
     return (
-      <div className="app-body">
-        <Nav />
 
-        <Tab changeView={this.changeView.bind(this)}/>
-        {this.props.children && React.cloneElement(this.props.children, {
-          handleLogout: this.handleLogout.bind(this),
-          getUserInfo: this.getUserInfo.bind(this)
-        })}
-        
-      </div>
+        <div className="app-body">
+          <Grid fluid>
+            <Nav />
+          </Grid>
+
+          <Grid>
+            <Tab changeView={this.changeView.bind(this)}/>
+            {this.props.children && React.cloneElement(this.props.children, {
+              handleLogout: this.handleLogout.bind(this),
+              getUserInfo: this.getUserInfo.bind(this)
+            })}
+          </Grid>
+          
+        </div>
+
     )
   }
 }

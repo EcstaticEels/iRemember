@@ -19,17 +19,18 @@ class WebNav extends React.Component {
   render() {
     var loggedInMsg = !!caregiverName.get() ? <NavItem>Logged in as: {caregiverName.get()}</NavItem> : null;
     var signInBtn = !caregiverName.get() ?  <NavItem href="/signin">Sign In</NavItem> : null;
+    var signOutBtn = !!caregiverName.get() ? <NavItem href="/signout">Sign Out</NavItem> : null;
     return (
       <Navbar>
         <Navbar.Header>
           <Navbar.Brand>
-            <a href="/">Home</a>
+            <a href="/">iRemember</a>
           </Navbar.Brand>
         </Navbar.Header>
         <Nav pullRight>
           {loggedInMsg}
           {signInBtn}
-          <NavItem href="/signout">Sign Out</NavItem>
+          {signOutBtn}
         </Nav>
       </Navbar>
     );

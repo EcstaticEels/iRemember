@@ -21,7 +21,7 @@ export default class FaceCurrent extends React.Component {
     if (!!this.props.current.subjectName) {
       currentView = (
         <div className="face-current">
-          <h1>{this.props.current.subjectName}</h1>
+          <h1 className="face-current-heading">{this.props.current.subjectName}</h1>
           {galleryView}
           <div><h3>Description: </h3>{this.props.current.description}</div>
           <label><h3>Audio Message:</h3>

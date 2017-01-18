@@ -8,6 +8,10 @@ import ReminderForm from './webReminderForm.js';
 import Loader from 'react-loader-advanced';
 import Moment from 'moment';
 
+import {observer} from 'mobx-react';
+import {reminderForm} from './webMobxStore';
+
+@observer
 class Reminder extends React.Component {
   constructor(props) {
     super(props);
@@ -104,6 +108,7 @@ class Reminder extends React.Component {
   }
 
   handleDateChange(date) {
+    console.log('date', date)
     this.setState({
       date: date
     }, () => {
@@ -156,12 +161,6 @@ class Reminder extends React.Component {
     });
   }
 
-  getAudio(event){
-    this.setState({
-      updateAudio: event.target.files
-    });
-  }
-
   getInput(event) {
     var key = event.target.getAttribute('class');
     var value = event.target.value;
@@ -199,15 +198,14 @@ class Reminder extends React.Component {
   }
 
   recurringDaysToObj(str) {
-    if (str) {
-      var arr = str.split(',');
-      var selectedDays = {};
-      var daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-      daysOfWeek.forEach((day) => {
-        selectedDays[day] = arr.indexOf(day) === -1 ? false : true;
-      })
-      return selectedDays;
-    }
+  if(!str) return;
+    var arr = str.split(',');
+    var selectedDays = {};
+    var daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    daysOfWeek.forEach((day) => {
+      selectedDays[day] = arr.indexOf(day) === -1 ? false : true;
+    })
+    return selectedDays;
   }
 
   editModeSwitch(bool) {
@@ -227,9 +225,9 @@ class Reminder extends React.Component {
       note: current.note,
       reminderId: current.id,
       img: current.img, 
-      title: current.title,
-      audio: current.audio
+      title: current.title
     });
+    reminderForm.audioUrl = current.audio;
     this.displayForm(true, true);
   }
 
@@ -250,18 +248,18 @@ class Reminder extends React.Component {
     })
   }
 
-  validForm() {
-    if(this.state.date.length !== 16){
-      return false;
-    }
-    if(this.state.title.length < 1) {
-      return false;
-    }
-     if(this.state.recurring && (!this.state.recurringDays || !this.state.recurringDays[0])) {
-      return false;
-    }
-    return true;
-  }
+  // validForm() {
+  //   if(this.state.date.length !== 16){
+  //     return false;
+  //   }
+  //   if(this.state.title.length < 1) {
+  //     return false;
+  //   }
+  //    if(this.state.recurring && (!this.state.recurringDays || !this.state.recurringDays[0])) {
+  //     return false;
+  //   }
+  //   return true;
+  // }
 
   submitForm(event) {
     event.preventDefault();
@@ -274,6 +272,11 @@ class Reminder extends React.Component {
     // }
     if (this.state.recurring){
       var recurringDays = this.selectedDaysToArray(this.state.selectedDays);
+      if (recurringDays.length === 0 || !recurringDays[0]) {
+        this.setState({
+          recurring: false
+        })
+      }
     }
     var that = this;
     var formData = new FormData();
@@ -282,17 +285,16 @@ class Reminder extends React.Component {
     console.log('converted date', convertedMomentDate)
     formData.append('date', convertedMomentDate);
     formData.append('recurring', this.state.recurring);
-    formData.append('recurringDays', recurringDays || []);
+    formData.append('recurringDays', recurringDays);
     formData.append('type', this.state.type);
     formData.append('note', this.state.note);
     formData.append('title', this.state.title);
+    console.log('audio', reminderForm.audioUrl, reminderForm.audioFile)
     formData.append('registered', false);
     if (this.state.editMode) {
       formData.append('reminderId', this.state.reminderId);
     }
-    for (var key in this.state.updateAudio) {
-      formData.append('file', this.state.updateAudio[key]);
-    }
+    formData.append('file', reminderForm.audioFile);
     $.ajax({
       method: this.state.editMode ? 'PUT': 'POST',
       url: '/web/reminders',
@@ -300,9 +302,11 @@ class Reminder extends React.Component {
       processData: false,
       contentType: false,
       success: function(res) {
+        console.log('success', res)
         if (that.state.editMode) {
           that.handleUpdate();
         } else {
+          console.log('res', res)
           var createdId = JSON.parse(res).id;
           var current;
           that.getReminders((reminders) => {
@@ -317,8 +321,11 @@ class Reminder extends React.Component {
             });
           });
         }
+        reminderForm.audioFile = null;
+        reminderForm.audioUrl = null;
         that.editModeSwitch(false);
         that.displayForm(false, false);
+        console.log('loader state changed to false')
         that.setState({
           loader: false
         });
@@ -332,7 +339,6 @@ class Reminder extends React.Component {
   render() {
     const spinner = <span><img src={'/default.svg'} /></span>
     return (
-      <Grid>
         <Row className="show-grid">
           <Col xs={12} md={4}>
             <div className="reminder">
@@ -351,7 +357,6 @@ class Reminder extends React.Component {
                 <ReminderForm 
                   getInput={this.getInput.bind(this)} 
                   getBoolean={this.getBoolean.bind(this)}
-                  getAudio={this.getAudio.bind(this)}
                   handleDateChange={this.handleDateChange.bind(this)}
                   submitForm={this.submitForm.bind(this)}
                   editMode={this.state.editMode}
@@ -371,7 +376,6 @@ class Reminder extends React.Component {
             </div>
           </Col>
         </Row>
-      </Grid>
     )
   }
 }
