@@ -94,7 +94,7 @@ const handleDetect = function(req, cb) {
           detectArr[index] = result.url
           count++;
           if (count === files.detectPhoto.length) {
-            cb(detectArr);
+            cb(detectArr, fields);
           }
         });
       })
@@ -127,7 +127,6 @@ const handleSetupForm = function(req, cb) {
 const handleReminderForm = function(req, cb) {
   const reminderForm = new multiparty.Form();
   reminderForm.parse(req, function(err, fields, files) {
-    console.log(fields)
     if (err) {
       console.log(err);
     }
@@ -353,7 +352,7 @@ module.exports = {
     })
   },
   detectFaces: (req, res) => {
-    handleDetect(req, detectArr => {
+    handleDetect(req, (detectArr, fields) => {
       console.log('in detect faces controller', detectArr);
       var newCloudinaryUrlArray = [];
       for (var i = 0; i < detectArr.length; i++) {
@@ -379,11 +378,59 @@ module.exports = {
           }
           var parsedData = JSON.parse(body);
           if (parsedData.length === 0) {
-            resultArr[index] = null;
+            resultArr[index] = [null];
           } else if (parsedData.length === 1) {
-            resultArr[index] = true;
+            resultArr[index] = [true];
+
+            if (fields.faceId) {
+              return new Promise((resolve, reject) => {
+                var faceId = fields.faceId[0];
+                db.Face.findOne({
+                  where: {
+                    id: Number(faceId)
+                  }
+                })
+                .then(face => {
+                  var bodyForIdentification = {    
+                    "personGroupId": req.user.personGroupID, 
+                    "faceIds":[
+                        parsedData[0].faceId
+                    ]
+                  };
+                  request.post({
+                    headers: microsoftHeaders,
+                    url: "https://api.projectoxford.ai/face/v1.0/identify",
+                    body: JSON.stringify(bodyForIdentification)
+                  }, function(err, response, body) {
+                    if (err) {
+                      console.log(err);
+                    }
+                    var parsedIdentifyBody = JSON.parse(body);
+                    console.log('identify results', parsedIdentifyBody[0].candidates)
+                    if (parsedIdentifyBody[0].candidates.length === 0) {
+                      resolve("not_found");
+                    } else if (parsedIdentifyBody[0].candidates.length === 1) {
+                      if (parsedIdentifyBody[0].candidates[0].personId === face.get('personId')) {
+                        resolve("found_match");
+                      } else {
+                        resolve("found_no_match")
+                      }
+                    } else if (parsedIdentifyBody[0].candidates.length > 1) {
+                      resolve("multiple_candidates");
+                    }
+                  });        
+                })
+              })
+              .then(result => {
+                resultArr[index].push(result);
+                count++;
+                if (count === detectArr.length) {
+                  res.status(200).send(JSON.stringify(resultArr));
+                }
+              });
+            }
           } else if (parsedData.length > 1) {
-            resultArr[index] = false;
+            resultArr[index] = [false];
           }
           count++;
           if (count === detectArr.length) {

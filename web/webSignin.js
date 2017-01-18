@@ -10,12 +10,10 @@ export default class Signin extends React.Component {
   
   render() {
     return (
-      <Grid>
-        <div>
-          <h1>Sign In</h1>
-          <a href='auth/google'>Sign In with Google</a>
-        </div>
-      </Grid>
+      <div>
+        <h1>Sign In</h1>
+        <a href='auth/google'>Sign In with Google</a>
+      </div>
     )
   }
 }

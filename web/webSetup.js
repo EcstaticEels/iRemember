@@ -87,7 +87,6 @@ export default class Setup extends React.Component {
   render() {
     const spinner = <span><img src={'/default.svg'} /></span>
     return (
-      <Grid>
         <Loader show={this.state.loader} message={spinner} foregroundStyle={{color: 'white'}} backgroundStyle={{backgroundColor: 'white'}} className="spinner">
         <form>
           <Row className="show-grid">
@@ -109,7 +108,6 @@ export default class Setup extends React.Component {
           <input type="submit" value="Submit" onClick={this.submitForm.bind(this)} />
         </form>
         </Loader>
-      </Grid>
     );
   }
 }

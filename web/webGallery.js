@@ -23,11 +23,11 @@ class Gallery extends React.Component {
     var gallerymenu;
     return (
       <ImageGallery
-      items={imageList}
-      gallerymenu={gallerymenu}
-      autoPlay={true}
-      showFileMeta={true}
-      slideInterval={8000}
+        items={imageList}
+        gallerymenu={gallerymenu}
+        autoPlay={true}
+        showFileMeta={true}
+        slideInterval={8000}
       />
     );
   }

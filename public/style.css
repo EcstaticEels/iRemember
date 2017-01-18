@@ -15,12 +15,32 @@
 }
 
 .facePic {
-  height: 100%;
-  width: 100%;
   margin-top: 10px;
 }
 
-.face-name {
+.face-current-heading {
+  text-align: center;
+}
+
+.face-current {
+  padding: 10px 20px;
+}
+
+.face-list {
+  padding: 10px 20px;
+}
+
+.list-group-item:first-child,
+.list-group-item {
+  border: none;
+  margin: 10px 0;
+  }
+
+.list-group-item:first-child {
+  margin: 0;
+}
+
+.face-list-name {
   margin-top: 35px;
 }
 
@@ -36,10 +56,20 @@
   margin: 60px;
 }
 
-.face-entry {
+.image-gallery {
+  width: 562px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.container-fluid {
+  padding: 0;
+}
+
+/*.face-entry {
   height: 100px;
   text-align: center;
-}
+}*/
 /*.pace {
   -webkit-pointer-events: none;
   pointer-events: none;

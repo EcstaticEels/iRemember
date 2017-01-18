@@ -31,7 +31,7 @@ export default class Signout extends React.Component {
 
   render() {
     return (
-      <Grid></Grid>
+      <div></div>
     );
   }
 }
