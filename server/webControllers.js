@@ -355,7 +355,6 @@ module.exports = {
   },
   detectFaces: (req, res) => {
     handleDetect(req, (detectArr, fields) => {
-      console.log('in detect faces controller', detectArr);
       var newCloudinaryUrlArray = [];
       for (var i = 0; i < detectArr.length; i++) {
         var newUrl = detectArr[i].slice(0, 49) + `a_auto_right/` + detectArr[i].slice(49);
@@ -367,6 +366,7 @@ module.exports = {
       }
       var resultArr = [];
       var count = 0;
+      console.log('in detect faces controller', detectArr);
       newCloudinaryUrlArray.forEach(function(detectUrl, index) {
         const bodyForDetection = { "url": detectUrl}; 
         request.post({
@@ -378,6 +378,7 @@ module.exports = {
           if (err) {
             console.log(err);
           }
+          console.log('body from detect', body)
           var parsedData = JSON.parse(body);
           if (parsedData.length === 0) {
             resultArr[index] = [null];
