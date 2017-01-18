@@ -19,7 +19,7 @@ import Exponent, {
 
 //MobX
 import { observer } from 'mobx-react/native';
-import Store from '../store.js';
+import { current } from '../store.js';
 
 import Moment from 'moment'
 
@@ -38,27 +38,26 @@ export default class ReminderInfoScreen extends React.Component {
   }
   
   render() {
-    console.log(Store.current.audio)
     var audio = <Text>''</Text>;
-    if (Store.current.audio) {
-      audio = <Components.Video source={{uri: Store.current.audio}}/>;
+    if (current.audio) {
+      audio = <Components.Video source={{uri: current.audio}}/>;
     }
     return (
       <ScrollView 
         style={styles.container}
         contentContainerStyle={styles.contentContainer}>
         <View style={styles.reminderInfoContainer}>
-          <Text style={styles.reminderTitle}>{Store.current.title}</Text>
+          <Text style={styles.reminderTitle}>{current.title}</Text>
         </View>
         {audio}
         <View style={styles.reminderInfoContainer}>
-          <Text style={styles.reminderNote}>{Store.current.note}</Text>
+          <Text style={styles.reminderNote}>{current.note}</Text>
         </View>
         <View style={styles.reminderInfoContainer}>
-          <Image style={styles.reminderImage} source={{uri: images[Store.current.type || 'other']}} /> 
+          <Image style={styles.reminderImage} source={{uri: images[current.type || 'other']}} /> 
         </View>
         <View style={styles.reminderInfoContainer}>
-          <Text style={styles.reminderTimeDate}>{Moment(Store.current.date.slice(0, 16)).calendar().toString()}</Text>       
+          <Text style={styles.reminderTimeDate}>{Moment(current.date).calendar().toString()}</Text>
         </View>
       </ScrollView>
     );
