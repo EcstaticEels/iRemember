@@ -1,5 +1,7 @@
 import React from 'react';
 import $ from 'jquery';
+import {Button, Row, Col, Grid} from 'react-bootstrap';
+import { browserHistory } from 'react-router';
 
 import {observer} from 'mobx-react';
 import WebMobxStore from './webMobxStore';
@@ -17,7 +19,9 @@ export default class Signout extends React.Component {
       method: 'GET',
       url: '/logout',
       success: function(res) {
-        this.props.handleLogout();
+        this.props.handleLogout(() => {
+          browserHistory.push('/')
+        });
       }.bind(this),
       error: function(err) {
         console.log('error', err);
@@ -26,7 +30,9 @@ export default class Signout extends React.Component {
   }
 
   render() {
-    return (<p>You are now logged out</p>);
+    return (
+      <div></div>
+    );
   }
 }
 

@@ -10,7 +10,6 @@ var ReminderEntry = (props) => {
 
   return (
 
-    <Grid>
       <Row className="show-grid">
         <div className="reminder-entry" onClick={changeCurrent}>
           <Col xs={12} md={4}>
@@ -22,7 +21,6 @@ var ReminderEntry = (props) => {
           </Col>
         </div>
       </Row>
-    </Grid>
 
   )
 };
