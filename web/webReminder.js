@@ -302,11 +302,12 @@ class Reminder extends React.Component {
       processData: false,
       contentType: false,
       success: function(res) {
+        console.log('success', res)
         if (that.state.editMode) {
           that.handleUpdate();
         } else {
           console.log('res', res)
-          var createdId = res.id;
+          var createdId = JSON.parse(res).id;
           var current;
           that.getReminders((reminders) => {
             for (var i = 0; i < reminders.length; i++) {
@@ -324,6 +325,7 @@ class Reminder extends React.Component {
         reminderForm.audioUrl = null;
         that.editModeSwitch(false);
         that.displayForm(false, false);
+        console.log('loader state changed to false')
         that.setState({
           loader: false
         });
