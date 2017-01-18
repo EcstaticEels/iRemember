@@ -137,7 +137,7 @@ export default class FaceForm extends React.Component {
 
           <FormGroup validationState={this.getImageValidationState()}>
             <ControlLabel> {'Image:'} </ControlLabel>
-            <ImagesUpload getPhotos={this.props.getPhotos} />
+            <ImagesUpload getPhotos={this.props.getPhotos} numFiles={this.props.updatePhotos.length}/>
           </FormGroup>
 
             <ReactModal 
@@ -200,95 +200,3 @@ export default class FaceForm extends React.Component {
     );
   }
 }
-
-
-
-      /* <div className="face-form">
->>>>>>> upstream/master
-          <Row className="show-grid">
-            <h5>New Face</h5>
-          </Row>
-          <form>
-          <Row className="show-grid">
-            <label>
-              Name:
-              <input type="text" value={this.props.subjectName} className="subjectName" placeholder="Name" onChange={this.props.getInput}/>
-              <br/>
-              <h5 className='error'>{nameError}</h5>
-            </label>
-          </Row>
-          <Row className="show-grid">
-            <label>Upload image:
-              <ImagesUpload getPhotos={this.props.getPhotos} numFiles={this.props.updatePhotos.length}/>
-              <br />
-            </label>
-          </Row>
-          <Row className="show-grid">
-
-            <ReactModal 
-             isOpen={this.state.showPreviewModal}
-             contentLabel="Preview Modal">
-              <h2>Image Preview</h2>
-              <div>
-                
-                <p>Images submitted for each subject here will be used to train our application to recognize each subject's face. 
-                  On this screen, please verify that each submitted image:</p>
-                  <ul>
-                    <li>depicts only the subject's face, keeping in mind that photos, artwork, televisions, or mirrors in frame may also display faces</li>
-                    <li>represents the subject as closely as possible as he or she appears today</li>
-                  </ul>
-                <p>
-                  Frontal and near-frontal face images yield ideal results with face identification. To improve the accuracy of our application's face 
-                  recognition function, please avoid images in dim light or images in which the subject's face is obscured (eg. by clothing, headwear, the environment, 
-                  or face position). 
-                </p>
-                <br />
-                <p>
-                  The images you selected on the previous screen will be auto-detected for faces here, and photos that do not contain exactly one face will be removed from the
-                  upload queue. When creating a face profile for a new subject, a minimum of three photos must be submitted. Photos will be automatically resized and rotated. 
-                  To discard photos, proceed back to the previous form and select new photos.
-                </p>
-
-                <div>
-                  <Loader show={this.state.loader} message={spinner} foregroundStyle={{color: 'white'}} backgroundStyle={{backgroundColor: 'white'}} className="spinner">
-                  {this.props.imagePreviewUrls.length > 0 ? 
-                    this.props.imagePreviewUrls.map((imagePreview, ind) => {
-                      return (<ImagePreviewEntry photo={imagePreview} index={ind} key={ind} success={this.props.detectArr[ind]} />);
-                    }) 
-                    : <h1>No images detected</h1>
-                  } 
-                  </Loader>
-                </div>
-              </div>
-              <button onClick={this.handleCloseModal}>Close Modal</button>
-            </ReactModal>
-
-
-          </Row>
-          <Row className="show-grid">
-            {uploadedPhotos}
-          </Row>
-          <Row className="show-grid">
-            <label>Upload Audio Message:
-              <AudioUpload getAudio={this.props.getAudio} />
-              <br/>
-            </label>
-          </Row>
-          <Row className="show-grid">
-            {uploadedAudio}
-          </Row>
-          <Row className="show-grid">
-            <label>Description:
-              <input type="text" value={this.props.description} className="description" placeholder="Description" onChange={this.props.getInput}/>
-              <br/>
-            </label>
-          </Row>
-            <Button bsSize='small' className="btn-submit" onClick={this.props.submitForm}>Submit</Button>
-          </form>
-<<<<<<< HEAD
-        </div>
-    );
-  }
-}
-
-

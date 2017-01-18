@@ -54,7 +54,8 @@ class Face extends React.Component {
         var parsedDetectResults = JSON.parse(res);
         var spliceArray = [];
         parsedDetectResults.forEach(function(item, index) {
-          if (item[0] !== true || item[0] === true && (item[1] !== undefined || item[1] !== true)) {
+          if (!(item[0] === true && (item[1] === undefined || item[1] === "found_match")) || item[0] !== true) {
+            console.log(item[0] === true, item[1] === "found_match")
             spliceArray.push(index);
           } 
         })
