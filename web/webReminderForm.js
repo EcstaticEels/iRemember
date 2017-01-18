@@ -15,8 +15,18 @@ export default class ReminderForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      recorded: false,
+      recording: false,
+      recorded: false
     }
+  }
+
+  getAudio(event) {
+    reminderForm.audioFile = event.target.files[0];
+    var url = URL.createObjectURL(event.target.files[0]);
+    reminderForm.audioUrl = url;
+    this.setState({
+      recorded: true
+    })
   }
 
   captureUserMedia(mediaConstraints, successCallback, errorCallback) {
@@ -31,13 +41,18 @@ export default class ReminderForm extends React.Component {
     // $('#start-recording').disabled = true;
     // audiosContainer = document.getElementById('audios-container');
     // console.log('startRecording()');
-    console.log('startRecording THIS:', this);
     var that = this;
+    this.setState({
+      recording: true
+    })
     this.captureUserMedia(this.mediaConstraints, this.onMediaSuccess.bind(that), this.onMediaError);
   };
 
   stopRecording() {
     var mediaRecorder = window.mediaRecorder;
+    this.setState({
+      recording: false
+    })
     // $('#stop-recording').disabled = true;
     mediaRecorder.stop();
     mediaRecorder.stream.stop();
@@ -177,21 +192,20 @@ export default class ReminderForm extends React.Component {
             <input type="text" value={this.props.note} className="note" placeholder="Notes" onChange={this.props.getInput}/>
           </label>
           <br />
-          <input type="submit" value="Submit" onClick={this.props.submitForm}/>
         </form>
         <br/>
           <div className="record-stop-button">
             <button className="general-button" onClick={this.startRecording.bind(this)}>Record</button>
             <button className="general-button" onClick={this.stopRecording.bind(this)}>STOP</button>
+            {this.state.recording ? <div><i className="fa fa-circle text-danger Blink"></i>LIVE</div> : null}
           </div>
           <div className="recorded-audio-box">
-            <AudioUpload getAudio={(event) => {
-              reminderForm.audioFile = event.target.files;
-            }}/> 
+            <AudioUpload getAudio={this.getAudio.bind(this)}/> 
             <div id="record-audio">
-              {this.state.recorded || this.props.editMode? <audio src={reminderForm.audioUrl} controls></audio> : null}
+              {this.state.recorded || (this.props.editMode && reminderForm.audioUrl)? <audio src={reminderForm.audioUrl} controls></audio> : null}
             </div>
           </div>
+          <button type="submit" value="Submit" onClick={this.props.submitForm}>Submit</button>
       </div>
     );
   }
