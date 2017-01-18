@@ -3,6 +3,8 @@ import React from 'react';
 import {
   StyleSheet,
   View,
+  NativeModules,
+  StatusBar
 } from 'react-native';
 import {ImagePicker, TouchID} from 'exponent';
 import {
@@ -25,18 +27,26 @@ export default class RootNavigation extends React.Component {
     super(props)
     this.state = {
       authenticated: false,
-      name: ''
+      name: '',
+      id: '',
+      loading: false,
+      fingerprint: false
     }
 
     this.handleTextChange = this.handleTextChange.bind(this);
     this.handleTextSubmit = this.handleTextSubmit.bind(this);
+    this.authFunction = this.authFunction.bind(this);
 
   }
 
+componentWillMount() {
+  StatusBar.setHidden(true);
+}
+
   uploadImageAsync(uri) {
+    console.log(this.state)
     let date = Date.now();
     let apiUrl = `${baseUrl}/mobile/login?date=${date}`
-    console.log(apiUrl)
 
     let uriParts = uri.split('.');
     let fileType = uriParts[uri.length - 1];
@@ -58,6 +68,8 @@ export default class RootNavigation extends React.Component {
       patientName: this.state.name
     };
 
+    console.log('UPLOADING IMAGE')
+
     return fetch(apiUrl, options);
   }
 
@@ -73,57 +85,76 @@ export default class RootNavigation extends React.Component {
   handleTextSubmit () {
     ImagePicker.launchCameraAsync()
     .then((photo) => {
-      this.uploadImageAsync(photo.uri)
-      .then((person) => {
-        console.log(person)
-        return person.json()
+      this.setState({loading: true}, function () {
+        this.uploadImageAsync(photo.uri)
         .then((person) => {
           console.log(person)
-          if (person.name === this.state.name) {
-            this.setState({authenticated: true})
-          } else {
-            this._failedLogin()
-          }
+          return person.json()
+          .then((person) => {
+            console.log(person)
+            if (person.name === this.state.name) {
+              this.setState({authenticated: true, id: person.id, loading:false})
+            } else {
+              this._failedLogin()
+            }
+          })
+        })
+        .catch((err) => {
+          console.log('BRO WE CANT AUTHENTICATE U')
+          console.log('ERROR', err)
+          this._failedLogin()
         })
       })
-      .catch((err) => {
-        console.log('BRO WE CANT AUTHENTICATE U')
-        console.log('ERROR', err)
-        this._failedLogin()
-      })
+    })
+  }  
+
+  authFunction () {
+    NativeModules.ExponentFingerprint.authenticateAsync('Show me your finger!')
+    .then((result) => {
+      console.log(result)
+      if (result.success) {
+        this.setState({fingerprint: true})
+      } else {
+        alert('Try again!');
+      }
     })
   }
 
   render() {
 
-    // if (!this.state.authenticated) {
+    // if (!this.state.fingerprint || !this.state.authenticated) {
     //   return (
     //     <StackNavigation
-    //       initialRoute={Router.getRoute('login', {handleTextChange: this.handleTextChange, handleTextSubmit: this.handleTextSubmit})}/>
+    //       initialRoute={Router.getRoute('login', {authFunction: this.authFunction, state:this.state, handleTextChange: this.handleTextChange, handleTextSubmit: this.handleTextSubmit})}/>
     //       // initialRoute='login' />
     //   )
     // } else {
       return (
         <TabNavigation
+          // tabBarColor='#9EBDFF'
+          tabBarColor='#eeeeee'
           id="main"
           navigatorUID="main"
-          tabBarHeight={200}
+          tabBarHeight={150}
           initialTab="home">
           <TabNavigationItem
             id="home"
+            style={styles.tabItem}
             renderIcon={isSelected => this._renderIcon('home', isSelected)}>
-            <StackNavigation initialRoute="home"/>
+            <StackNavigation initialRoute={Router.getRoute('home', {state: this.state})}/>
           </TabNavigationItem>
           <TabNavigationItem
             id="reminders"
+            style={styles.tabItem}
             renderIcon={isSelected => this._renderIcon('bell', isSelected)}>
-            <StackNavigation initialRoute="reminders"/>
+            <StackNavigation initialRoute={Router.getRoute('reminders', {state: this.state})}/>
           </TabNavigationItem>
 
           <TabNavigationItem
             id="photos"
+            style={styles.tabItem}
             renderIcon={isSelected => this._renderIcon('camera', isSelected)}>
-            <StackNavigation initialRoute="photos"/>
+            <StackNavigation initialRoute={Router.getRoute('photos', {state: this.state})}/>
           </TabNavigationItem>
         </TabNavigation>
       );
@@ -135,8 +166,10 @@ export default class RootNavigation extends React.Component {
     return (
       <FontAwesome
         name={name}
-        size={100}
-        color={isSelected ? Colors.tabIconSelected : Colors.tabIconDefault}
+        size={80}
+        color={isSelected ? Colors.tabIconSelected : '#777'}
+        style={styles.tabItem}
+        selectedStyle={styles.tabItem} 
       />
     );
   }
@@ -149,5 +182,11 @@ const styles = StyleSheet.create({
   },
   selectedTab: {
     color: Colors.tabIconSelected,
+    borderLeftWidth: 1,
+    borderLeftColor: '#777'
   },
+  tabItem: {
+    borderRightWidth: 1,
+    borderRightColor: '#777'
+  }
 });

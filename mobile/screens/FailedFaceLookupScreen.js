@@ -11,8 +11,6 @@ import {
 export default class FailedLoginScreen extends React.Component {
   constructor (props) {
     super (props);
-
-    console.log(this.props.route.params)
   }
 
   static route = {
@@ -27,7 +25,7 @@ export default class FailedLoginScreen extends React.Component {
         style={styles.container}
         contentContainerStyle={styles.contentContainer}>
           <Text style={styles.infoText}> 
-            We couldn't find this face on your profile! Please check with your caregiver
+            We couldn't find this face on your profile! Please check with your caregiver.
           </Text>
       </ScrollView>
     )
