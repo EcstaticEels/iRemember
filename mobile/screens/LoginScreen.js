@@ -46,7 +46,8 @@ export default class LoginScreen extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#2c3e50',
+    // backgroundColor: '#FFEDBC', meh its okay
+    backgroundColor: '#466675'
   },
   contentContainer: {
     paddingTop: 40,
@@ -63,7 +64,8 @@ const styles = StyleSheet.create({
     color: '#7f8c8d',
   },
   infoText: {
-    color: '#ECECEC',
+    color: '#fac8bf',
+    fontWeight: 'bold',
     fontSize: 24,
     alignSelf: 'center'
   },
