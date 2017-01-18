@@ -30,28 +30,7 @@ export default class PushNotification extends React.Component {
     this._notificationSubscription && this._notificationSubscription.remove();
   }
 
-  allowPushNotification() {
-    Permissions.askAsync(Permissions.REMOTE_NOTIFICATIONS)
-    .then((response) => {
-      if (response.status === "granted") {
-        Notifications.getExponentPushTokenAsync()
-        .then((token) => {
-          axios.post(baseUrl + '/mobile/pushNotification', {
-            token:  token,
-            id: Store.id,
-          })
-            .then(function (response) {
-              console.log(response);
-            })
-            .catch(function (error) {
-              console.log(error);
-            });
-        })
-      } else {
-        console.log('Permission NOT GRANTED');
-      }
-    })
-  }
+  
 
   _registerForPushNotifications() {
     // Send our push token over to our backend so we can receive notifications

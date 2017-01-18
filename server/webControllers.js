@@ -329,7 +329,6 @@ module.exports = {
   },
   addReminder: (req, res) => {
     handleReminderForm(req, (audioUrl, fields) => {
-      console.log('audioUrl', audioUrl)
       db.Reminder.create({ 
         date: fields.date[0],
         type: fields.type[0],
@@ -341,22 +340,24 @@ module.exports = {
         registered: false,
         patientId: req.user.patientId
       })
-      .then(reminder => {
-        db.Patient.findOne({
-          where: {
-            id: req.user.patientId
-          }
+        .then(reminder => {
+          console.log('res', reminder)
+          res.status(201).send(JSON.stringify(reminder));
+        })
+        .then(() => {
+          db.Patient.findOne({
+            where: {
+              id: req.user.patientId
+            }
         })
         .then(patient => {
+          console.log('patient', patient)
           sdk.sendPushNotificationAsync({
             exponentPushToken: patient.token, // The push token for the app user you want to send the notification to 
             message: "New Reminder Added"
           });
         })
       })
-      .then(() => {
-        res.status(201).send(JSON.stringify(reminder));
-      });
     });
   },
   retrieveReminders: (req, res) => {
