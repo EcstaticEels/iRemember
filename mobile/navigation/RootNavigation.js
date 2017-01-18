@@ -141,20 +141,56 @@ componentWillMount() {
             id="home"
             style={styles.tabItem}
             renderIcon={isSelected => this._renderIcon('home', isSelected)}>
-            <StackNavigation initialRoute={Router.getRoute('home', {state: this.state})}/>
+            <StackNavigation 
+            defaultRouteConfig={{
+              navigationBar: {
+                backgroundColor: '#FF8A9C',
+                titleStyle: {
+                  // color: '#FBFBF2',
+                  fontFamily: 'quicksand-regular',
+                  fontSize: 30,
+                },
+                tintColor: '#FBFBF2'
+              }
+            }} 
+            initialRoute={Router.getRoute('home', {state: this.state})}/>
           </TabNavigationItem>
           <TabNavigationItem
             id="reminders"
             style={styles.tabItem}
             renderIcon={isSelected => this._renderIcon('bell', isSelected)}>
-            <StackNavigation initialRoute={Router.getRoute('reminders', {state: this.state})}/>
+            <StackNavigation
+            defaultRouteConfig={{
+              navigationBar: {
+                backgroundColor: '#FF8A9C',
+                titleStyle: {
+                  // color: '#FBFBF2',
+                  fontFamily: 'quicksand-regular',
+                  fontSize: 30,
+                },
+                tintColor: '#FBFBF2'
+              }
+            }} 
+            initialRoute={Router.getRoute('reminders', {state: this.state})}/>
           </TabNavigationItem>
 
           <TabNavigationItem
             id="photos"
             style={styles.tabItem}
             renderIcon={isSelected => this._renderIcon('camera', isSelected)}>
-            <StackNavigation initialRoute={Router.getRoute('photos', {state: this.state})}/>
+            <StackNavigation 
+            defaultRouteConfig={{
+              navigationBar: {
+                backgroundColor: '#FF8A9C',
+                titleStyle: {
+                  // color: '#FBFBF2',
+                  fontFamily: 'quicksand-regular',
+                  fontSize: 30,
+                },
+                tintColor: '#FBFBF2'
+              }
+            }} 
+            initialRoute={Router.getRoute('photos', {state: this.state})}/>
           </TabNavigationItem>
         </TabNavigation>
       );
@@ -188,5 +224,5 @@ const styles = StyleSheet.create({
   tabItem: {
     borderRightWidth: 1,
     borderRightColor: '#777'
-  }
+  },
 });

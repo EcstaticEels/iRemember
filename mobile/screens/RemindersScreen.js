@@ -60,6 +60,7 @@ export default class RemindersScreen extends React.Component {
 
   render() {
     return (
+      <View style={styles.container}>
         <ListView
           style={styles.list}
           dataSource={this.state.dataSource}
@@ -73,6 +74,7 @@ export default class RemindersScreen extends React.Component {
           }
           renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.separator} />}
         />
+      </View>
     );
   }
 }
@@ -82,19 +84,20 @@ export default class RemindersScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 15,
+    paddingTop: 50,
+    backgroundColor: '#5897B2',
   },
     separator: {
     flex: 1,
-    height: StyleSheet.hairlineWidth,
-    backgroundColor: '#8E8E8E',
+    height: 1,
+    backgroundColor: '#777',
   },
   reminderImage: {
     height: 50,
     width: 50
   },
   list: {
-    backgroundColor: '#2c3e50'
+    backgroundColor: '#5897B2',
   },
   reminderText: {
     color: '#ECECEC',
@@ -104,5 +107,5 @@ const styles = StyleSheet.create({
   },
   reminderView: {
     flexDirection: 'row',
-  }
+  },
 });
