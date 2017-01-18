@@ -7,7 +7,10 @@ import FaceCurrent from './webFaceCurrent.js';
 import FaceForm from './webFaceForm.js';
 import Loader from 'react-loader-advanced';
 
+import {observer} from 'mobx-react';
+import {reminderForm} from './webMobxStore';
 
+@observer
 class Face extends React.Component {
   constructor(props) {
     super(props);
@@ -243,6 +246,7 @@ class Face extends React.Component {
   }
 
   submitForm(event) {
+    console.log('AUdio', audioFile)
     event.preventDefault();
     this.setState({
       loader: true
@@ -261,7 +265,7 @@ class Face extends React.Component {
       formData.append('photo', this.state.updatePhotos[key]);
     }
     for (var key in this.state.updateAudio) {
-      formData.append('audio', this.state.updateAudio[key]);
+      formData.append('audio', reminderForm.audioFile);
     }
     // for (var i = 0; i < this.state.finalCropInfo.length; i++) {
     //   formData.append(`cropInfo_${i}`, JSON.stringify(this.state.finalCropInfo[i]));

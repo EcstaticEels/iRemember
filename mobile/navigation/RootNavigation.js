@@ -1,12 +1,14 @@
 //React & Exponent
 import React from 'react';
 import {
+  Platform,
   StyleSheet,
   View,
   NativeModules
 } from 'react-native';
 import {
-  Notifications, 
+  Permissions,
+  Notifications,
   ImagePicker, 
   TouchID
 } from 'exponent';
@@ -82,8 +84,8 @@ export default class RootNavigation extends React.Component {
     console.log('getReminders?')
     var getReminders = Store.getReminders();
     getReminders.then((reminders)=> {
-      this.cancelDeletedReminders(reminders);
-      this.registerMultipleLocalNotifications(reminders);
+      this.cancelDeletedReminders(Store.reminders);
+      this.registerMultipleLocalNotifications(Store.reminders);
     })
   }
 
@@ -92,7 +94,7 @@ export default class RootNavigation extends React.Component {
     // You can comment the following line out if you want to stop receiving
     // a notification every time you open the app. Check out the source
     // for this function in api/registerForPushNotificationsAsync.js
-    registerForPushNotificationsAsync();
+    this.allowPushNotification();
 
     // Watch for incoming notifications
     this._notificationSubscription = Notifications.addListener(this._handleNotification);
@@ -100,9 +102,7 @@ export default class RootNavigation extends React.Component {
 
   _handleNotification = ({origin, data, remote}) => {
     console.log('origin', origin, 'data', data, 'remote', remote)
-    if (origin === 'received' && data.server) {
-      console.log('setting up reminders?')
-
+    if (origin === 'received' && remote) {
 
     //Testing
     // var getReminders = Store.getReminders();
@@ -117,19 +117,46 @@ export default class RootNavigation extends React.Component {
     //   })
 
       this.setUpReminders();
-    } else if(origin === 'received') {
-      this.props.navigator.showLocalAlert('hi', Alerts.notice);
-    } else {
+    } else if(origin === 'received' && !remote) {
+      var message = data[1];
+      if(data[2]) message += ':' + data[2];
+      this.props.navigator.showLocalAlert(message, Alerts.notice);
+    } else if(origin === 'selected' && !remote){
       var selectedReminder = Store.reminders.find((reminder) => {
         return reminder.id === data[0];
       })
       Store.current = selectedReminder;
-      this.props.navigator.push(Router.getRoute('reminder'))
+      this.props.navigator.push(Router.getRoute('reminder'));
+    } else {
+      this.setUpReminders();
     }
   }
 
+  allowPushNotification() {
+    Permissions.askAsync(Permissions.REMOTE_NOTIFICATIONS)
+    .then((response) => {
+      if (response.status === "granted") {
+        Notifications.getExponentPushTokenAsync()
+        .then((token) => {
+          console.log(token)
+          axios.post(baseUrl + '/mobile/pushNotification', {
+            token:  token,
+            id: Store.id,
+          })
+            .then(function (response) {
+              console.log(response);
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+        })
+      } else {
+        console.log('Permission NOT GRANTED');
+      }
+    })
+  }
+
   uploadImageAsync(uri) {
-    console.log(this.state)
     let date = Date.now();
     let apiUrl = `${baseUrl}/mobile/login?date=${date}`
 
@@ -152,8 +179,6 @@ export default class RootNavigation extends React.Component {
       },
       patientName: this.state.name
     };
-
-    console.log('UPLOADING IMAGE')
 
     return fetch(apiUrl, options);
   }
@@ -178,6 +203,7 @@ export default class RootNavigation extends React.Component {
           } else {
             this._failedLogin()
           }
+        })
         .catch((err) => {
           console.log('BRO WE CANT AUTHENTICATE U')
           console.log('ERROR', err)
@@ -190,7 +216,6 @@ export default class RootNavigation extends React.Component {
   authFunction () {
     NativeModules.ExponentFingerprint.authenticateAsync('Show me your finger!')
     .then((result) => {
-      console.log(result)
       if (result.success) {
         this.setState({fingerprint: true})
       } else {
@@ -201,13 +226,13 @@ export default class RootNavigation extends React.Component {
 
   render() {
 
-    if (!this.state.fingerprint || !this.state.authenticated) {
-      return (
-        <StackNavigation
-          initialRoute={Router.getRoute('login', {authFunction: this.authFunction, state:this.state, handleTextChange: this.handleTextChange, handleTextSubmit: this.handleTextSubmit})}/>
-          // initialRoute='login' />
-      )
-    } else {
+    // if (!this.state.fingerprint || !this.state.authenticated) {
+    //   return (
+    //     <StackNavigation
+    //       initialRoute={Router.getRoute('login', {authFunction: this.authFunction, state:this.state, handleTextChange: this.handleTextChange, handleTextSubmit: this.handleTextSubmit})}/>
+    //       // initialRoute='login' />
+    //   )
+    // } else {
       return (
         <TabNavigation
           id="main"
@@ -233,7 +258,7 @@ export default class RootNavigation extends React.Component {
         </TabNavigation>
       );
 
-    }
+    // }
   }
 
   _renderIcon(name, isSelected) {
@@ -325,10 +350,13 @@ export default class RootNavigation extends React.Component {
   registerLocalNotification(reminder) {
     var that = this;
     var reminderId = reminder.id || 0;
+    console.log('why??')
     return new Promise((resolve, reject) => {
+      console.log('reminder', reminder)
       if (!reminder || reminder.registered) {
           resolve(false);
       } else {
+        console.log('how about here/')
         var localNotification = {
           title: reminder.title,
           body: reminder.note || ' ',

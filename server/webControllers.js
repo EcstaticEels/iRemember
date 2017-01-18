@@ -329,6 +329,7 @@ module.exports = {
   },
   addReminder: (req, res) => {
     handleReminderForm(req, (audioUrl, fields) => {
+      console.log('audioUrl', audioUrl)
       db.Reminder.create({ 
         date: fields.date[0],
         type: fields.type[0],
@@ -343,18 +344,17 @@ module.exports = {
       .then(reminder => {
         db.Patient.findOne({
           where: {
-            id: reminder.patientId
+            id: req.user.patientId
           }
         })
         .then(patient => {
           sdk.sendPushNotificationAsync({
-            exponentPushToken: 'ExponentPushToken[vKtJn3Et16bGEDvhFpx4xk]', // The push token for the app user you want to send the notification to 
-            message: "From your server",
-            data: {server: true}
+            exponentPushToken: patient.token, // The push token for the app user you want to send the notification to 
+            message: "New Reminder Added"
           });
         })
       })
-      .then(reminder => {
+      .then(() => {
         res.status(201).send(JSON.stringify(reminder));
       });
     });
@@ -374,36 +374,42 @@ module.exports = {
   updateReminder: (req, res) => { 
     handleReminderForm(req, (audioUrl, fields) => {
       let reminderId = fields.reminderId[0];
-      let updateObj = audioUrl ? 
-        { date: fields.date[0],
-          type: fields.type[0],
-          note: fields.note[0],
-          audio: audioUrl,
-          registered: false,
-          title: fields.title[0],
-          recurring: fields.recurring[0],
-          recurringDays: fields.recurringDays[0]
+      let updateObj = { 
+        date: fields.date[0],
+        type: fields.type[0],
+        note: fields.note[0],
+        registered: false,
+        title: fields.title[0],
+        recurring: fields.recurring[0],
+        recurringDays: fields.recurringDays[0]
+      }
+      if(audioUrl || fields.audio) {
+        updateObj.audio = fields.audio[0]
+      }
+      db.Reminder.update(updateObj, {
+        where: {
+          id: reminderId
         }
-        : { date: fields.date[0],
-          type: fields.type[0],
-          note: fields.note[0],
-          title: fields.title[0],
-          registered: false,
-          recurring: fields.recurring[0],
-          recurringDays: fields.recurringDays[0]
-        };
-      db.Reminder.update(updateObj, 
-        {
+      })
+      .then(reminder => {
+        db.Patient.findOne({
           where: {
-            id: reminderId
+            id: reminder.patientId
           }
-        }
-      )
+        })
+        .then(patient => {
+          sdk.sendPushNotificationAsync({
+            exponentPushToken: patient.token, // The push token for the app user you want to send the notification to 
+            message: "New Reminder Added"
+          });
+        })
+      })
       .then(updatedReminder => {
         res.status(200).send(JSON.stringify(updatedReminder));
       });
     })
   },
+
   deleteReminder: (req, res) => {
     let reminderId = req.body.reminderId;
     db.Reminder.update({registered: null}, { where: {id: reminderId}})
