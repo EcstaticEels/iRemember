@@ -30,10 +30,10 @@ import moment from 'moment';
 import { MonoText } from '../components/StyledText';
 import weatherIcons from '../assets/images/weatherIcons.js';
 
-import SunCalc from 'suncalc';
+// import SunCalc from 'suncalc';
 
-import LocalNotification from '../notification/localNotification.js';
-import PushNotification from '../notification/pushNotification.js';
+// import LocalNotification from '../notification/localNotification.js';
+// import PushNotification from '../notification/pushNotification.js';
 
 
 import Router from '../navigation/Router.js';
@@ -213,7 +213,7 @@ export default class HomeScreen extends React.Component {
               801: 'partiallyCloudy'
 
             }
-            var sunlightTimes = SunCalc.getTimes(new Date(), this.state.currentLatitude, this.state.currentLongitude);
+            // var sunlightTimes = SunCalc.getTimes(new Date(), this.state.currentLatitude, this.state.currentLongitude);
             var ind = Math.floor(weather.id/100);
             var iconKey = iconReference[ind];
             if (weather.id === 800 || weather.id === 801) {
@@ -231,7 +231,7 @@ export default class HomeScreen extends React.Component {
 
             this.setState({
               weatherDescription: description.charAt(0).toUpperCase() + description.slice(1),
-              weatherIcon: weatherIcons[dayNight][iconKey],
+              // weatherIcon: weatherIcons[dayNight][iconKey],
               loading: false
             });
           })
@@ -310,9 +310,6 @@ export default class HomeScreen extends React.Component {
             <Image style={styles.homepageContentIcon} source={{uri: "" + this.state.weatherIcon}}>
             </Image> 
           </View>
-
-          <LocalNotification/>
-          <PushNotification _goToReminder={this._goToReminder.bind(this)} showPushNotification={this.showPushNotification.bind(this)}/>
         </ScrollView>
       ) 
     } else {
