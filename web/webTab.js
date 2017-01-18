@@ -10,7 +10,8 @@ var Tab = (props) => {
   }
 
   return (
-    <Nav bsStyle="tabs" className="tabNav">
+
+    <Nav bsStyle="tabs" className="tabNav container">
       <LinkContainer to="/reminders" className="link">
         <NavItem>Reminders</NavItem>
       </LinkContainer>
@@ -22,9 +23,3 @@ var Tab = (props) => {
 }
 
 module.exports = Tab;
-    // <Navbar fixedTop inverse>
-    //   <Nav activeKey='allTime' bsStyle='pills' onSelect={changeTab}>
-    //     <NavItem title='reminders'  eventKey='reminders'><Link to="/reminders">Reminders</Link></NavItem>
-    //     <NavItem title='face'  eventKey='face'><Link to="/face">Face Recognition</Link></NavItem>
-    //   </Nav>
-    // </Navbar>
