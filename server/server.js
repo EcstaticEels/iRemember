@@ -108,6 +108,7 @@ app.put('/web/reminders', ensureAuthenticated, webControllers.updateReminder);
 app.delete('/web/reminders', ensureAuthenticated, webControllers.deleteReminder);
 app.post('/web/setup', ensureAuthenticated, webControllers.setup);
 
+app.post('/web/detect', ensureAuthenticated, webControllers.detectFaces);
 
 //Mobile
 app.post('/mobile/login', upload.single('picture'), mobileControllers.loginFace);
@@ -142,7 +143,6 @@ app.get('/auth/google',
 );
 
 app.get('/user', function(req, res) {
-  console.log(req.user)
   var userObj;
   if (req.user) {
     if (req.user.patientId) {
@@ -158,7 +158,6 @@ app.get('/user', function(req, res) {
       res.status(200).send(JSON.stringify({caregiver: req.user}));
     }
   }
-
 });
 
 app.get('/auth/google/callback', 
@@ -166,7 +165,6 @@ app.get('/auth/google/callback',
     failureRedirect: '/signin'
   }), function(req, res) {
     console.log('req.user', req.user)
-    console.log('req.session', req.session)
     res.redirect('/');
   }); 
 

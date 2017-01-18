@@ -28,11 +28,53 @@ class Face extends React.Component {
       audio: '',
       loader: false,
       fieldBeingEdited: '',
+      detectArr: [],
+      itemsToSplice: [],
+      spliced: false
       errorText: ''
     };
   }
 
+  detectFaces() {
+    console.log('we are detecting faces');
+    var formData = new FormData();
+    for (var key in this.state.updatePhotos) {
+      formData.append('detectPhoto', this.state.updatePhotos[key]);
+    }
+    if (this.state.editMode) {
+      formData.append('faceId', this.state.current.dbId);
+    } 
+    $.ajax({
+      url: '/web/detect',
+      method: 'POST',
+      data: formData,
+      processData: false, // tells jQuery not to process data
+      contentType: false, // tells jQuery not to set contentType
+      success: function (res) {
+        var parsedDetectResults = JSON.parse(res);
+        var spliceArray = [];
+        parsedDetectResults.forEach(function(item, index) {
+          if (item[0] !== true || item[0] === true && (item[1] !== undefined || item[1] !== true)) {
+            spliceArray.push(index);
+          } 
+        })
+        this.setState({
+          detectArr: parsedDetectResults,
+          itemsToSplice: spliceArray
+        }, () => {
+          console.log('finished detectFaces and splicing calcs', this.state)
+        });
+      }.bind(this),
+      error: function (err) {
+        console.log('error', err);
+      }
+    });
+  }
+
   delete() {
+    this.setState({
+      loader: true
+    });
     var that = this;
     $.ajax({
       method: 'DELETE',
@@ -40,13 +82,31 @@ class Face extends React.Component {
       data: JSON.stringify({faceId: this.state.current.dbId}),
       contentType: 'application/json',
       success: function(res) {
-        console.log('success', res);
-        that.componentDidMount();
+        that.setState({
+          loader: false
+        }, () => {
+          that.componentDidMount();
+        });
       },
       error: function(err) {
         console.log('error', err);
       }
     })
+  }
+
+  removePhotos() {
+    var arrayStateCopy = Array.prototype.slice.call(this.state.updatePhotos);
+    var splicedCount=0;
+    this.state.itemsToSplice.forEach(function(index) {
+      arrayStateCopy.splice(index - splicedCount, 1);
+      splicedCount++;
+    });
+    this.setState({
+      updatePhotos: arrayStateCopy,
+      spliced: true
+    }, () => {
+      console.log('new update photo list', this.state.updatePhotos)
+    });
   }
 
   handleCloudinaryUrl(urlArray, w, h, type) {
@@ -108,7 +168,12 @@ class Face extends React.Component {
         description: '',
         updatePhotos: '',
         updateAudio: '',
-        audio: ''
+        audio: '',
+        imagePreviewUrls: [],
+        fieldBeingEdited: '',
+        spliced: false,
+        detectArr: [],
+        itemsToSplice: []
       });
     }
   }
@@ -169,7 +234,14 @@ class Face extends React.Component {
       subjectName: current.subjectName,
       photos: current.photos,
       description: current.description,
-      audio: current.audio
+      audio: current.audio, 
+      updatePhotos: '',
+      updateAudio: '',
+      imagePreviewUrls: '',
+      fieldBeingEdited: '',
+      detectArr: [],
+      itemsToSplice: [],
+      spliced: false
     });
     this.displayForm(true, true);
   }
@@ -185,9 +257,12 @@ class Face extends React.Component {
       this.setState({
         updatePhotos: files,
         imagePreviewUrls: data,
-        fieldBeingEdited: 'photos'
+        fieldBeingEdited: 'photos',
+        detectArr: [],
+        itemsToSplice: [],
+        spliced: false
       }, () => {
-        console.log('after upload', this.state)
+        console.log('update preview', this.state)
       });
     }
     updateTest = updateTest.bind(this)
@@ -229,17 +304,17 @@ class Face extends React.Component {
       this.setState({
         list: faces,
         current: current
+      }, () => {
+        console.log('state after update to check the clearing', this.state)
       });
     });
   }
 
   validForm() {
     if(this.state.subjectName.length < 3){
-      console.log('name')
       return false;
     }
     if(!this.state.editMode && this.state.updatePhotos.length < 1) {
-      console.log('photo')
       return false;
     }
     return true;
@@ -267,9 +342,6 @@ class Face extends React.Component {
     for (var key in this.state.updateAudio) {
       formData.append('audio', reminderForm.audioFile);
     }
-    // for (var i = 0; i < this.state.finalCropInfo.length; i++) {
-    //   formData.append(`cropInfo_${i}`, JSON.stringify(this.state.finalCropInfo[i]));
-    // }
     var that = this;
     $.ajax({
       url: '/web/identify',
@@ -278,8 +350,7 @@ class Face extends React.Component {
       processData: false, // tells jQuery not to process data
       contentType: false, // tells jQuery not to set contentType
       success: function (res) {
-        console.log('success', res);
-        if (that.state.editMode) {
+        if (that.state.editMode) { //if we are editing information for a face
           that.handleUpdate();
         } else {
           var createdId = JSON.parse(res).id;
@@ -312,9 +383,8 @@ class Face extends React.Component {
   render() {
     const spinner = <span><img src={'/default.svg'} /></span>
     return (
-    <Grid>
       <Row className="show-grid">
-        <Col xs={12} md={4}>
+        <Col xs={6} md={5}>
           <div className="face">
             <div>
             {
@@ -330,7 +400,7 @@ class Face extends React.Component {
             />
           </div>
         </Col>
-        <Col xs={12} md={8}>
+        <Col xs={12} md={7}>
           <div>
           <Loader show={this.state.loader} message={spinner} foregroundStyle={{color: 'white'}} backgroundStyle={{backgroundColor: 'white'}} className="spinner">
             {
@@ -345,9 +415,15 @@ class Face extends React.Component {
                   subjectName={this.state.subjectName}
                   photos={this.state.photos} 
                   description={this.state.description}
+                  updatePhotos={this.state.updatePhotos}
                   imagePreviewUrls={this.state.imagePreviewUrls}
                   handleCloudinaryUrl={this.handleCloudinaryUrl.bind(this)}
                   fieldBeingEdited={this.state.fieldBeingEdited}
+                  removePhotos={this.removePhotos.bind(this)}
+                  detectFaces={this.detectFaces.bind(this)}
+                  spliced={this.state.spliced}
+                  itemsToSplice={this.state.itemsToSplice}
+                  detectArr={this.state.detectArr}
                   errorText={this.state.errorText}
                 /> 
                 : <FaceCurrent
@@ -361,7 +437,6 @@ class Face extends React.Component {
           </div>
         </Col>
       </Row>
-    </Grid>
     )
   }
 }
