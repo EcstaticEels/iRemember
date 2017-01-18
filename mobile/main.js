@@ -37,6 +37,9 @@ class AppContainer extends React.Component {
         fonts: [
           FontAwesome.font,
           {'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf')},
+          {'quicksand-bold': require('./assets/fonts/Quicksand-Bold.ttf')},
+          {'quicksand-medium': require('./assets/fonts/Quicksand-Medium.ttf')},
+          {'quicksand-regular': require('./assets/fonts/Quicksand-Regular.ttf')}
         ],
       });
     } catch(e) {
