@@ -332,7 +332,7 @@ export default class HomeScreen extends React.Component {
           <View style={styles.dateContainer}>
             <Text style={styles.dateText}>{moment().format('MMMM DD, YYYY')}</Text>
           </View>
-          <ActivityIndicator size='large' />
+          <ActivityIndicator size='large' color='#FBFBF2' />
         </ScrollView>
       );
     }
