@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
 import {Route, Router, browserHistory, IndexRoute, IndexRedirect} from 'react-router';
-import { Button} from 'react-bootstrap';
+import { Button, Grid} from 'react-bootstrap';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
 import {caregiverName, needsSetup, patientName} from './webMobxStore';
@@ -76,16 +76,22 @@ class App extends React.Component {
 
   render() {
     return (
-      <div className="app-body">
-        <Nav />
 
-        <Tab changeView={this.changeView.bind(this)}/>
-        {this.props.children && React.cloneElement(this.props.children, {
-          handleLogout: this.handleLogout.bind(this),
-          getUserInfo: this.getUserInfo.bind(this)
-        })}
-        
-      </div>
+        <div className="app-body">
+          <Grid fluid>
+            <Nav />
+          </Grid>
+
+          <Grid>
+            <Tab changeView={this.changeView.bind(this)}/>
+            {this.props.children && React.cloneElement(this.props.children, {
+              handleLogout: this.handleLogout.bind(this),
+              getUserInfo: this.getUserInfo.bind(this)
+            })}
+          </Grid>
+          
+        </div>
+
     )
   }
 }

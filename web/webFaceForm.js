@@ -14,27 +14,12 @@ export default class FaceForm extends React.Component {
     super(props);
     this.state = {
       showPreviewModal: false,
-      // detectArr: [],
-      // itemsToSplice: [],
       loader: false
     }
     this.handleCloseModal = this.handleCloseModal.bind(this);
-    // this.detectFaces = this.detectFaces.bind(this);
   } 
 
   componentWillReceiveProps(nextProps) { 
-    // if (nextProps.imagePreviewUrls.length > 0 && nextProps.fieldBeingEdited === 'photos' && this.state.itemsToSplice.length === 0) {
-    //   this.setState({
-    //     showPreviewModal: true,
-    //     loader: true
-    //   });
-    //   this.detectFaces(nextProps);
-    // } else if (nextProps.imagePreviewUrls.length > 0 && nextProps.fieldBeingEdited === 'photos' && this.state.itemsToSplice.length > 0) {
-    //   this.setState({
-    //     itemsToSplice: [],
-    //     detectArr: []
-    //   });
-    // }
     if (nextProps.spliced === false && nextProps.fieldBeingEdited === 'photos' && nextProps.imagePreviewUrls.length > 0
       && nextProps.detectArr.length > 0) {
       this.setState({
@@ -49,43 +34,6 @@ export default class FaceForm extends React.Component {
       this.props.detectFaces();
     } 
   }
-
-  // detectFaces(nextProps) {
-  //   console.log('we are detecting faces');
-  //   var formData = new FormData();
-  //   for (var key in nextProps.updatePhotos) {
-  //     formData.append('detectPhoto', nextProps.updatePhotos[key]);
-  //   }
-  //   $.ajax({
-  //     url: '/web/detect',
-  //     method: 'POST',
-  //     data: formData,
-  //     processData: false, // tells jQuery not to process data
-  //     contentType: false, // tells jQuery not to set contentType
-  //     success: function (res) {
-  //       var parsedDetectResults = JSON.parse(res);
-  //       this.setState({
-  //         detectArr: parsedDetectResults
-  //       }, () => {
-  //         var spliceArray = [];
-  //         this.state.detectArr.forEach(function(item, index) {
-  //           if (item !== true) {
-  //             spliceArray.push(index);
-  //           }
-  //         });
-  //         this.setState({
-  //           itemsToSplice: spliceArray,
-  //           loader: false
-  //         }, () => {
-  //           console.log('set splicing arr', this.state.itemsToSplice)
-  //         });
-  //       })
-  //     }.bind(this),
-  //     error: function (err) {
-  //       console.log('error', err);
-  //     }
-  //   });
-  // }
 
   // handleCropUpdate(index, cropInfo) {
     // var newCropInfoArray = JSON.parse(JSON.stringify(this.state.cropInfo));
@@ -142,7 +90,6 @@ export default class FaceForm extends React.Component {
 
 
     return (
-      <Grid>
         <div className="face-form">
           <Row className="show-grid">
             <h5>New Face</h5>
@@ -224,7 +171,6 @@ export default class FaceForm extends React.Component {
             <Button bsSize='small' className="btn-submit" onClick={this.props.submitForm}>Submit</Button>
           </form>
         </div>
-      </Grid>
     );
   }
 }

@@ -37,6 +37,9 @@ class Face extends React.Component {
     for (var key in this.state.updatePhotos) {
       formData.append('detectPhoto', this.state.updatePhotos[key]);
     }
+    if (this.state.editMode) {
+      formData.append('faceId', this.state.current.dbId);
+    } 
     $.ajax({
       url: '/web/detect',
       method: 'POST',
@@ -47,9 +50,9 @@ class Face extends React.Component {
         var parsedDetectResults = JSON.parse(res);
         var spliceArray = [];
         parsedDetectResults.forEach(function(item, index) {
-          if (item !== true) {
+          if (item[0] !== true || item[0] === true && (item[1] !== undefined || item[1] !== true)) {
             spliceArray.push(index);
-          }
+          } 
         })
         this.setState({
           detectArr: parsedDetectResults,
@@ -354,9 +357,8 @@ class Face extends React.Component {
   render() {
     const spinner = <span><img src={'/default.svg'} /></span>
     return (
-    <Grid>
       <Row className="show-grid">
-        <Col xs={12} md={4}>
+        <Col xs={6} md={5}>
           <div className="face">
             <div>
             {
@@ -372,7 +374,7 @@ class Face extends React.Component {
             />
           </div>
         </Col>
-        <Col xs={12} md={8}>
+        <Col xs={12} md={7}>
           <div>
           <Loader show={this.state.loader} message={spinner} foregroundStyle={{color: 'white'}} backgroundStyle={{backgroundColor: 'white'}} className="spinner">
             {
@@ -408,7 +410,6 @@ class Face extends React.Component {
           </div>
         </Col>
       </Row>
-    </Grid>
     )
   }
 }
