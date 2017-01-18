@@ -7,66 +7,85 @@ import ImagePreview from './webImagePreviewCrop';
 import ReactAudioPlayer from 'react-audio-player';
 import ImagePreviewEntry from './webImagePreviewEntry.js';
 import $ from 'jquery';
+import Loader from 'react-loader-advanced';
 
 export default class FaceForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       showPreviewModal: false,
-      detectArr: [],
-      itemsToSplice: []
+      // detectArr: [],
+      // itemsToSplice: [],
+      loader: false
     }
     this.handleCloseModal = this.handleCloseModal.bind(this);
-    this.detectFaces = this.detectFaces.bind(this);
+    // this.detectFaces = this.detectFaces.bind(this);
   } 
 
-  componentWillReceiveProps(nextProps) { //need to remember to del final crop info if discarded changes
-    if (nextProps.imagePreviewUrls.length > 0 && nextProps.fieldBeingEdited === 'photos' && this.state.itemsToSplice.length === 0) {
+  componentWillReceiveProps(nextProps) { 
+    // if (nextProps.imagePreviewUrls.length > 0 && nextProps.fieldBeingEdited === 'photos' && this.state.itemsToSplice.length === 0) {
+    //   this.setState({
+    //     showPreviewModal: true,
+    //     loader: true
+    //   });
+    //   this.detectFaces(nextProps);
+    // } else if (nextProps.imagePreviewUrls.length > 0 && nextProps.fieldBeingEdited === 'photos' && this.state.itemsToSplice.length > 0) {
+    //   this.setState({
+    //     itemsToSplice: [],
+    //     detectArr: []
+    //   });
+    // }
+    if (nextProps.spliced === false && nextProps.fieldBeingEdited === 'photos' && nextProps.imagePreviewUrls.length > 0
+      && nextProps.detectArr.length > 0) {
       this.setState({
-        showPreviewModal: true
-      });
-      this.detectFaces(nextProps);
-    } else if (nextProps.imagePreviewUrls.length > 0 && nextProps.fieldBeingEdited === 'photos' && this.state.itemsToSplice.length > 0) {
+        loader: false
+      })
+    } else if (nextProps.spliced === false && nextProps.fieldBeingEdited === 'photos' && nextProps.imagePreviewUrls.length > 0
+      && nextProps.detectArr.length === 0) {
       this.setState({
-        itemsToSplice: []
+        showPreviewModal: true,
+        loader: true
       });
-    }
+      this.props.detectFaces();
+    } 
   }
 
-  detectFaces(nextProps) {
-    var formData = new FormData();
-    for (var key in nextProps.updatePhotos) {
-      formData.append('detectPhoto', nextProps.updatePhotos[key]);
-    }
-    $.ajax({
-      url: '/web/detect',
-      method: 'POST',
-      data: formData,
-      processData: false, // tells jQuery not to process data
-      contentType: false, // tells jQuery not to set contentType
-      success: function (res) {
-        var parsedDetectResults = JSON.parse(res);
-        this.setState({
-          detectArr: parsedDetectResults
-        }, () => {
-          var spliceArray = [];
-          this.state.detectArr.forEach(function(item, index) {
-            if (item !== true) {
-              spliceArray.push(index);
-            }
-          });
-          this.setState({
-            itemsToSplice: spliceArray
-          }, () => {
-            console.log('set splicing arr', this.state.itemsToSplice)
-          });
-        })
-      }.bind(this),
-      error: function (err) {
-        console.log('error', err);
-      }
-    });
-  }
+  // detectFaces(nextProps) {
+  //   console.log('we are detecting faces');
+  //   var formData = new FormData();
+  //   for (var key in nextProps.updatePhotos) {
+  //     formData.append('detectPhoto', nextProps.updatePhotos[key]);
+  //   }
+  //   $.ajax({
+  //     url: '/web/detect',
+  //     method: 'POST',
+  //     data: formData,
+  //     processData: false, // tells jQuery not to process data
+  //     contentType: false, // tells jQuery not to set contentType
+  //     success: function (res) {
+  //       var parsedDetectResults = JSON.parse(res);
+  //       this.setState({
+  //         detectArr: parsedDetectResults
+  //       }, () => {
+  //         var spliceArray = [];
+  //         this.state.detectArr.forEach(function(item, index) {
+  //           if (item !== true) {
+  //             spliceArray.push(index);
+  //           }
+  //         });
+  //         this.setState({
+  //           itemsToSplice: spliceArray,
+  //           loader: false
+  //         }, () => {
+  //           console.log('set splicing arr', this.state.itemsToSplice)
+  //         });
+  //       })
+  //     }.bind(this),
+  //     error: function (err) {
+  //       console.log('error', err);
+  //     }
+  //   });
+  // }
 
   // handleCropUpdate(index, cropInfo) {
     // var newCropInfoArray = JSON.parse(JSON.stringify(this.state.cropInfo));
@@ -92,18 +111,12 @@ export default class FaceForm extends React.Component {
   // }
   
   handleCloseModal () {
-    this.setState({ showPreviewModal: false, detectArr: []  }, () => {
-      if (this.state.itemsToSplice.length > 0) {
-        this.props.removePhotos(this.state.itemsToSplice);
+    this.setState({ showPreviewModal: false }, () => {
+      if (this.props.itemsToSplice.length > 0) {
+        this.props.removePhotos();
       }
     });
   }
-
-  // openModal(bool) {
-  //   this.setState({
-  //     showPreviewModal: bool
-  //   });
-  // }
 
   render() {
     var cloudinaryUrls = this.props.photos.map(function(photoObj) {
@@ -124,6 +137,7 @@ export default class FaceForm extends React.Component {
         {audioView}
         <br />
       </label>) : null;
+    const spinner = <span><img src={'/ring.svg'} /></span>
 
 
 
@@ -155,9 +169,10 @@ export default class FaceForm extends React.Component {
               <h2>Image Preview</h2>
               <div>
                 
-                <p>Images submitted for each subject here will be used to train our application to recognize each subject's face. Please verify that each submitted image:</p>
+                <p>Images submitted for each subject here will be used to train our application to recognize each subject's face. 
+                  On this screen, please verify that each submitted image:</p>
                   <ul>
-                    <li>depicts only the subject's face, keeping in mind that photos, televisions, or mirrors in frame may also display faces</li>
+                    <li>depicts only the subject's face, keeping in mind that photos, artwork, televisions, or mirrors in frame may also display faces</li>
                     <li>represents the subject as closely as possible as he or she appears today</li>
                   </ul>
                 <p>
@@ -165,19 +180,22 @@ export default class FaceForm extends React.Component {
                   recognition function, please avoid images in dim light or images in which the subject's face is obscured (eg. by clothing, headwear, the environment, 
                   or face position). 
                 </p>
-                  <br />
+                <br />
                 <p>
-                  Photos that do not contain exactly one face will be removed and accepted photos will be automatically resized and rotated. 
+                  The images you selected on the previous screen will be auto-detected for faces here, and photos that do not contain exactly one face will be removed from the
+                  upload queue. When creating a face profile for a new subject, a minimum of three photos must be submitted. Photos will be automatically resized and rotated. 
                   To discard photos, proceed back to the previous form and select new photos.
                 </p>
 
                 <div>
+                  <Loader show={this.state.loader} message={spinner} foregroundStyle={{color: 'white'}} backgroundStyle={{backgroundColor: 'white'}} className="spinner">
                   {this.props.imagePreviewUrls.length > 0 ? 
                     this.props.imagePreviewUrls.map((imagePreview, ind) => {
-                      return (<ImagePreviewEntry photo={imagePreview} index={ind} key={ind} success={this.state.detectArr[ind]} />);
+                      return (<ImagePreviewEntry photo={imagePreview} index={ind} key={ind} success={this.props.detectArr[ind]} />);
                     }) 
-                    : <h1>No Image Preview Urls</h1>
+                    : <h1>No images detected</h1>
                   } 
+                  </Loader>
                 </div>
               </div>
               <button onClick={this.handleCloseModal}>Close Modal</button>

@@ -23,7 +23,7 @@ class WebNav extends React.Component {
       <Navbar>
         <Navbar.Header>
           <Navbar.Brand>
-            <a href="/">Home</a>
+            <a href="/">iRemember</a>
           </Navbar.Brand>
         </Navbar.Header>
         <Nav pullRight>

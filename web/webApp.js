@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
 import {Route, Router, browserHistory, IndexRoute, IndexRedirect} from 'react-router';
-import { Jumbotron, Button} from 'react-bootstrap';
+import { Button} from 'react-bootstrap';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
 import {caregiverName, needsSetup, patientName} from './webMobxStore';
@@ -67,10 +67,11 @@ class App extends React.Component {
     });
   }
 
-  handleLogout() {
+  handleLogout(cb) {
     caregiverName.set('');
     needsSetup.set(false);
     console.log('logging out, caregiver name: ', caregiverName.get(), ' needssetup: ', needsSetup.get())
+    cb();
   }
 
   render() {
