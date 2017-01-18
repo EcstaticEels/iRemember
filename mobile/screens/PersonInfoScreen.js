@@ -1,6 +1,7 @@
 import React from 'react';
 
 import {
+  TouchableHighlight,
   Image,
   Linking,
   Platform,
@@ -18,6 +19,14 @@ import Exponent, {
 import { Router } from '../navigation/Router.js';
 
 export default class PersonInfoScreen extends React.Component {
+
+  constructor (props) {
+    super(props)
+
+    this.state = {
+      played: false
+    }
+  }
   static route = {
     navigationBar: {
       visible: false
@@ -27,9 +36,13 @@ export default class PersonInfoScreen extends React.Component {
   render() {
     console.log('on personinfo screen', this.props.route.params)
     var audio = <Text></Text>;
-    if (this.props.route.params.person.audio) {
-      audio = <Components.Video source={{uri: this.props.route.params.person.audio}}/>;
+    if (this.props.route.params.person.audio && !this.state.played) {
+      audio = 
+        <Components.Video
+        source={{uri: this.props.route.params.person.audio}}
+        />;
     }
+
     return (
       <ScrollView contentContainerStyle={styles.contentContainer} style={styles.container}>
         <View style={styles.personInfoContainer}>

@@ -1,19 +1,16 @@
 import React from 'react';
 
-var FileUpload = require('NativeModules').FileUpload;
-
 import {
   ScrollView,
   StyleSheet,
+  ActivityIndicator
 } from 'react-native';
 
 import {
   ExponentConfigView,
 } from '@exponent/samples';
 
-import * as Exponent from 'exponent';
-
-import axios from 'axios';
+import Exponent, {ImagePicker} from 'exponent';
 
 import Router from '../navigation/Router.js';
 
@@ -24,6 +21,10 @@ export default class PhotosScreen extends React.Component {
   constructor (props) {
     super (props);
     this._goToPersonInfoPage.bind(this);
+
+    this.state = {
+      loading: false
+    }
   }
 
   static route = {
@@ -32,17 +33,23 @@ export default class PhotosScreen extends React.Component {
     },
   }
 
+  componentDidMount () {
+    this.takePhoto()
+  }
+
   takePhoto () {
-    Exponent.ImagePicker.launchCameraAsync()
+    ImagePicker.launchCameraAsync()
     .then((photo) => {
-      if (photo.cancelled) {
+      if (photo.cancelled === true) {
         this.props.navigation.performAction(({ tabs }) => {
           tabs('main').jumpToTab('home');
         })
       } else {
-        uploadImageAsync(photo.uri)
+        this.setState({loading: true})
+        this.uploadImageAsync(photo.uri)
         .then((response) => {
           return response.json().then(responseJSON => {
+            this.setState({loading: false})
             console.log(responseJSON)
             if(responseJSON.message === 'No faces detected') {
               this._goToNoFacesFoundPage()
@@ -77,28 +84,10 @@ export default class PhotosScreen extends React.Component {
     this.props.navigator.push(Router.getRoute('multipleFacesFound'))    
   }
 
-
-  render() {
-  this.takePhoto()
-    return (
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={this.props.route.getContentContainerStyle()}>
-
-      </ScrollView>
-    );
-  }
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
-
-async function uploadImageAsync(uri) {
+uploadImageAsync(uri) {
   let date = Date.now();
-  let patientId = 1;
+  let patientId = this.props.route.params.state.id;
+
   let apiUrl = `${baseUrl}/mobile/identify?date=${date}&patientId=${patientId}`;
 
   let uriParts = uri.split('.');
@@ -109,6 +98,8 @@ async function uploadImageAsync(uri) {
     uri: uri,
     name: date + '.jpeg',
     type: 'image/jpeg',
+    // patientId: this.props.route.params.id,
+    // patientName: this.props.route.params.name
   });
 
   let options = {
@@ -122,3 +113,42 @@ async function uploadImageAsync(uri) {
 
   return fetch(apiUrl, options);
 }
+
+
+  render() {
+
+    // this.takePhoto()
+
+    if (this.state.loading) {
+      return (
+        <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+          <ActivityIndicator size='large' />
+        </ScrollView>
+      );
+    } else {
+      return (
+        <ScrollView
+          style={styles.container}
+          contentContainerStyle={this.props.route.getContentContainerStyle()}>
+        </ScrollView>
+      );
+    }
+  }
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#2c3e50'
+  },
+  ActivityIndicator: {
+    alignSelf: 'center'
+  },
+  contentContainer: {
+    paddingTop: 40,
+    height: 300,
+    flexDirection: 'column',
+    justifyContent: 'space-around',
+    flex: 1
+  },
+});

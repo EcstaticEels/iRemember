@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Row, Col, Grid} from 'react-bootstrap';
+import {Button, Row, Col, Grid, FormControl, FormGroup, ControlLabel} from 'react-bootstrap';
 import ImagesUpload from './webImagesUpload.js';
 import AudioUpload from './webAudioUpload.js';
 import ReactModal from 'react-modal';
@@ -66,7 +66,43 @@ export default class FaceForm extends React.Component {
     });
   }
 
+  getNameValidationState () {
+    if (this.props.subjectName.length > 0) {
+      return 'success'
+    } else {
+      return 'error'
+    }
+  }
+
+  getImageValidationState () {
+    if (this.props.photos.length >= 3) {
+      return 'success'
+    } else {
+      return 'error'
+    }
+  }
+
+  getDescriptionValidationState () {
+    if (this.props.description.length === 0) {
+      return 'warning'
+    } else {
+      return 'success'
+    }
+  }
+
+  getAudioValidationState () {
+    if (this.props.audio) {
+      return 'success'
+    } else {
+      return 'warning'
+    }
+  }
+
   render() {
+    if (this.props.errorText === 'Name is a required field') {
+      var nameError = this.props.errorText;
+    }
+
     var cloudinaryUrls = this.props.photos.map(function(photoObj) {
       return photoObj.photo;
     });
@@ -90,7 +126,85 @@ export default class FaceForm extends React.Component {
 
 
     return (
-        <div className="face-form">
+    <div className="face-form">
+      <Grid>
+        <form>
+          <FormGroup validationState={this.getNameValidationState()}>
+            <ControlLabel> {'First name'} </ControlLabel>
+            <FormControl type="text" value={this.props.subjectName} id='subjectName' placeholder='Name' onChange={this.props.getInput} />
+
+          </FormGroup>
+
+          <FormGroup validationState={this.getImageValidationState()}>
+            <ControlLabel> {'Image:'} </ControlLabel>
+            <ImagesUpload getPhotos={this.props.getPhotos} />
+          </FormGroup>
+
+            <ReactModal 
+             isOpen={this.state.showPreviewModal}
+             contentLabel="Preview Modal">
+              <h2>Image Preview</h2>
+              <div>
+                
+                <p>Images submitted for each subject here will be used to train our application to recognize each subject's face. 
+                  On this screen, please verify that each submitted image:</p>
+                  <ul>
+                    <li>depicts only the subject's face, keeping in mind that photos, artwork, televisions, or mirrors in frame may also display faces</li>
+                    <li>represents the subject as closely as possible as he or she appears today</li>
+                  </ul>
+                <p>
+                  Frontal and near-frontal face images yield ideal results with face identification. To improve the accuracy of our application's face 
+                  recognition function, please avoid images in dim light or images in which the subject's face is obscured (eg. by clothing, headwear, the environment, 
+                  or face position). 
+                </p>
+                <br />
+                <p>
+                  The images you selected on the previous screen will be auto-detected for faces here, and photos that do not contain exactly one face will be removed from the
+                  upload queue. When creating a face profile for a new subject, a minimum of three photos must be submitted. Photos will be automatically resized and rotated. 
+                  To discard photos, proceed back to the previous form and select new photos.
+                </p>
+
+                <div>
+                  <Loader show={this.state.loader} message={spinner} foregroundStyle={{color: 'white'}} backgroundStyle={{backgroundColor: 'white'}} className="spinner">
+                  {this.props.imagePreviewUrls.length > 0 ? 
+                    this.props.imagePreviewUrls.map((imagePreview, ind) => {
+                      return (<ImagePreviewEntry photo={imagePreview} index={ind} key={ind} success={this.props.detectArr[ind]} />);
+                    }) 
+                    : <h1>No images detected</h1>
+                  } 
+                  </Loader>
+                </div>
+              </div>
+              <button onClick={this.handleCloseModal}>Close Modal</button>
+            </ReactModal>
+
+          <Row className="show-grid">
+            {uploadedPhotos}
+          </Row>
+
+          <FormGroup validationState={this.getAudioValidationState()} >
+            <ControlLabel> {'Upload Audio Message:'} </ControlLabel>
+            <AudioUpload getPhotos={this.props.getAudio} />
+          </FormGroup>
+
+        <FormGroup validationState={this.getDescriptionValidationState()}>
+          <ControlLabel> {'Description'} </ControlLabel>
+          <FormControl type="text" value={this.props.description} id='description' placeholder='Description' onChange={this.props.getInput} />
+        </FormGroup>
+
+        <Button bsSize='small' className="btn-submit" onClick={this.props.submitForm}>Submit</Button>
+
+       </form> 
+      </Grid>
+    </div>
+    );
+  }
+}
+
+
+
+      /* <div className="face-form">
+>>>>>>> upstream/master
           <Row className="show-grid">
             <h5>New Face</h5>
           </Row>
@@ -100,6 +214,7 @@ export default class FaceForm extends React.Component {
               Name:
               <input type="text" value={this.props.subjectName} className="subjectName" placeholder="Name" onChange={this.props.getInput}/>
               <br/>
+              <h5 className='error'>{nameError}</h5>
             </label>
           </Row>
           <Row className="show-grid">
@@ -170,8 +285,10 @@ export default class FaceForm extends React.Component {
           </Row>
             <Button bsSize='small' className="btn-submit" onClick={this.props.submitForm}>Submit</Button>
           </form>
+<<<<<<< HEAD
         </div>
     );
   }
 }
+
 

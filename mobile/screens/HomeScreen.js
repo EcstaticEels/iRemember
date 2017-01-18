@@ -10,7 +10,8 @@ import {
   Text,
   TouchableOpacity,
   View,
-  DeviceEventEmitter
+  DeviceEventEmitter,
+  ActivityIndicator,
 } from 'react-native';
 import * as Exponent from 'exponent';
 
@@ -28,6 +29,8 @@ import moment from 'moment';
 //Styling
 import { MonoText } from '../components/StyledText';
 import weatherIcons from '../assets/images/weatherIcons.js';
+
+import SunCalc from 'suncalc';
 
 import LocalNotification from '../notification/localNotification.js';
 import PushNotification from '../notification/pushNotification.js';
@@ -50,8 +53,9 @@ export default class HomeScreen extends React.Component {
       currentLongitude: '',
       dateTime: {
         time: '',
-        dayNight: ''
-      }
+        hour: ''
+      },
+      loading: true
     }
   }
 
@@ -64,22 +68,23 @@ export default class HomeScreen extends React.Component {
   //need to render something prettier
 
   componentDidMount () {
+
+
+    // const {reminders, change} = Store;
+    // change('reminders', 'bye');
+    var that = this;
+    this.getTime();
+    this.getWeather();
+
+    if(!this.state.notificationToken) this.allowPushNotification();
+//     this.cancelDeletedReminders();
+//     this.getReminders();
+    // setInterval(that.getTime(), 10000);
     // const {reminders, change} = Store;
     // change('reminders', 'bye');
     // var that = this;
     this.getTime();
     this.getWeather();
-    // if(!this.state.notificationToken) this.allowPushNotification();
-// <<<<<<< HEAD
-//     this.cancelDeletedReminders();
-//     this.getReminders();
-    // setInterval(that.getTime(), 10000);
-// =======
-    // console.log('getting here?')
-    // this.getReminders();
-    // console.log(this.props.navigator)
-    // setInterval(() => {that.polling()}, 10000);
-// >>>>>>> upstream/master
   }
 
   // componentWillMount() {
@@ -175,16 +180,9 @@ export default class HomeScreen extends React.Component {
 
     var hours = date.getHours();
 
-    if (hours > 18) {
-      var dayNight = 'night';
-    } else {
-      var dayNight = 'day';
-    }
-
-
     this.setState({dateTime: {
       time: moment().format('LT'),
-      dayNight: dayNight
+      hour: hours
     }});
   }
 
@@ -215,15 +213,26 @@ export default class HomeScreen extends React.Component {
               801: 'partiallyCloudy'
 
             }
+            var sunlightTimes = SunCalc.getTimes(new Date(), this.state.currentLatitude, this.state.currentLongitude);
             var ind = Math.floor(weather.id/100);
             var iconKey = iconReference[ind];
             if (weather.id === 800 || weather.id === 801) {
               iconKey = iconReference[weather.id];
             }
-            var description = weather.description;
+            var description = weather.main;
+            console.log(this.state.dateTime.hour)
+            console.log(sunlightTimes.sunrise.getHours())
+            console.log(sunlightTimes.sunset.getHours())
+            if (this.state.dateTime.hour >= sunlightTimes.sunrise.getHours() && this.state.dateTime.hour <= sunlightTimes.sunset.getHours()) {
+              var dayNight = 'day'
+            } else {
+              var dayNight = 'night'
+            }
+
             this.setState({
               weatherDescription: description.charAt(0).toUpperCase() + description.slice(1),
-              weatherIcon: weatherIcons[iconKey]
+              weatherIcon: weatherIcons[dayNight][iconKey],
+              loading: false
             });
           })
         })
@@ -257,31 +266,44 @@ export default class HomeScreen extends React.Component {
     //   });
   }
 
-  render() {
-    // console.log(this.state)
+  _renderIcon(name, isSelected) {
     return (
+      <FontAwesome
+        name={name}
+        size={80}
+        color={'#777'}
+      />
+    );
+  }
 
+  render() {
+    console.log(this.state.weatherIcon)
+
+    if (!this.state.loading) {
+      return (
         <ScrollView
           style={styles.container}
           contentContainerStyle={styles.contentContainer}>
-         
 
-          <View style={styles.homepageContentContainer}>
+          <View style={styles.timeContainer}>
             <Text style={styles.timeText}>
               {this.state.dateTime.time}
             </Text>
           </View>
 
-          <View style={styles.homepageContentContainer}>
-            <Text style={styles.commentText}>
-              {'WOULD LIKE TO PUT SOME SORT OF DAYLIGHT / SUNMOON SPECTRUM HERE'}
-            </Text>
-          </View>
-          <View style={styles.homepageContentContainer}>
-            <Text style={styles.dateText}>{moment().format('dddd, MMMM DD YYYY')}</Text>
+          <View style={styles.dateContainer}>
+
+            <View style={styles.innerDateContainer}>
+              <Text style={styles.dateText}> {moment().format('dddd')} </Text>
+            </View>
+
+            <View style={styles.innerDateContainer}>
+              <Text style={styles.dateText}>{moment().format('MMMM DD, YYYY')}</Text>
+            </View>
+
           </View>
 
-          <View style={styles.homepageContentContainer}>
+          <View style={styles.weatherContainer}>
             <Text style={styles.weatherText}>
               {this.state.weatherDescription}
             </Text>
@@ -292,46 +314,95 @@ export default class HomeScreen extends React.Component {
           <LocalNotification/>
           <PushNotification _goToReminder={this._goToReminder.bind(this)} showPushNotification={this.showPushNotification.bind(this)}/>
         </ScrollView>
-    );
+      ) 
+    } else {
+      return (
+
+        <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+          <View style={styles.timeContainer}>
+            <Text style={styles.timeText}>
+              {this.state.dateTime.time}
+            </Text>
+          </View>
+
+          <View style={styles.dateContainer}>
+            <Text style={styles.dateText}> {moment().format('dddd')} </Text>
+          </View>
+
+          <View style={styles.dateContainer}>
+            <Text style={styles.dateText}>{moment().format('MMMM DD, YYYY')}</Text>
+          </View>
+          <ActivityIndicator size='large' />
+        </ScrollView>
+      );
+    }
   }
 }
 
-//WOULD STILL LIKE TO RENDER DIFFERENT COLOR SCHEME BASED ON DAY VS. NIGHT
 
+//hide top bar in exponent?
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#2c3e50',
+    backgroundColor: '#5897B2',
   },
   contentContainer: {
-    paddingTop: 40,
+    paddingTop: 0,
     height: 300,
     flexDirection: 'column',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     flex: 1
   },
-  homepageContentContainer: {
+  dateContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#5897B2',
+    paddingTop: 10,
+    paddingBottom: 10
+  },
+  timeContainer : {
+    backgroundColor: '#FF8A9C',
     flexDirection: 'row',
     justifyContent: 'space-around',
-    alignItems: 'center'
+    alignItems: 'center',
+    paddingTop: 10,
+    paddingBottom: 10
+  },
+  weatherContainer : {
+    backgroundColor: '#FF8A9C',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: 10,
+    paddingBottom: 10
   },
   homepageContentIcon: {
-    height: 100,
-    width: 100
+    height: 120,
+    width: 120
   },
   weatherText: {
-    color: '#ECECEC',
-    fontSize: 24
+    color: '#FBFBF2',
+    fontSize: 70,
+    paddingRight: 40,
+    fontFamily: 'quicksand-regular'
   },
   timeText: {
-    fontSize: 60, 
-    color: '#ECECEC',
+    fontSize: 70, 
+    color: '#FBFBF2',
+    fontFamily: 'quicksand-regular'
   }, 
   dateText: {
-    color: '#ECECEC',
-    fontSize: 36,
+    color: '#FBFBF2',
+    fontSize: 50,
+    fontFamily: 'quicksand-regular'
   },
-  commentText: {
-    color: '#ECECEC',
-    fontSize: 12
-  }
+  activityIndicator: {
+    alignSelf: 'center',
+  },
+  innerDateContainer: {
+    alignItems: 'center',
+    backgroundColor: '#5897B2',
+    paddingTop: 5,
+  },
 });
