@@ -8,7 +8,7 @@ import FaceForm from './webFaceForm.js';
 import Loader from 'react-loader-advanced';
 
 import {observer} from 'mobx-react';
-import {reminderForm} from './webMobxStore';
+import {faceForm} from './webMobxStore';
 
 @observer
 class Face extends React.Component {
@@ -244,10 +244,12 @@ class Face extends React.Component {
       itemsToSplice: [],
       spliced: false
     });
+    faceForm.audioUrl = current.audio;
     this.displayForm(true, true);
   }
 
   getPhotos(e){
+    console.log('target', e.target)
     e.preventDefault();
     e.persist();
 
@@ -322,7 +324,7 @@ class Face extends React.Component {
   }
 
   submitForm(event) {
-    console.log('AUdio', audioFile)
+    console.log('audio', faceForm.audioFile)
     event.preventDefault();
     this.setState({
       loader: true
@@ -340,9 +342,7 @@ class Face extends React.Component {
     for (var key in this.state.updatePhotos) {
       formData.append('photo', this.state.updatePhotos[key]);
     }
-    for (var key in this.state.updateAudio) {
-      formData.append('audio', reminderForm.audioFile);
-    }
+    formData.append('audio', faceForm.audioFile);
     var that = this;
     $.ajax({
       url: '/web/identify',
@@ -368,6 +368,8 @@ class Face extends React.Component {
             });
           });
         }
+        faceForm.audioFile = null;
+        faceForm.audioUrl = null;
         that.editModeSwitch(false);
         that.displayForm(false, false);
         that.setState({
