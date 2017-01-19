@@ -84,6 +84,7 @@ Face.belongsTo(Caregiver);
 FacePhoto.belongsTo(Face);
 PatientPhoto.belongsTo(Patient);
 
+// Reminder.sync({force: true})
 sequelizeDb.sync();
 
 module.exports = {

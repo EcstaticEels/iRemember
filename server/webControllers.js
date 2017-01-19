@@ -37,8 +37,6 @@ const handleFaceForm = function(req, cb) {
       console.log(err);
     }
     const urlArray = [];
-    console.log('fields in face form', fields);
-    console.log('files in face form', files);
     if (Object.keys(files).length > 0) { //if there are files
       if (files.photo) { //if there are photo files
         files.photo.forEach(function(file) {
@@ -83,8 +81,6 @@ const handleFaceForm = function(req, cb) {
 const handleDetect = function(req, cb) {
   const detectForm = new multiparty.Form();
   detectForm.parse(req, function(err, fields, files) {
-    console.log('files in detect', files);
-    console.log('fields in detect', fields);
     if (err) {
       console.log(err);
     }
@@ -111,8 +107,6 @@ const handleSetupForm = function(req, cb) {
       console.log(err);
     }
     const patientPhotoArray = [];
-    console.log('files in setup', files);
-    console.log('fields in setup', fields);
     if (Object.keys(files).length > 0) {
       files.patientPhoto.forEach(function(file) {
         cloudinary.uploader.upload(file.path, function(result) { 
@@ -153,7 +147,6 @@ const handleReminderForm = function(req, cb) {
 module.exports = {
   addFace: (req, res) => {
     handleFaceForm(req, (urlArray, audioUrl, fields) => {
-      console.log(urlArray, audioUrl);
       let personGroupId = req.user.personGroupID;
       request.post({
         headers: microsoftHeaders,
@@ -212,9 +205,7 @@ module.exports = {
     });
   },
   updateFace: (req, res) => {
-    console.log('hit updateFace')
     handleFaceForm(req, (urlArray, audioUrl, fields) => {
-      console.log(urlArray);
       let faceId = fields.faceId[0];
       let personGroupId = req.user.personGroupID;
       db.Face.findOne({
@@ -308,7 +299,6 @@ module.exports = {
     });
   },
   deleteFace: (req, res) => {
-    console.log(req.body);
     let faceId = req.body.faceId;
     db.Face.findOne({
       where: {
@@ -445,12 +435,15 @@ module.exports = {
     });
   },
   addReminder: (req, res) => {
+    console.log(req.body.audio)
     handleReminderForm(req, (audioUrl, fields) => {
+      console.log('audio', audioUrl, 'fields', fields)
       db.Reminder.create({ 
         date: fields.date[0],
         type: fields.type[0],
         note: fields.note[0],
         recurring: fields.recurring[0], 
+        recurringDays: fields.recurringDays[0], 
         caregiverId: req.user.id,
         audio: audioUrl,
         title: fields.title[0],
@@ -468,7 +461,7 @@ module.exports = {
             }
         })
         .then(patient => {
-          console.log('patient', patient)
+          console.log('patient', patient.token)
           sdk.sendPushNotificationAsync({
             exponentPushToken: patient.token, // The push token for the app user you want to send the notification to 
             message: "New Reminder Added"
@@ -546,7 +539,6 @@ module.exports = {
           "name": fields.patientName[0]
         })
       }, (err, response, body) => {
-        console.log(body);
         let createdPerson = JSON.parse(body);
         db.Patient.create({
           name: fields.patientName[0],
