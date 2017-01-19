@@ -126,8 +126,8 @@ export default class FaceForm extends React.Component {
 
 
     return (
-    <div className="face-form">
-      <Grid>
+      <div className="face-form">
+        <h3>Add a New Face</h3>
         <form>
           <FormGroup validationState={this.getNameValidationState()}>
             <ControlLabel> {'First name'} </ControlLabel>
@@ -190,7 +190,7 @@ export default class FaceForm extends React.Component {
        </form> 
 
       <Button bsSize='small' className="btn-submit" onClick={this.props.submitForm}>Submit</Button>
-      </Grid>
+
     </div>
     );
   }

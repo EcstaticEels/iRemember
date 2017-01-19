@@ -172,17 +172,17 @@ export default class ReminderForm extends React.Component {
   render() {
     return (
       <div className="reminder-form">
-        <h3>New Reminder</h3>
+        <h3>Add a New Reminder</h3>
         <br/>
         <FormGroup>
           <DropdownButton 
             title={this.props.type.slice(0,1).toUpperCase() + this.props.type.slice(1)} 
             id="type" value={this.props.type} 
             onSelect={(event) => this.props.getType(event)} required>
-            <MenuItem eventKey="medication" value='medication'>Medication</MenuItem>
-            <MenuItem eventKey="appointment" value='appointment'>Appointment</MenuItem>
-            <MenuItem eventKey='chores'>Chores</MenuItem>
-            <MenuItem eventKey='others'>Others</MenuItem>
+            <MenuItem eventKey="Medication" value='Medication'>Medication</MenuItem>
+            <MenuItem eventKey="Appointment" value='Appointment'>Appointment</MenuItem>
+            <MenuItem eventKey='Chores' value="Chores">Chores</MenuItem>
+            <MenuItem eventKey='Others' value="Others">Others</MenuItem>
           </DropdownButton>
         </FormGroup>
 
