@@ -108,11 +108,8 @@ class Reminder extends React.Component {
   }
 
   handleDateChange(date) {
-    console.log('date', date)
     this.setState({
       date: date
-    }, () => {
-      console.log('date change', this.state.date)
     });
   }
 
@@ -162,19 +159,26 @@ class Reminder extends React.Component {
   }
 
   getInput(event) {
-    var key = event.target.getAttribute('class');
+    var key = event.target.getAttribute('id');
     var value = event.target.value;
     var obj = {};
     obj[key] = value;
+    console.log(obj, event, event.key)
     this.setState(obj);
   }
 
   getBoolean(event) {
-    var key = event.target.getAttribute('class');
+    var key = event.target.getAttribute('name');
     var value = event.target.value;
     var obj = {};
     obj[key] = JSON.parse(value);
     this.setState(obj);
+  }
+
+  getType(event) {
+    this.setState({
+      type: event
+    })
   }
 
   getSelectedDay(event){
@@ -366,6 +370,7 @@ class Reminder extends React.Component {
                   recurring={this.state.recurring}
                   selectedDays={this.state.selectedDays}
                   getSelectedDay={this.getSelectedDay.bind(this)} 
+                  getType={this.getType.bind(this)}
                   img={this.state.img} 
                   note={this.state.note}
                   audio={this.state.audio}

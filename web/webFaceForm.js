@@ -182,21 +182,21 @@ export default class FaceForm extends React.Component {
             {uploadedPhotos}
           </Row>
 
-          <FormGroup validationState={this.getAudioValidationState()} >
-            <ControlLabel> {'Upload Audio Message:'} </ControlLabel>
-            <AudioUpload getPhotos={this.props.getAudio} />
-          </FormGroup>
-
         <FormGroup validationState={this.getDescriptionValidationState()}>
           <ControlLabel> {'Description'} </ControlLabel>
           <FormControl type="text" value={this.props.description} id='description' placeholder='Description' onChange={this.props.getInput} />
         </FormGroup>
 
-        <Button bsSize='small' className="btn-submit" onClick={this.props.submitForm}>Submit</Button>
-
        </form> 
+
+      <Button bsSize='small' className="btn-submit" onClick={this.props.submitForm}>Submit</Button>
       </Grid>
     </div>
     );
   }
 }
+
+// <FormGroup validationState={this.getAudioValidationState()} >
+//             <ControlLabel> {'Upload Audio Message:'} </ControlLabel>
+//             <AudioUpload getPhotos={this.props.getAudio} />
+//           </FormGroup>
