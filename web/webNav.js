@@ -17,7 +17,7 @@ class WebNav extends React.Component {
   }
 
   render() {
-    var loggedInMsg = !!caregiverName.get() ? <NavItem>Logged in as: {caregiverName.get()}</NavItem> : null;
+    var loggedInMsg = !!caregiverName.get() ? <NavItem className="caregiver-name">Logged in as: {caregiverName.get()}</NavItem> : null;
     var signInBtn = !caregiverName.get() ?  <NavItem href="/signin">Sign In</NavItem> : null;
     var signOutBtn = !!caregiverName.get() ? <NavItem href="/signout">Sign Out</NavItem> : null;
     return (

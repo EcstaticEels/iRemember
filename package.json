@@ -59,6 +59,7 @@
     "exponent-server-sdk": "^1.0.5",
     "express": "^4.14.0",
     "express-session": "^1.14.2",
+    "hover.css": "^2.0.2",
     "jquery": "^3.1.1",
     "mobx": "^2.7.0",
     "mobx-react": "^4.0.4",
