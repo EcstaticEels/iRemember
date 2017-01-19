@@ -84,12 +84,12 @@ export default class RemindersScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 50,
-    backgroundColor: '#5897B2',
+    // paddingTop: 50,
+    backgroundColor: '#FA9581',
   },
     separator: {
     flex: 1,
-    height: 1,
+    height: 2,
     backgroundColor: '#777',
   },
   reminderImage: {
@@ -97,15 +97,26 @@ const styles = StyleSheet.create({
     width: 50
   },
   list: {
-    backgroundColor: '#5897B2',
+    backgroundColor: '#8bacbd',
   },
   reminderText: {
-    color: '#ECECEC',
+    color: '#FBFBF2',
     alignSelf: 'center',
+    // paddingLeft: 20,
+    fontSize: 30,
+    fontFamily: 'quicksand-regular',
+    textShadowColor: '#888',
+    textShadowOffset: {width: 0, height: 1},
+    textShadowRadius: 1,
     paddingLeft: 20,
-    fontSize: 40
+    paddingRight: 20
   },
   reminderView: {
     flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    height: 100,
+    paddingLeft: 10,
+    paddingRight: 10,
   },
 });

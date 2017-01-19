@@ -66,7 +66,7 @@ export default class ReminderInfoScreen extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#2c3e50',
+    backgroundColor: '#8bacbd',
   },
   contentContainer: {
     height: 300,
@@ -84,17 +84,27 @@ const styles = StyleSheet.create({
     width: 150,
   },
   reminderTitle: {
-    color: '#ECECEC',
+    color: '#FBFBF2',
     fontSize: 40,
-    textDecorationLine: 'underline',
-    textDecorationColor: '#ECECEC'
+    fontFamily: 'quicksand-regular',
+    textShadowColor: '#888',
+    textShadowOffset: {width: 0, height: 1},
+    textShadowRadius: 1,
   },
   reminderNote: {
-    color: '#ECECEC',
+    color: '#FBFBF2',
     fontSize: 20,
+    fontFamily: 'quicksand-regular',
+    textShadowColor: '#888',
+    textShadowOffset: {width: 0, height: 1},
+    textShadowRadius: 1,
   },
   reminderTimeDate: {
-    color: '#ECECEC',
-    fontSize: 30
+    color: '#FBFBF2',
+    fontSize: 30,
+    fontFamily: 'quicksand-regular',
+    textShadowColor: '#888',
+    textShadowOffset: {width: 0, height: 1},
+    textShadowRadius: 1,
   }
 });
