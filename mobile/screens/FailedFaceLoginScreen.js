@@ -10,28 +10,28 @@ import {
 
 import { Ionicons } from '@exponent/vector-icons';
 
-export default class NoFaceFoundScreen extends React.Component {
+export default class FailedLoginScreen extends React.Component {
   constructor (props) {
     super (props);
   }
 
   static route = {
     navigationBar: {
-      title: 'No Face Found'
+      title: 'Failed Login'
     },
   }
 
-   render () {
+  render () {
     return (
       <ScrollView 
         style={styles.container}
         contentContainerStyle={styles.contentContainer}>
           <View style={styles.iconContainer}>
-            <Ionicons name='ios-people' size={300} color='#FBFBF2' />
+            <Ionicons name='ios-lock-outline' size={300} color='#FBFBF2' />
           </View>
           <View style={styles.infoTextContainer}>
             <Text style={styles.infoText}> 
-              We found multiple faces in that photo. Please make sure that only one face is in frame and try again!
+              We couldn't identify you from that photo. Please try again!
             </Text>
           </View>
       </ScrollView>
@@ -40,7 +40,6 @@ export default class NoFaceFoundScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
-
   container: {
     backgroundColor: '#8bacbd',
   },
