@@ -12,7 +12,7 @@ import Loader from 'react-loader-advanced';
 import MSR from 'msr';
 
 import {observer} from 'mobx-react';
-import {reminderForm} from './webMobxStore';
+import {faceForm} from './webMobxStore';
 
 import Dropzone from 'react-dropzone'
 
@@ -81,9 +81,9 @@ export default class FaceForm extends React.Component {
   // }
 
   getAudio(event) {
-    reminderForm.audioFile = event.target.files[0];
+    faceForm.audioFile = event.target.files[0];
     var url = URL.createObjectURL(event.target.files[0]);
-    reminderForm.audioUrl = url;
+    faceForm.audioUrl = url;
     this.setState({
       recorded: true
     })
@@ -148,9 +148,9 @@ export default class FaceForm extends React.Component {
       // this.onDrop(blob);
 
       var file = new File([blob], tempFileName);
-      reminderForm.audioFile = file;
+      faceForm.audioFile = file;
       var blobUrl = URL.createObjectURL(blob);
-      reminderForm.audioUrl = blobUrl;
+      faceForm.audioUrl = blobUrl;
       this.setState({
         recorded: true
       })
@@ -241,15 +241,21 @@ export default class FaceForm extends React.Component {
     });
     var thumbnailPhotos = this.props.handleCloudinaryUrl(cloudinaryUrls, '134', '94', 'thumb');
     var uploadedPhotos = this.props.editMode ?       
-      (<label>Current Uploaded Photos:
+      (<label>
         <div>
-        {thumbnailPhotos.length > 0 ? thumbnailPhotos.map((val, ind) => <img src={val} key={ind} />) : null}
+        {thumbnailPhotos.length > 0 ? thumbnailPhotos.map((val, ind) => {
+          if(ind % 5 === 0) {
+            return <img src={val} key={ind} className="preview-img front" />
+          } else {
+            return <img src={val} key={ind} className="preview-img" />
+          }
+        }) : null}
         </div>
         <br />
       </label>) : null;
     var audioView = this.props.audio ? <ReactAudioPlayer src={this.props.audio} /> : <h4>No audio set for this face</h4>;
     var uploadedAudio = this.props.editMode ? 
-      (<label>Current Uploaded Audio Reminder:
+      (<label>Current Uploaded Audio face:
         <br />
         {audioView}
         <br />
@@ -260,7 +266,7 @@ export default class FaceForm extends React.Component {
 
     return (
     <div className="face-form">
-    <h3>New Reminder</h3>
+    <h3>New face</h3>
         <br/>
 
         <FormGroup validationState={this.validateName()}>
@@ -282,7 +288,9 @@ export default class FaceForm extends React.Component {
         <FormGroup validationState={this.validatePhotos()}>
           <ControlLabel> {'Image:'} </ControlLabel>
           <Dropzone ref="dropzone" onDrop={this.onDrop} encType="multipart/form-data" multiple>
-            <div>Try dropping some files here, or click to select files to upload.</div>
+            <Row className="show-grid">
+            {uploadedPhotos}
+            </Row>
           </Dropzone>
           <ImagesUpload getPhotos={this.props.getPhotos} numFiles={this.props.updatePhotos.length}/>
         </FormGroup>
@@ -291,8 +299,8 @@ export default class FaceForm extends React.Component {
         <FormGroup>{this.audioPart()}</FormGroup>
 
         <FormGroup>{
-          this.state.recorded || (this.props.editMode && reminderForm.audioUrl)? 
-          <audio src={reminderForm.audioUrl} controls></audio> : null
+          this.state.recorded || (this.props.editMode && faceForm.audioUrl)? 
+          <audio src={faceForm.audioUrl} controls></audio> : null
         }</FormGroup>
         
         <ReactModal 
@@ -332,10 +340,6 @@ export default class FaceForm extends React.Component {
           </div>
           <button onClick={this.handleCloseModal}>Close Modal</button>
         </ReactModal>
-
-        <Row className="show-grid">
-          {uploadedPhotos}
-        </Row>
 
       <Button type="submit" value="Submit" onClick={this.props.submitForm}>Submit</Button>
     </div>
