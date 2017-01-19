@@ -86,8 +86,8 @@ export default class PhotosScreen extends React.Component {
 
 uploadImageAsync(uri) {
   let date = Date.now();
-  // let patientId = this.props.route.params.state.id;
-  let patientId = 1;
+  let patientId = this.props.route.params.state.id;
+  // let patientId = 1;
 
   let apiUrl = `${baseUrl}/mobile/identify?date=${date}&patientId=${patientId}`;
 
@@ -111,8 +111,6 @@ uploadImageAsync(uri) {
       'Content-Type': 'multipart/form-data',
     }
   };
-
-  console.log('WE GOT HERE')
 
   return fetch(apiUrl, options);
 }

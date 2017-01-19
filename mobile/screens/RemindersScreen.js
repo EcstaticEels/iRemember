@@ -21,14 +21,17 @@ import Store from '../store.js';
 
 import Router from '../navigation/Router.js'
 
+import { Ionicons } from '@exponent/vector-icons';
+
 var dataSource = new ListView.DataSource({rowHasChanged: function (r1, r2) {
   return r1 !== r2
 }})
 
 var images = {
-  medication: 'https://s30.postimg.org/d0nn9k64d/pill_logo1.png',
-  appointment: 'https://s30.postimg.org/q3j9stwcd/appointment_logo3.jpg',
-  other: 'https://s30.postimg.org/i0l3hibr1/reminder_logo.png'
+  Medication: 'ios-medkit',
+  Appointment: 'ios-calendar',
+  Chores: 'ios-home',
+  Other: 'ios-alarm'
 }
 
 @observer
@@ -55,7 +58,7 @@ export default class RemindersScreen extends React.Component {
 
   _goToReminder = (reminder) => {
     Store.current = reminder;
-    this.props.navigator.push(Router.getRoute('reminder'))
+    this.props.navigator.push(Router.getRoute('reminder'), {reminder: reminder})
   }
 
   render() {
@@ -67,7 +70,7 @@ export default class RemindersScreen extends React.Component {
           renderRow={(reminder) =>
             <TouchableHighlight onPress={() => this._goToReminder(reminder)}>
               <View style={styles.reminderView}> 
-                <Image style={styles.reminderImage} source={{uri: images[reminder.type || 'other']}} /> 
+                <Ionicons style={styles.reminderImage} name={images[reminder.type]} size={50} color='#FBFBF2' /> 
                 <Text style={styles.reminderText}>{reminder.title}</Text>
               </View>
             </TouchableHighlight> 
@@ -94,7 +97,6 @@ const styles = StyleSheet.create({
   },
   reminderImage: {
     height: 50,
-    width: 50
   },
   list: {
     backgroundColor: '#8bacbd',

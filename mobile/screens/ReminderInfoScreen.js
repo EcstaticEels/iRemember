@@ -21,14 +21,16 @@ import Exponent, {
 import { observer } from 'mobx-react/native';
 import { current } from '../store.js';
 
-import Moment from 'moment'
+import Moment from 'moment';
+
+import { Ionicons } from '@exponent/vector-icons';
 
 var images = {
-  medication: 'https://s30.postimg.org/d0nn9k64d/pill_logo1.png',
-  appointment: 'https://s30.postimg.org/q3j9stwcd/appointment_logo3.jpg',
-  other: 'https://s30.postimg.org/i0l3hibr1/reminder_logo.png'
+  Medication: 'ios-medkit',
+  Appointment: 'ios-calendar',
+  Chores: 'ios-home',
+  Other: 'ios-alarm'
 }
-
 @observer
 export default class ReminderInfoScreen extends React.Component {
   static route = {
@@ -46,19 +48,13 @@ export default class ReminderInfoScreen extends React.Component {
       <ScrollView 
         style={styles.container}
         contentContainerStyle={styles.contentContainer}>
-        <View style={styles.reminderInfoContainer}>
           <Text style={styles.reminderTitle}>{current.title}</Text>
-        </View>
         {audio}
-        <View style={styles.reminderInfoContainer}>
           <Text style={styles.reminderNote}>{current.note}</Text>
-        </View>
-        <View style={styles.reminderInfoContainer}>
-          <Image style={styles.reminderImage} source={{uri: images[current.type || 'other']}} /> 
-        </View>
-        <View style={styles.reminderInfoContainer}>
+    
+         <Ionicons size={200} color='#FBFBF2' name={images[current.type]} /> 
+
           <Text style={styles.reminderTimeDate}>{Moment(current.date).calendar().toString()}</Text>
-        </View>
       </ScrollView>
     );
   }
@@ -72,7 +68,8 @@ const styles = StyleSheet.create({
     height: 300,
     flexDirection: 'column',
     justifyContent: 'space-around',
-    flex: 1
+    flex: 1,
+    alignItems: 'center'
   },
   reminderInfoContainer: {
     flexDirection: 'row',
