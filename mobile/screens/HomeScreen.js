@@ -329,8 +329,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#8bacbd',
     paddingTop: 10,
     paddingBottom: 10,
-    paddingLeft: 10,
-    paddingRight: 10
   },
   weatherContainer : {
     flex: 1,
@@ -340,8 +338,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 10,
     paddingBottom: 10,
-    paddingLeft: 10,
-    paddingRight: 10
   },
   homepageContentIcon: {
     height: 120,
@@ -357,7 +353,7 @@ const styles = StyleSheet.create({
     textShadowRadius: 1
   },
   timeText: {
-    fontSize: 100, 
+    fontSize: 90, 
     color: '#FBFBF2',
     fontFamily: 'quicksand-regular',
     textShadowColor: '#888',
@@ -366,7 +362,7 @@ const styles = StyleSheet.create({
   }, 
   dateText: {
     color: '#FBFBF2',
-    fontSize: 50,
+    fontSize: 40,
     fontFamily: 'quicksand-regular',
     textShadowColor: '#888',
     textShadowOffset: {width: 0, height: 1},
