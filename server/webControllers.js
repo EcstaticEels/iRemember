@@ -33,12 +33,11 @@ cloudinary.config({
 const handleFaceForm = function(req, cb) {
   const faceForm = new multiparty.Form();
   faceForm.parse(req, function(err, fields, files) {
+    console.log('fields', fields, 'files', files)
     if (err) {
       console.log(err);
     }
     const urlArray = [];
-    console.log('fields in face form', fields);
-    console.log('files in face form', files);
     if (Object.keys(files).length > 0) { //if there are files
       if (files.photo) { //if there are photo files
         files.photo.forEach(function(file) {
@@ -83,8 +82,6 @@ const handleFaceForm = function(req, cb) {
 const handleDetect = function(req, cb) {
   const detectForm = new multiparty.Form();
   detectForm.parse(req, function(err, fields, files) {
-    console.log('files in detect', files);
-    console.log('fields in detect', fields);
     if (err) {
       console.log(err);
     }
@@ -111,8 +108,6 @@ const handleSetupForm = function(req, cb) {
       console.log(err);
     }
     const patientPhotoArray = [];
-    console.log('files in setup', files);
-    console.log('fields in setup', fields);
     if (Object.keys(files).length > 0) {
       files.patientPhoto.forEach(function(file) {
         cloudinary.uploader.upload(file.path, function(result) { 
@@ -153,7 +148,6 @@ const handleReminderForm = function(req, cb) {
 module.exports = {
   addFace: (req, res) => {
     handleFaceForm(req, (urlArray, audioUrl, fields) => {
-      console.log(urlArray, audioUrl);
       let personGroupId = req.user.personGroupID;
       request.post({
         headers: microsoftHeaders,
@@ -212,9 +206,7 @@ module.exports = {
     });
   },
   updateFace: (req, res) => {
-    console.log('hit updateFace')
     handleFaceForm(req, (urlArray, audioUrl, fields) => {
-      console.log(urlArray);
       let faceId = fields.faceId[0];
       let personGroupId = req.user.personGroupID;
       db.Face.findOne({
@@ -308,7 +300,6 @@ module.exports = {
     });
   },
   deleteFace: (req, res) => {
-    console.log(req.body);
     let faceId = req.body.faceId;
     db.Face.findOne({
       where: {
@@ -427,6 +418,7 @@ module.exports = {
               .then(result => {
                 resultArr[index].push(result);
                 count++;
+                console.log('increased count in the true block')
                 if (count === detectArr.length) {
                   res.status(200).send(JSON.stringify(resultArr));
                 }
@@ -436,6 +428,7 @@ module.exports = {
             resultArr[index] = [false];
           }
           count++;
+          console.log('increased count in the outer block')
           if (count === detectArr.length) {
             res.status(200).send(JSON.stringify(resultArr));
           }
@@ -445,12 +438,15 @@ module.exports = {
     });
   },
   addReminder: (req, res) => {
+    console.log(req.body.audio)
     handleReminderForm(req, (audioUrl, fields) => {
+      console.log('audio', audioUrl, 'fields', fields)
       db.Reminder.create({ 
         date: fields.date[0],
         type: fields.type[0],
         note: fields.note[0],
         recurring: fields.recurring[0], 
+        recurringDays: fields.recurringDays[0], 
         caregiverId: req.user.id,
         audio: audioUrl,
         title: fields.title[0],
@@ -468,11 +464,13 @@ module.exports = {
             }
         })
         .then(patient => {
-          console.log('patient', patient)
-          sdk.sendPushNotificationAsync({
-            exponentPushToken: patient.token, // The push token for the app user you want to send the notification to 
-            message: "New Reminder Added"
-          });
+          console.log('patient', patient.token)
+          if (patient.token !== null) {
+            sdk.sendPushNotificationAsync({
+              exponentPushToken: patient.token, // The push token for the app user you want to send the notification to 
+              message: "New Reminder Added"
+            });
+          }
         })
       })
     });
@@ -501,8 +499,8 @@ module.exports = {
         recurring: fields.recurring[0],
         recurringDays: fields.recurringDays[0]
       }
-      if(audioUrl || fields.audio) {
-        updateObj.audio = fields.audio[0]
+      if (audioUrl) {
+        updateObj.audio = audioUrl
       }
       db.Reminder.update(updateObj, {
         where: {
@@ -516,10 +514,12 @@ module.exports = {
           }
         })
         .then(patient => {
-          sdk.sendPushNotificationAsync({
-            exponentPushToken: patient.token, // The push token for the app user you want to send the notification to 
-            message: "New Reminder Added"
-          });
+          if (patient.token !== null) {
+            sdk.sendPushNotificationAsync({
+              exponentPushToken: patient.token, // The push token for the app user you want to send the notification to 
+              message: "New Reminder Added"
+            });
+          }
         })
       })
       .then(updatedReminder => {
@@ -546,7 +546,6 @@ module.exports = {
           "name": fields.patientName[0]
         })
       }, (err, response, body) => {
-        console.log(body);
         let createdPerson = JSON.parse(body);
         db.Patient.create({
           name: fields.patientName[0],

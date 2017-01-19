@@ -8,7 +8,7 @@ import FaceForm from './webFaceForm.js';
 import Loader from 'react-loader-advanced';
 
 import {observer} from 'mobx-react';
-import {reminderForm} from './webMobxStore';
+import {faceForm} from './webMobxStore';
 
 @observer
 class Face extends React.Component {
@@ -244,10 +244,12 @@ class Face extends React.Component {
       itemsToSplice: [],
       spliced: false
     });
+    faceForm.audioUrl = current.audio;
     this.displayForm(true, true);
   }
 
   getPhotos(e){
+    console.log('target', e.target)
     e.preventDefault();
     e.persist();
 
@@ -322,7 +324,7 @@ class Face extends React.Component {
   }
 
   submitForm(event) {
-    console.log('AUdio', audioFile)
+    console.log('audio', faceForm.audioFile)
     event.preventDefault();
     this.setState({
       loader: true
@@ -340,9 +342,7 @@ class Face extends React.Component {
     for (var key in this.state.updatePhotos) {
       formData.append('photo', this.state.updatePhotos[key]);
     }
-    for (var key in this.state.updateAudio) {
-      formData.append('audio', reminderForm.audioFile);
-    }
+    formData.append('audio', faceForm.audioFile);
     var that = this;
     $.ajax({
       url: '/web/identify',
@@ -368,6 +368,8 @@ class Face extends React.Component {
             });
           });
         }
+        faceForm.audioFile = null;
+        faceForm.audioUrl = null;
         that.editModeSwitch(false);
         that.displayForm(false, false);
         that.setState({
@@ -381,63 +383,76 @@ class Face extends React.Component {
   }
 
 
+        // <div>
+        // {
+        //   this.state.showForm ? null :  
+        //     <Button bsSize="large" className="btn-addNew" bsStyle="primary" onClick={ () => this.displayForm.call(this, true, false)}>ADD A NEW FACE</Button>
+        // }
+        // </div>
+
   render() {
     const spinner = <span><img src={'/default.svg'} /></span>
     return (
-      <Row className="show-grid">
-        <Col xs={6} md={5}>
-          <div className="face">
-            <div>
-            {
-              this.state.showForm ? null :  
-                <Button bsSize="large" className="btn-addNew" bsStyle="primary" onClick={ () => this.displayForm.call(this, true, false)}>Add New Face</Button>
-            }
+      <div>
+        <Row className="show-grid">
+          <Col xs={6} md={4}>
+            <div className="face">
+              <div>
+              {
+                this.state.showForm ? null :  
+
+                  <div className="list-group-item new-face-btn hvr-trim" onClick={ () => this.displayForm.call(this, true, false)}>
+                    <h2>Add a New Face</h2>
+                  </div>
+              }
+              </div>
+              <FaceList 
+                showForm={this.state.showForm}
+                list={this.state.list}
+                getInput={this.getInput.bind(this)}
+                updateCurrent={this.updateCurrent.bind(this)}
+                handleCloudinaryUrl={this.handleCloudinaryUrl.bind(this)}
+              />
             </div>
-            <FaceList 
-              list={this.state.list}
-              getInput={this.getInput.bind(this)}
-              updateCurrent={this.updateCurrent.bind(this)}
-              handleCloudinaryUrl={this.handleCloudinaryUrl.bind(this)}
-            />
-          </div>
-        </Col>
-        <Col xs={12} md={7}>
-          <div>
-          <Loader show={this.state.loader} message={spinner} foregroundStyle={{color: 'white'}} backgroundStyle={{backgroundColor: 'white'}} className="spinner">
-            {
-              this.state.showForm ? 
-                <FaceForm 
-                  getInput={this.getInput.bind(this)} 
-                  getPhotos={this.getPhotos.bind(this)}
-                  submitForm={this.submitForm.bind(this)}
-                  editMode={this.state.editMode}
-                  getAudio={this.getAudio.bind(this)}
-                  audio={this.state.audio}
-                  subjectName={this.state.subjectName}
-                  photos={this.state.photos} 
-                  description={this.state.description}
-                  updatePhotos={this.state.updatePhotos}
-                  imagePreviewUrls={this.state.imagePreviewUrls}
-                  handleCloudinaryUrl={this.handleCloudinaryUrl.bind(this)}
-                  fieldBeingEdited={this.state.fieldBeingEdited}
-                  removePhotos={this.removePhotos.bind(this)}
-                  detectFaces={this.detectFaces.bind(this)}
-                  spliced={this.state.spliced}
-                  itemsToSplice={this.state.itemsToSplice}
-                  detectArr={this.state.detectArr}
-                  errorText={this.state.errorText}
-                /> 
-                : <FaceCurrent
-                    current={this.state.current}
-                    edit={this.edit.bind(this)} 
+          </Col>
+          <Col xs={12} md={8}>
+            <div>
+            <Loader show={this.state.loader} message={spinner} foregroundStyle={{color: 'white'}} backgroundStyle={{backgroundColor: 'white'}} className="spinner">
+              {
+                this.state.showForm ? 
+                  <FaceForm 
+                    getInput={this.getInput.bind(this)} 
+                    getPhotos={this.getPhotos.bind(this)}
+                    submitForm={this.submitForm.bind(this)}
+                    editMode={this.state.editMode}
+                    getAudio={this.getAudio.bind(this)}
+                    audio={this.state.audio}
+                    subjectName={this.state.subjectName}
+                    photos={this.state.photos} 
+                    description={this.state.description}
+                    updatePhotos={this.state.updatePhotos}
+                    imagePreviewUrls={this.state.imagePreviewUrls}
                     handleCloudinaryUrl={this.handleCloudinaryUrl.bind(this)}
-                    delete={this.delete.bind(this)}
-                  />
-            }
-          </Loader>
-          </div>
-        </Col>
-      </Row>
+                    fieldBeingEdited={this.state.fieldBeingEdited}
+                    removePhotos={this.removePhotos.bind(this)}
+                    detectFaces={this.detectFaces.bind(this)}
+                    spliced={this.state.spliced}
+                    itemsToSplice={this.state.itemsToSplice}
+                    detectArr={this.state.detectArr}
+                    errorText={this.state.errorText}
+                  /> 
+                  : <FaceCurrent
+                      current={this.state.current}
+                      edit={this.edit.bind(this)} 
+                      handleCloudinaryUrl={this.handleCloudinaryUrl.bind(this)}
+                      delete={this.delete.bind(this)}
+                    />
+              }
+            </Loader>
+            </div>
+          </Col>
+        </Row>
+      </div>
     )
   }
 }
