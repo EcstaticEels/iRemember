@@ -2,6 +2,24 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 300;
 }
 
+html, body, #app, .app-grid, .app-body, .app-window, .app-body, .app-grid-secondary {
+  height: 100%;
+}
+
+.app-window {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: -82px;
+}
+
+/*
+.app-body {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}*/
+
 /***************************************/
 /**************General******************/
 /***************************************/
@@ -29,12 +47,13 @@ body {
 .navbar {
   background-color: rgba(139, 172, 189, 0.7);
   min-height: 60px;
-  border: 1px solid white;
+  border: 1px solid #D0D0D0;
 }
 
 .navbar-brand {
   font-size: 35px;
   font-family: 'Lato', sans-serif;
+  text-shadow: 0 1px 1px #888;
 }
 
 .navbar-default .navbar-brand {
@@ -63,13 +82,16 @@ body {
   border-bottom-color: transparent;
 }
 
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
+  border: 1px solid #fff;
+  border-bottom-color: transparent;
+}
 .nav-tabs>li>a {
   border: none;
   border-radius: 5px 5px 0 0;
 }
 
 .caregiver-name {
-  font-family: 'Lato', sans-serif;
   font-size: 17px;
 }
 /******************************************/
@@ -206,12 +228,20 @@ body {
 
 .reminder-btns,
 .face-btns {
-  margin-bottom: 20px;
-  margin-top: 10px;
+  margin-bottom: 35px;
+  margin-top: 25px;
 }
 
-.reminder-image {
-  float: right;
+.btn-edit, 
+.btn-delete {
+  background-color: #e1eff2;
+  margin-right: 10px;
+}
+
+.btn {
+  border-radius: 3px;
+  padding: 7px 15px;
+  border: none;
 }
 
 /******************************************/
@@ -248,6 +278,58 @@ body {
   background: white;
   z-index: 9999;
 }
+
+/************************************************/
+/****************Forms***************************/
+/************************************************/
+.form-control {
+  border-radius: 0px;
+}
+
+.input-group-addon {
+  border-radius: 0px;
+}
+
+.record-button {
+  margin-left: 15px;
+}
+
+.face-form,
+.reminder-form {
+  padding-left: 42px;
+  padding-right: 42px;
+  padding-top: 25px;
+}
+
+.face-form-heading,
+.reminder-form-heading {
+  text-align: center;
+  font-size: 40px;
+}
+
+.face-form-submit-btn,
+.reminder-form-submit-btn,
+.reminder-type-btn {
+  background-color: #e1eff2;
+}
+.face-form-submit-btn,
+.reminder-form-submit-btn {
+  margin-bottom: 30px;
+}
+
+.reminder-form-btns {
+  margin-bottom: 25px;
+}
+
+.record-button, 
+.upload-button {
+  border: 1px solid #D0D0D0;
+}
+
+.record-button {
+  margin-right: 15px;
+}
+
 /************************************************/
 /****************Sign In*************************/
 /************************************************/
@@ -255,10 +337,6 @@ body {
 .sign-in-container {
     display: flex;
     justify-content: center;
-}
-
-.sign-in-header {
-
 }
 
 .sign-in-box {
@@ -300,25 +378,24 @@ body {
     content: "\f04c";
 }
 
-.pause-button {
+/*.pause-button {
   margin-left: 40px;
   margin-top: 20px;
   margin-bottom: 19px;
   margin-right: 15px;
-}
+}*/
 
-.record-button {
-  margin-left: 40px;
+/*.record-button {
   margin-top: 20px;
   margin-bottom: 19px;
   margin-right: 15px; 
-}
+}*/
 
-.audio-upload {
+/*.audio-upload {
   margin-top: 1px;
   margin-left: 3px;
   margin-bottom: 19px;
-}
+}*/
 
 .recorded-audio-box {
   margin-left: 80px;

@@ -266,7 +266,7 @@ export default class FaceForm extends React.Component {
 
     return (
     <div className="face-form">
-    <h3>New face</h3>
+    <h3 className="face-form-heading">Add a New Face</h3>
         <br/>
 
         <FormGroup validationState={this.validateName()}>
@@ -342,7 +342,7 @@ export default class FaceForm extends React.Component {
           <button onClick={this.handleCloseModal}>Close Modal</button>
         </ReactModal>
 
-      <Button bsSize='small' className="btn-submit" onClick={this.props.submitForm}>Submit</Button>
+      <Button bsSize='small' className="face-form-submit-btn" onClick={this.props.submitForm}>Submit</Button>
 
     </div>
     );
