@@ -21,14 +21,17 @@ import Store from '../store.js';
 
 import Router from '../navigation/Router.js'
 
+import { Ionicons } from '@exponent/vector-icons';
+
 var dataSource = new ListView.DataSource({rowHasChanged: function (r1, r2) {
   return r1 !== r2
 }})
 
 var images = {
-  medication: 'https://s30.postimg.org/d0nn9k64d/pill_logo1.png',
-  appointment: 'https://s30.postimg.org/q3j9stwcd/appointment_logo3.jpg',
-  other: 'https://s30.postimg.org/i0l3hibr1/reminder_logo.png'
+  Medication: 'ios-medkit',
+  Appointment: 'ios-calendar',
+  Chores: 'ios-home',
+  Other: 'ios-alarm'
 }
 
 @observer
@@ -55,24 +58,26 @@ export default class RemindersScreen extends React.Component {
 
   _goToReminder = (reminder) => {
     Store.current = reminder;
-    this.props.navigator.push(Router.getRoute('reminder'))
+    this.props.navigator.push(Router.getRoute('reminder'), {reminder: reminder})
   }
 
   render() {
     return (
+      <View style={styles.container}>
         <ListView
           style={styles.list}
           dataSource={this.state.dataSource}
           renderRow={(reminder) =>
             <TouchableHighlight onPress={() => this._goToReminder(reminder)}>
               <View style={styles.reminderView}> 
-                <Image style={styles.reminderImage} source={{uri: images[reminder.type || 'other']}} /> 
+                <Ionicons style={styles.reminderImage} name={images[reminder.type]} size={50} color='#FBFBF2' /> 
                 <Text style={styles.reminderText}>{reminder.title}</Text>
               </View>
             </TouchableHighlight> 
           }
           renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.separator} />}
         />
+      </View>
     );
   }
 }
@@ -82,27 +87,38 @@ export default class RemindersScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 15,
+    // paddingTop: 50,
+    backgroundColor: '#FA9581',
   },
     separator: {
     flex: 1,
-    height: StyleSheet.hairlineWidth,
-    backgroundColor: '#8E8E8E',
+    height: 2,
+    backgroundColor: '#777',
   },
   reminderImage: {
     height: 50,
-    width: 50
   },
   list: {
-    backgroundColor: '#2c3e50'
+    backgroundColor: '#8bacbd',
   },
   reminderText: {
-    color: '#ECECEC',
+    color: '#FBFBF2',
     alignSelf: 'center',
+    // paddingLeft: 20,
+    fontSize: 30,
+    fontFamily: 'quicksand-regular',
+    textShadowColor: '#888',
+    textShadowOffset: {width: 0, height: 1},
+    textShadowRadius: 1,
     paddingLeft: 20,
-    fontSize: 40
+    paddingRight: 20
   },
   reminderView: {
     flexDirection: 'row',
-  }
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    height: 100,
+    paddingLeft: 10,
+    paddingRight: 10,
+  },
 });
