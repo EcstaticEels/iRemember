@@ -255,7 +255,7 @@ export default class FaceForm extends React.Component {
       </label>) : null;
     var audioView = this.props.audio ? <ReactAudioPlayer src={this.props.audio} /> : <h4>No audio set for this face</h4>;
     var uploadedAudio = this.props.editMode ? 
-      (<label>Current Uploaded Audio face:
+      (<label>Current Uploaded Audio Face:
         <br />
         {audioView}
         <br />
@@ -266,7 +266,7 @@ export default class FaceForm extends React.Component {
 
     return (
     <div className="face-form">
-    <h3>New face</h3>
+    <h3>New Face</h3>
         <br/>
 
         <FormGroup validationState={this.validateName()}>
@@ -285,12 +285,14 @@ export default class FaceForm extends React.Component {
             onChange={this.props.getInput} />
         </FormGroup> 
 
+        <FormGroup>{
+          this.props.editMode ? <Row className="show-grid"><ControlLabel>{'Image:'}</ControlLabel>{uploadedPhotos}</Row> : null
+        }</FormGroup>
+
         <FormGroup validationState={this.validatePhotos()}>
           <ControlLabel> {'Image:'} </ControlLabel>
-          <Dropzone ref="dropzone" onDrop={this.onDrop} encType="multipart/form-data" multiple>
-            <Row className="show-grid">
-            {uploadedPhotos}
-            </Row>
+          <Dropzone className='dropzone' ref="dropzone" onDrop={this.onDrop} encType="multipart/form-data" multiple>
+            <div>Dropzone</div>
           </Dropzone>
           <ImagesUpload getPhotos={this.props.getPhotos} numFiles={this.props.updatePhotos.length}/>
         </FormGroup>
