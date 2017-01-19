@@ -40,8 +40,13 @@ body {
 .navbar-default .navbar-brand {
   color: white;
 }
+
 .tabNav {
   margin-bottom: 30px;
+}
+
+.nav-tabs {
+  border-bottom: 1px solid #fff;
 }
 
 .navbar-default .navbar-nav>li>a {
@@ -54,6 +59,8 @@ body {
 .nav-tabs>li.active>a {
   background-image: url('http://api.thumbr.it/whitenoise-361x370.png?background=eaeaeaff&noise=626262&density=5&opacity=7');
   font-size: 17px;
+  border: 1px solid #fff;
+  border-bottom-color: transparent;
 }
 
 .nav-tabs>li>a {
@@ -118,6 +125,15 @@ body {
   align-items: center;
 }
 
+.reminder-entry {
+  display: flex;
+  align-items: center;
+}
+
+.reminder-list-time {
+  font-weight: bold;
+}
+
 .hvr-trim {
   vertical-align: middle;
   -webkit-transform: perspective(1px) translateZ(0);
@@ -146,12 +162,18 @@ body {
 /******************************************/
 /****************Face-Current**************/
 /******************************************/
-
+.face-form,
+.reminder-form,
 .reminder-current,
 .face-current {
   padding: 10px 20px;
   background-color: white;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.15), 0 6px 20px 0 rgba(0, 0, 0, 0.14);
+}
+
+.reminder-current-header,
+.face-current-header {
+  font-weight: 500;
 }
 
 .reminder-current-heading,
@@ -226,7 +248,27 @@ body {
   background: white;
   z-index: 9999;
 }
+/************************************************/
+/****************Sign In*************************/
+/************************************************/
 
+.sign-in-container {
+    display: flex;
+    justify-content: center;
+}
+
+.sign-in-header {
+
+}
+
+.sign-in-box {
+      background-color: white;
+    padding: 100px 150px;
+}
+
+/************************************************/
+/****************Other***************************/
+/************************************************/
 
 .Blink {
     animation: blinker 1.5s cubic-bezier(.5, 0, 1, 1) infinite alternate;  

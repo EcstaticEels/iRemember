@@ -405,6 +405,7 @@ class Face extends React.Component {
               }
               </div>
               <FaceList 
+                showForm={this.state.showForm}
                 list={this.state.list}
                 getInput={this.getInput.bind(this)}
                 updateCurrent={this.updateCurrent.bind(this)}

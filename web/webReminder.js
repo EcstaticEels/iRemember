@@ -44,11 +44,11 @@ class Reminder extends React.Component {
   getReminders(func) {
     var that = this
     var mapIcons = (type) => {
-      if (type === 'medication') {
+      if (type === 'Medication') {
         return '/pill_logo1.jpg';
-      } else if (type === 'appointment') {
+      } else if (type === 'Appointment') {
         return '/appointment_logo3.jpg';
-      } else if (type === 'chores') {
+      } else if (type === 'Chores') {
         return '/chores.jpg'; 
       } else {
         return '/reminder_logo.jpg';
@@ -360,6 +360,7 @@ class Reminder extends React.Component {
                 list={this.state.list} 
                 getInput={this.getInput.bind(this)} 
                 updateCurrent={this.updateCurrent.bind(this)}
+                showForm={this.state.showForm}
               />
             </div>
           </Col>
