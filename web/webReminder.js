@@ -108,11 +108,8 @@ class Reminder extends React.Component {
   }
 
   handleDateChange(date) {
-    console.log('date', date)
     this.setState({
       date: date
-    }, () => {
-      console.log('date change', this.state.date)
     });
   }
 
@@ -170,7 +167,7 @@ class Reminder extends React.Component {
   }
 
   getBoolean(event) {
-    var key = event.target.getAttribute('class');
+    var key = event.target.getAttribute('name');
     var value = event.target.value;
     var obj = {};
     obj[key] = JSON.parse(value);
