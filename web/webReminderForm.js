@@ -1,5 +1,8 @@
 import React from 'react';
-import {Button, Row, Col, Grid} from 'react-bootstrap';
+import {Button, Row, Col, Grid, FormControl, FormGroup, InputGroup, ControlLabel, DropdownButton, MenuItem, Radio, Checkbox} from 'react-bootstrap';
+
+// Be sure to include styles at some point, probably during your bootstrapping
+// import 'react-select/dist/react-select.css';
 import AudioUpload from './webAudioUpload.js';
 import Moment from 'moment';
 // import { TransitionView, Calendar, DateField, DatePicker } from 'react-date-picker';
@@ -15,8 +18,19 @@ export default class ReminderForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      recording: false,
       recorded: false,
+      upload: false
     }
+  }
+
+  getAudio(event) {
+    reminderForm.audioFile = event.target.files[0];
+    var url = URL.createObjectURL(event.target.files[0]);
+    reminderForm.audioUrl = url;
+    this.setState({
+      recorded: true
+    })
   }
 
   captureUserMedia(mediaConstraints, successCallback, errorCallback) {
@@ -31,13 +45,18 @@ export default class ReminderForm extends React.Component {
     // $('#start-recording').disabled = true;
     // audiosContainer = document.getElementById('audios-container');
     // console.log('startRecording()');
-    console.log('startRecording THIS:', this);
     var that = this;
+    this.setState({
+      recording: true
+    })
     this.captureUserMedia(this.mediaConstraints, this.onMediaSuccess.bind(that), this.onMediaError);
   };
 
   stopRecording() {
     var mediaRecorder = window.mediaRecorder;
+    this.setState({
+      recording: false
+    })
     // $('#stop-recording').disabled = true;
     mediaRecorder.stop();
     mediaRecorder.stream.stop();
@@ -91,6 +110,50 @@ export default class ReminderForm extends React.Component {
     console.error('media error', e);
   }
 
+  validateTitle() {
+    return this.props.title.length > 0 ? 'success': 'error';
+  }
+
+  validateDate() {
+    return typeof this.props.date === 'object' ? 'success': 'error'
+  }
+
+  showUpload() {
+    this.setState({
+      upload: !this.state.upload
+    })
+  }
+
+  audioPart() {
+    if(this.state.recording) {
+      return(
+        <div><Button className="pause-button" onClick={this.stopRecording.bind(this)}>
+          <i className="fa fa-pause"></i>STOP</Button>
+          <i className="fa fa-circle text-danger Blink"></i>LIVE</div>)
+    } else if(this.state.upload) {
+      return (
+        <div className="audio-uploading">
+        <Row>
+          <Button className="record-button" onClick={this.startRecording.bind(this)}>
+            <i className="fa fa-circle text-danger"></i> Record</Button>
+          <Button className="upload-button" onClick={this.showUpload.bind(this)}>Upload</Button>
+        </Row>
+        <div className="recorded-audio-box">
+          <AudioUpload getAudio={this.getAudio.bind(this)}/></div>
+        </div>
+      )
+    } else {
+      return (<Row>
+        <Button className="record-button" onClick={this.startRecording.bind(this)}>
+          <i className="fa fa-circle text-danger"></i> Record</Button>
+        <Button className="upload-button" onClick={this.showUpload.bind(this)}>Upload</Button>
+      </Row>)
+    }
+  }
+
+
+
+
   // bytesToSize(bytes) {
   //   var k = 1000;
   //   var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
@@ -109,90 +172,117 @@ export default class ReminderForm extends React.Component {
   render() {
     return (
       <div className="reminder-form">
-        <h4>New Reminder</h4>
-        <form>
-          <label>
-            Time:
-            <Datetime className='date' value={this.props.date}
-            onChange={(dateMoment) => {
-              this.props.handleDateChange(dateMoment);
+        <h3>Add a New Reminder</h3>
+        <br/>
+        <FormGroup>
+          <DropdownButton 
+            title={this.props.type.slice(0,1).toUpperCase() + this.props.type.slice(1)} 
+            id="type" value={this.props.type} 
+            onSelect={(event) => this.props.getType(event)} required>
+            <MenuItem eventKey="Medication" value='Medication'>Medication</MenuItem>
+            <MenuItem eventKey="Appointment" value='Appointment'>Appointment</MenuItem>
+            <MenuItem eventKey='Chores' value="Chores">Chores</MenuItem>
+            <MenuItem eventKey='Others' value="Others">Others</MenuItem>
+          </DropdownButton>
+        </FormGroup>
+
+        <FormGroup validationState={this.validateTitle()}>
+          <ControlLabel> {'Title'} </ControlLabel>
+          <FormControl 
+            type="text" value={this.props.title} 
+            id="title" placeholder="Title" 
+            onChange={this.props.getInput} />
+        </FormGroup>
+
+        <FormGroup>
+          <ControlLabel> {'Notes'} </ControlLabel>
+          <FormControl
+            type="text" value={this.props.note} 
+            id="note" placeholder="Notes" 
+            onChange={this.props.getInput} />
+        </FormGroup>
+
+        <FormGroup validationState={this.validateDate()}>
+          <ControlLabel> {'Date & Time'} </ControlLabel>
+          <InputGroup>
+            <Datetime 
+              id='date' 
+              value={this.props.date}
+              onChange={(dateMoment) => {
+                this.props.handleDateChange(dateMoment);
             }}/>
-          </label>
-          <br/>
-          <label>
-            Type:
-            <select className="type" value={this.props.type} onChange={this.props.getInput} required>
-              <option value='medication'>Medication</option>
-              <option value='appointment'>Appointment</option>
-              <option value='chores'>Chores</option>
-              <option value='others'>Others</option>
-            </select>
-          </label>
-          <br/>
-          <label>
-            Recurring:
-            <label>
-              <input 
+            <InputGroup.Addon>
+              <Radio
                 name="recurring"
+                id="recurring"
                 className="recurring"
                 type="radio"
                 value={false}
                 onChange={this.props.getBoolean}
-                checked={this.props.recurring? false: true}/>
-              Once
-            </label>
-            <label>
-              <input 
+                checked={this.props.recurring? false: true} inline>Once</Radio>
+              <Radio
                 name="recurring"
+                id="recurring"
                 className="recurring"
                 type="radio"
                 value={true}
                 onChange={this.props.getBoolean}
-                checked={this.props.recurring? true: false}/>
-              Recurring
-            </label>
-          </label>
-           <div>{
-            this.props.recurring? 
-            <label className="recurringDays">
-              Select Days:
-              <input type="checkbox" id="Monday" value="Monday" checked={this.props.selectedDays.Monday} onClick={this.props.getSelectedDay}/><label for="Monday">Monday</label>
-              <input type="checkbox" id="Tuesday" value="Tuesday" checked={this.props.selectedDays.Tuesday} onClick={this.props.getSelectedDay}/><label for="Tuesday">Tuesday</label>
-              <input type="checkbox" id="Wednesday" value="Wednesday" checked={this.props.selectedDays.Wednesday} onClick={this.props.getSelectedDay}/><label for="Wednesday">Wednesday</label>
-              <input type="checkbox" id="Thursday" value="Thursday" checked={this.props.selectedDays.Thursday} onClick={this.props.getSelectedDay}/><label for="Thursday">Thursday</label>
-              <input type="checkbox" id="Friday" value="Friday" checked={this.props.selectedDays.Friday} onClick={this.props.getSelectedDay}/><label for="Friday">Friday</label>
-              <input type="checkbox" id="Saturday" value="Saturday" checked={this.props.selectedDays.Saturday} onClick={this.props.getSelectedDay}/><label for="Saturday">Saturday</label>
-              <input type="checkbox" id="Sunday" value="Sunday" checked={this.props.selectedDays.Sunday} onClick={this.props.getSelectedDay}/><label for="Sunday">Sunday</label>
-            </label> : null
-          }</div>
-          <br/>
-          <label>Upload Audio Message:
-          </label>
-          <br />
-          <label>Title:
-            <input type="text" value={this.props.title} className="title" placeholder="Title" onChange={this.props.getInput} />
-          </label>
-          <br />
-          <label>Notes:
-            <input type="text" value={this.props.note} className="note" placeholder="Notes" onChange={this.props.getInput}/>
-          </label>
-          <br />
-          <input type="submit" value="Submit" onClick={this.props.submitForm}/>
-        </form>
-        <br/>
-          <div className="record-stop-button">
-            <button className="general-button" onClick={this.startRecording.bind(this)}>Record</button>
-            <button className="general-button" onClick={this.stopRecording.bind(this)}>STOP</button>
-          </div>
-          <div className="recorded-audio-box">
-            <AudioUpload getAudio={(event) => {
-              reminderForm.audioFile = event.target.files;
-            }}/> 
-            <div id="record-audio">
-              {this.state.recorded || this.props.editMode? <audio src={reminderForm.audioUrl} controls></audio> : null}
-            </div>
-          </div>
+                checked={this.props.recurring? true: false} inline>Recurring</Radio>
+            </InputGroup.Addon>
+          </InputGroup>
+        </FormGroup>
+           
+         <FormGroup>{
+          this.props.recurring? 
+          <FormGroup className="recurringDays">
+            <Checkbox 
+              type="checkbox" id="Monday" value="Monday" 
+              checked={this.props.selectedDays.Monday} 
+              onClick={this.props.getSelectedDay} inline> Monday </Checkbox>
+            <Checkbox 
+              type="checkbox" id="Tuesday" value="Tuesday" 
+              checked={this.props.selectedDays.Tuesday} 
+              onClick={this.props.getSelectedDay} inline> Tuesday </Checkbox>
+            <Checkbox 
+              type="checkbox" id="Wednesday" value="Wednesday" 
+              checked={this.props.selectedDays.Wednesday} 
+              onClick={this.props.getSelectedDay} inline> Wednesday </Checkbox>
+            <Checkbox 
+              type="checkbox" id="Thursday" value="Thursday" 
+              checked={this.props.selectedDays.Thursday} 
+              onClick={this.props.getSelectedDay} inline> Thursday </Checkbox>
+            <Checkbox 
+              type="checkbox" id="Friday" value="Friday" 
+              checked={this.props.selectedDays.Friday} 
+              onClick={this.props.getSelectedDay} inline> Friday </Checkbox>
+            <Checkbox 
+              type="checkbox" id="Saturday" value="Saturday"
+              checked={this.props.selectedDays.Saturday}
+              onClick={this.props.getSelectedDay} inline> Saturday </Checkbox>
+            <Checkbox 
+              type="checkbox" id="Sunday" value="Sunday"
+              checked={this.props.selectedDays.Sunday}
+              onClick={this.props.getSelectedDay} inline> Sunday </Checkbox>
+          </FormGroup> : null
+        }</FormGroup>
+
+        <ControlLabel> {'Audio Message'} </ControlLabel>
+        <FormGroup>{this.audioPart()}</FormGroup>
+
+        <FormGroup>{
+          this.state.recorded || (this.props.editMode && reminderForm.audioUrl)? 
+          <audio src={reminderForm.audioUrl} controls></audio> : null
+        }</FormGroup>
+        
+        <Button type="submit" value="Submit" onClick={this.props.submitForm}>Submit</Button>
+
       </div>
     );
   }
 }
+
+// <div className="record-stop-button">{ 
+//             this.state.recording ?
+//               
+//               : <Button className="general-button" onClick={this.startRecording.bind(this)}><i className="fa fa-circle text-danger"></i> Record</Button>
+//           }</div>
