@@ -226,3 +226,76 @@ body {
   background: white;
   z-index: 9999;
 }
+
+
+.Blink {
+    animation: blinker 1.5s cubic-bezier(.5, 0, 1, 1) infinite alternate;  
+}
+
+@keyframes blinker {  
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.fa {
+    display: inline-block;
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+.text-danger {
+    color: #a94442;
+}
+
+.fa-circle {
+    content: "\f111";
+}
+
+.fa-stop {
+    content: "\f04c";
+}
+
+.pause-button {
+  margin-left: 40px;
+  margin-top: 20px;
+  margin-bottom: 19px;
+  margin-right: 15px;
+}
+
+.record-button {
+  margin-left: 40px;
+  margin-top: 20px;
+  margin-bottom: 19px;
+  margin-right: 15px; 
+}
+
+.audio-upload {
+  margin-top: 1px;
+  margin-left: 3px;
+  margin-bottom: 19px;
+}
+
+.recorded-audio-box {
+  margin-left: 80px;
+  margin-top: 20px;
+}
+
+.recurringDays {
+  margin-bottom: 30px;
+  margin-left: 30px;
+  margin-top: 20px;
+}
+
+.dropdown {
+  margin-top: 13px;
+  margin-bottom: 10px;
+  margin-left: 1px;
+}
+
+.rdtPicker {
+  margin-top: 38px;
+}
+
