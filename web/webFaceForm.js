@@ -251,7 +251,6 @@ export default class FaceForm extends React.Component {
           }
         }) : null}
         </div>
-        <br />
       </label>) : null;
     var audioView = this.props.audio ? <ReactAudioPlayer src={this.props.audio} /> : <h4>No audio set for this face</h4>;
     var uploadedAudio = this.props.editMode ? 
@@ -287,13 +286,13 @@ export default class FaceForm extends React.Component {
         </FormGroup> 
 
         <FormGroup>{
-          this.props.editMode ? <Row className="show-grid"><ControlLabel>{'Image:'}</ControlLabel>{uploadedPhotos}</Row> : null
+          this.props.editMode ? <div><ControlLabel>{'Image:'}</ControlLabel><Row className="show-grid">{uploadedPhotos}</Row></div> : null
         }</FormGroup>
 
         <FormGroup validationState={this.validatePhotos()}>
           <ControlLabel> {'Image:'} </ControlLabel>
           <Dropzone className='dropzone' ref="dropzone" onDrop={this.onDrop} encType="multipart/form-data" multiple>
-            <div>Dropzone</div>
+            <h3 className='dropzone-text'>Drop files here or click to upload.</h3>
           </Dropzone>
           <ImagesUpload getPhotos={this.props.getPhotos} numFiles={this.props.updatePhotos.length}/>
         </FormGroup>
