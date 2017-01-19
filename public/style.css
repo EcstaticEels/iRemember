@@ -1,48 +1,222 @@
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 300;
+}
+
+/***************************************/
+/**************General******************/
+/***************************************/
+body {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 300;
+  background-image: url('http://api.thumbr.it/whitenoise-361x370.png?background=eaeaeaff&noise=626262&density=5&opacity=7');
+}
+
+.container-fluid {
+  padding: 0;
+}
+
+/***************************************/
+/**************Face-Current*************/
+/***************************************/
+
 .gallery-photo {
   height: auto;
+}
+
+/******************************************/
+/**************Navigation Bars*************/
+/******************************************/
+.navbar {
+  background-color: rgba(139, 172, 189, 0.7);
+  min-height: 60px;
+  border: 1px solid white;
+}
+
+.navbar-brand {
+  font-size: 35px;
+  font-family: 'Lato', sans-serif;
+}
+
+.navbar-default .navbar-brand {
+  color: white;
 }
 
 .tabNav {
   margin-bottom: 30px;
 }
 
-.btn-addNew {
-  margin: 10px 5px;
+.nav-tabs {
+  border-bottom: 1px solid #fff;
 }
 
-.btn-edit, .btn-delete {
-  margin-top: 15px;
+.navbar-default .navbar-nav>li>a {
+  font-size: 15px;
+  color: white;
+  padding: 20px 10px  ;
 }
 
-.facePic {
-  margin-top: 10px;
+.nav-tabs>li>a,
+.nav-tabs>li.active>a {
+  background-image: url('http://api.thumbr.it/whitenoise-361x370.png?background=eaeaeaff&noise=626262&density=5&opacity=7');
+  font-size: 17px;
+  border: 1px solid #fff;
+  border-bottom-color: transparent;
 }
 
-.face-current-heading {
-  text-align: center;
+.nav-tabs>li>a {
+  border: none;
+  border-radius: 5px 5px 0 0;
 }
 
-.face-current {
-  padding: 10px 20px;
+.caregiver-name {
+  font-family: 'Lato', sans-serif;
+  font-size: 17px;
 }
-
-.face-list {
-  padding: 10px 20px;
-}
+/******************************************/
+/*********Face and Reminder-List***********/
+/******************************************/
 
 .list-group-item:first-child,
 .list-group-item {
   border: none;
-  margin: 10px 0;
-  }
+  border-radius: 0px;
+  margin: 20px 0;
+  box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.15), 0 6px 20px 0 rgba(0, 0, 0, 0.14);
+  cursor: pointer;
+}
 
 .list-group-item:first-child {
   margin: 0;
 }
 
-.face-list-name {
-  margin-top: 35px;
+.new-reminder-btn,
+.new-face-btn {
+  font-family: 'Lato', sans-serif;
+  font-size: 40px;
+  color: white;
+  text-align: center;
+  background-color: rgba(250, 149, 129, 0.7);
 }
+
+.new-reminder-btn h2,
+.new-face-btn h2 {
+  margin: 10px;
+}
+
+.reminder-list,
+.face-list {
+  padding: 20px 0;
+}
+
+.facePic {
+  padding: 4px 6px;
+}
+
+.face-list-name {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 25px;
+}
+
+.face-list-entry {
+  display: flex;
+  padding-right: 10px;
+  align-items: center;
+}
+
+.reminder-entry {
+  display: flex;
+  align-items: center;
+}
+
+.reminder-list-time {
+  font-weight: bold;
+}
+
+.hvr-trim {
+  vertical-align: middle;
+  -webkit-transform: perspective(1px) translateZ(0);
+  transform: perspective(1px) translateZ(0);
+  box-shadow: 0 0 1px transparent;
+  position: relative;
+}
+.hvr-trim:before {
+  content: '';
+  position: absolute;
+  border: white solid 4px;
+  top: 4px;
+  left: 4px;
+  right: 4px;
+  bottom: 4px;
+  opacity: 0;
+  -webkit-transition-duration: 0.3s;
+  transition-duration: 0.3s;
+  -webkit-transition-property: opacity;
+  transition-property: opacity;
+}
+.hvr-trim:hover:before, .hvr-trim:focus:before, .hvr-trim:active:before {
+  opacity: 1;
+}
+
+/******************************************/
+/****************Face-Current**************/
+/******************************************/
+.face-form,
+.reminder-form,
+.reminder-current,
+.face-current {
+  padding: 10px 20px;
+  background-color: white;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.15), 0 6px 20px 0 rgba(0, 0, 0, 0.14);
+}
+
+.reminder-current-header,
+.face-current-header {
+  font-weight: 500;
+}
+
+.reminder-current-heading,
+.face-current-heading {
+  text-align: center;
+  font-size: 48px;
+  margin: 25px 0;
+  font-weight: 500;
+}
+
+.image-gallery {
+  width: 562px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.reminder-type,
+.reminder-audio,
+.reminder-btns,
+.reminder-description,
+.reminder-recurring,
+.reminder-time,
+.face-audio,
+.face-btns,
+.face-description {
+  width: 562px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.reminder-btns,
+.face-btns {
+  margin-bottom: 20px;
+  margin-top: 10px;
+}
+
+.reminder-image {
+  float: right;
+}
+
+/******************************************/
+/****************Image-Preview*************/
+/******************************************/
 
 .preview-image {
   height: 50%;
@@ -56,15 +230,10 @@
   margin: 60px;
 }
 
-.image-gallery {
-  width: 562px;
-  margin-left: auto;
-  margin-right: auto;
-}
+/************************************************/
+/****************User feedback Items*************/
+/************************************************/
 
-.container-fluid {
-  padding: 0;
-}
 
 .error {
   color: 'red';
@@ -79,6 +248,27 @@
   background: white;
   z-index: 9999;
 }
+/************************************************/
+/****************Sign In*************************/
+/************************************************/
+
+.sign-in-container {
+    display: flex;
+    justify-content: center;
+}
+
+.sign-in-header {
+
+}
+
+.sign-in-box {
+      background-color: white;
+    padding: 100px 150px;
+}
+
+/************************************************/
+/****************Other***************************/
+/************************************************/
 
 .Blink {
     animation: blinker 1.5s cubic-bezier(.5, 0, 1, 1) infinite alternate;  

@@ -13,9 +13,10 @@ export default class FaceList extends React.Component {
       return photoObj.photo;
     });
     var thumbnailPhotos = this.props.handleCloudinaryUrl(cloudinaryUrls, '134', '94', 'thumb');
+    var styleObj = this.props.showForm ? {padding: '0px'} : {};
 
     return (
-        <div className="face-list">
+        <div className="face-list" style={styleObj}>
           <ListGroup bsClass="list-group">
             {thumbnailPhotos.length > 0 ? thumbnailPhotos.map((val, ind) => {
               return (

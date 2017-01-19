@@ -277,6 +277,7 @@ export default class FaceForm extends React.Component {
             onChange={this.props.getInput} />
         </FormGroup>
 
+
         <FormGroup>
           <ControlLabel> {'Description'} </ControlLabel>
           <FormControl
@@ -343,11 +344,16 @@ export default class FaceForm extends React.Component {
           <button onClick={this.handleCloseModal}>Close Modal</button>
         </ReactModal>
 
-      <Button type="submit" value="Submit" onClick={this.props.submitForm}>Submit</Button>
+      <Button bsSize='small' className="btn-submit" onClick={this.props.submitForm}>Submit</Button>
+
     </div>
     );
   }
 }
+
+       // <Row className="show-grid">
+       //      {uploadedPhotos}
+       //    </Row>
 
 // <FormGroup validationState={this.getAudioValidationState()} >
 //             <ControlLabel> {'Upload Audio Message:'} </ControlLabel>

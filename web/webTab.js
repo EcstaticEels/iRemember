@@ -2,24 +2,29 @@ import React from 'react';
 import {Link} from 'react-router';
 import {Nav, Navbar, NavItem, NavDropdown, MenuItem, Button} from 'react-bootstrap';
 import {LinkContainer, IndexLinkContainer} from 'react-router-bootstrap';
+import {observer} from 'mobx-react';
+import {caregiverName, needsSetup} from './webMobxStore';
 
-var Tab = (props) => {
-
-  var changeTab = (select) => {
-    props.changeView(select)
+@observer
+class Tab extends React.Component {
+  constructor(props) {
+    super(props);
   }
 
-  return (
+  render() {
+    var nav = !!caregiverName.get() || !!needsSetup.get() ? 
+      (<Nav bsStyle="tabs" className="tabNav container">
+        <LinkContainer to="/reminders" className="link">
+          <NavItem>Reminders</NavItem>
+        </LinkContainer>
+        <LinkContainer to="/face" className="link">
+          <NavItem>Face</NavItem>
+        </LinkContainer>
+      </Nav>) : null;
 
-    <Nav bsStyle="tabs" className="tabNav container">
-      <LinkContainer to="/reminders" className="link">
-        <NavItem>Reminders</NavItem>
-      </LinkContainer>
-      <LinkContainer to="/face" className="link">
-        <NavItem>Face</NavItem>
-      </LinkContainer>
-    </Nav>
-  )
+    return nav;
+  }
 }
+
 
 module.exports = Tab;
