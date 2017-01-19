@@ -339,43 +339,54 @@ class Reminder extends React.Component {
   render() {
     const spinner = <span><img src={'/default.svg'} /></span>
     return (
+      <div>
         <Row className="show-grid">
-          <Col xs={12} md={4}>
+          <Col xs={6} md={4}>
             <div className="reminder">
               <div>
-                {this.state.showForm ? null : 
-                  <Button bsSize="large" className="btn-addNew" bsStyle="primary" onClick={() => this.displayForm.call(this, true, false)}>Add New Reminder</Button>}
+                {
+                  this.state.showForm ? null :  
+                  <div className="list-group-item new-face-btn hvr-trim" 
+                  onClick={ () => this.displayForm.call(this, true, false)}>
+                    <h2>Add a New Face</h2>
+                  </div>
+                }
               </div>
-              <ReminderList list={this.state.list} getInput={this.getInput.bind(this)} updateCurrent={this.updateCurrent.bind(this)}/>
+              <ReminderList 
+                list={this.state.list} 
+                getInput={this.getInput.bind(this)} 
+                updateCurrent={this.updateCurrent.bind(this)}
+              />
             </div>
           </Col>
           <Col xs={12} md={8}>
             <div>
-            <Loader show={this.state.loader} message={spinner} foregroundStyle={{color: 'white'}} backgroundStyle={{backgroundColor: 'white'}} className="spinner">
-            {
-              this.state.showForm ? 
-                <ReminderForm 
-                  getInput={this.getInput.bind(this)} 
-                  getBoolean={this.getBoolean.bind(this)}
-                  handleDateChange={this.handleDateChange.bind(this)}
-                  submitForm={this.submitForm.bind(this)}
-                  editMode={this.state.editMode}
-                  date={this.state.date}
-                  type={this.state.type}
-                  title={this.state.title}
-                  recurring={this.state.recurring}
-                  selectedDays={this.state.selectedDays}
-                  getSelectedDay={this.getSelectedDay.bind(this)} 
-                  img={this.state.img} 
-                  note={this.state.note}
-                  audio={this.state.audio}
-                /> 
-                : <ReminderCurrent current={this.state.current} edit={this.edit.bind(this)} delete={this.delete.bind(this)} />
-            }
-            </Loader>
+              <Loader show={this.state.loader} message={spinner} foregroundStyle={{color: 'white'}} backgroundStyle={{backgroundColor: 'white'}} className="spinner">
+              {
+                this.state.showForm ? 
+                  <ReminderForm 
+                    getInput={this.getInput.bind(this)} 
+                    getBoolean={this.getBoolean.bind(this)}
+                    handleDateChange={this.handleDateChange.bind(this)}
+                    submitForm={this.submitForm.bind(this)}
+                    editMode={this.state.editMode}
+                    date={this.state.date}
+                    type={this.state.type}
+                    title={this.state.title}
+                    recurring={this.state.recurring}
+                    selectedDays={this.state.selectedDays}
+                    getSelectedDay={this.getSelectedDay.bind(this)} 
+                    img={this.state.img} 
+                    note={this.state.note}
+                    audio={this.state.audio}
+                  /> 
+                  : <ReminderCurrent current={this.state.current} edit={this.edit.bind(this)} delete={this.delete.bind(this)} />
+              }
+              </Loader>
             </div>
           </Col>
         </Row>
+      </div>
     )
   }
 }

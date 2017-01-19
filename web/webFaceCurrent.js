@@ -3,7 +3,7 @@ import ReactAudioPlayer from 'react-audio-player';
 import Gallery from './webGallery.js';
 import { observable } from 'mobx';
 import {caregiverName, patientName} from './webMobxStore';
-import {Button} from 'react-bootstrap';
+import {Button, Row, Col} from 'react-bootstrap';
 
 export default class FaceCurrent extends React.Component {
   constructor(props) {
@@ -17,25 +17,36 @@ export default class FaceCurrent extends React.Component {
   render() {
     var galleryView = this.props.current.photos.length > 0 ? <Gallery photos={this.props.current.photos} handleCloudinaryUrl={this.props.handleCloudinaryUrl}/> : null;
     var currentView;
-    var audioView = this.props.current.audio ? <ReactAudioPlayer src={this.props.current.audio} /> : <h4>No audio set for this face</h4>;
+    var audioView = this.props.current.audio ? <ReactAudioPlayer src={this.props.current.audio} /> : <h5>No audio submitted yet for this face</h5>;
     if (!!this.props.current.subjectName) {
       currentView = (
         <div className="face-current">
           <h1 className="face-current-heading">{this.props.current.subjectName}</h1>
-          {galleryView}
-          <div><h3>Description: </h3>{this.props.current.description}</div>
-          <label><h3>Audio Message:</h3>
-            {audioView}
-          </label>
-          <br />
-          <Button bsSize='small' className="btn-edit" onClick={this.edit.bind(this)}>Edit</Button>
-          <Button bsSize='small' className="btn-delete" onClick={this.props.delete}>Delete</Button>
+          <Row className="show-grid">
+            {galleryView}
+          </Row>
+          <Row>
+            <div className='face-description'> 
+              <h3 className='face-current-header'>Description: </h3>
+              <h5>{this.props.current.description}</h5>
+            </div>
+          </Row>
+          <Row>
+            <div className='face-audio'>
+              <h3 className='face-current-header'>Audio Message: </h3>
+              {audioView}
+            </div>
+          </Row>
+            <div className='face-btns'>
+              <Button bsSize='small' className="btn-edit" onClick={this.edit.bind(this)}>Edit</Button>
+              <Button bsSize='small' className="btn-delete" onClick={this.props.delete}>Delete</Button>
+            </div>
         </div>
       );
     } else {
       currentView = (
         <div className="face-current">
-          <h1>Add a person to {patientName.get()}'s face gallery</h1>
+          <h2>Add a person to {patientName.get()}'s face gallery</h2>
         </div>
       );
     }
