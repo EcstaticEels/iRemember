@@ -45,11 +45,11 @@ export default class PersonInfoScreen extends React.Component {
 
     return (
       <ScrollView contentContainerStyle={styles.contentContainer} style={styles.container}>
-        <View style={styles.personInfoContainer}>
+        <View style={styles.personNameContainer}>
           <Text style={styles.personName}>{this.props.route.params.person.name}</Text>
         </View>
         {audio}
-        <View style={styles.personInfoContainer}>
+        <View style={styles.photoContainer}>
           <Image style={styles.personImage} source={{uri: this.props.route.params.person.photo}} /> 
         </View>
         <View style={styles.personInfoContainer}>
@@ -62,7 +62,7 @@ export default class PersonInfoScreen extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#2c3e50',
+    backgroundColor: '#8bacbd',
   },
   contentContainer: {
     height: 300,
@@ -73,20 +73,40 @@ const styles = StyleSheet.create({
   personInfoContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    alignItems: 'center'
+    alignItems: 'center',
+    flex: 1
+  },
+  personNameContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    backgroundColor: '#FA9581',
+    flex: 1
+  },
+  photoContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    flex: 4
   },
   personImage: {
-    height: 200,
-    width: 200,
+    height: 300,
+    width: 300,
   },
   personName: {
-    color: '#ECECEC',
-    fontSize: 50,
-    textDecorationLine: 'underline',
-    textDecorationColor: '#ECECEC'
+    color: '#FBFBF2',
+    fontSize: 70,
+    fontFamily: 'quicksand-regular',
+    textShadowColor: '#888',
+    textShadowOffset: {width: 0, height: 1},
+    textShadowRadius: 1,
   },
   personInfo: {
-    color: '#ECECEC',
+    color: '#FBFBF2',
     fontSize: 30,
+    fontFamily: 'quicksand-regular',
+    textShadowColor: '#888',
+    textShadowOffset: {width: 0, height: 1},
+    textShadowRadius: 1,
   }
 });

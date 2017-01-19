@@ -30,15 +30,23 @@ export default class LoginScreen extends React.Component {
     this.props.route.params.authFunction()
       return (
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-          <TextInput
-            onSubmitEditing={this.props.route.params.handleTextSubmit}
-            onChangeText={this.props.route.params.handleTextChange}
-            placeholder={'Enter your first name here'}
-            placeholderTextColor={'#95a5a6'}
-            style={styles.nameTextInput} />
-          <Text style={styles.infoText}> 
-            On the next screen, you will take a photo of yourself. Please make sure that only your face is in the photo
-          </Text>
+          <View style={styles.promptTextContainer}>
+            <Text style={styles.promptText}>
+              Please enter your first name below:
+            </Text>
+          </View>
+          <View style={styles.nameTextInputContainer}>
+            <TextInput
+              onSubmitEditing={this.props.route.params.handleTextSubmit}
+              onChangeText={this.props.route.params.handleTextChange}
+              returnKeyType={'done'}
+              style={styles.nameTextInput} />
+          </View>
+          <View style={styles.infoTextContainer}>
+            <Text style={styles.infoText}> 
+              To gain access to your account, you will take a photo of yourself. Please make sure that only your face is in the frame.
+            </Text>
+          </View>
         </ScrollView>
       )
   }
@@ -46,28 +54,68 @@ export default class LoginScreen extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    // backgroundColor: '#FFEDBC', meh its okay
-    backgroundColor: '#466675'
+    backgroundColor: '#8bacbd',
   },
   contentContainer: {
-    paddingTop: 40,
     height: 300,
     flexDirection: 'column',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     flex: 1
   },
   nameTextInput: {
-    height: 40,
-    fontSize: 36,
-    borderColor: '#7f8c8d',
-    borderWidth: 1,
-    color: '#7f8c8d',
+    height: 100,
+    fontSize: 80,
+    borderColor: '#FBFBF2',
+    borderWidth: 3,
+    color: '#FBFBF2',
+  },
+  nameTextInputContainer: {
+    flex: 1,
+    backgroundColor: '#8bacbd',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    paddingTop: 50,
+    paddingLeft: 20,
+    paddingRight: 20
   },
   infoText: {
-    color: '#fac8bf',
-    fontWeight: 'bold',
-    fontSize: 24,
-    alignSelf: 'center'
+    color: '#FBFBF2',
+    fontFamily: 'quicksand-regular',
+    textShadowColor: '#888',
+    textShadowOffset: {width: 0, height: 1},
+    textShadowRadius: 1,
+    fontSize: 35,
+    textAlign: 'center'
+  },
+  infoTextContainer: {
+    backgroundColor: '#FA9581',
+    // flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    paddingBottom: 10,
+    paddingTop: 10,
+    alignItems: 'center',
+    paddingLeft: 10,
+    paddingRight: 10
+  },
+  promptText: {
+    color: '#FBFBF2',
+    fontFamily: 'quicksand-regular',
+    textShadowColor: '#888',
+    textShadowOffset: {width: 0, height: 1},
+    textShadowRadius: 1,
+    fontSize: 50,
+    textAlign: 'center'
+  },
+  promptTextContainer: {
+    backgroundColor: '#8bacbd',
+    // flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    paddingTop: 20,
+    alignItems: 'center',
+    paddingLeft: 10,
+    paddingRight: 10
   },
   activityIndicator: {
     alignSelf: 'center',
