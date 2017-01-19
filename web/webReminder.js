@@ -346,9 +346,9 @@ class Reminder extends React.Component {
               <div>
                 {
                   this.state.showForm ? null :  
-                  <div className="list-group-item new-face-btn hvr-trim" 
+                  <div className="list-group-item new-reminder-btn hvr-trim" 
                   onClick={ () => this.displayForm.call(this, true, false)}>
-                    <h2>Add a New Face</h2>
+                    <h2>Add a New Reminder</h2>
                   </div>
                 }
               </div>
