@@ -14,8 +14,6 @@ import MSR from 'msr';
 import {observer} from 'mobx-react';
 import {faceForm} from './webMobxStore';
 
-import Dropzone from 'react-dropzone'
-
 export default class FaceForm extends React.Component {
   constructor(props) {
     super(props);
@@ -251,11 +249,10 @@ export default class FaceForm extends React.Component {
           }
         }) : null}
         </div>
-        <br />
       </label>) : null;
     var audioView = this.props.audio ? <ReactAudioPlayer src={this.props.audio} /> : <h4>No audio set for this face</h4>;
     var uploadedAudio = this.props.editMode ? 
-      (<label>Current Uploaded Audio face:
+      (<label>Current Uploaded Audio Face:
         <br />
         {audioView}
         <br />
@@ -266,9 +263,7 @@ export default class FaceForm extends React.Component {
 
     return (
     <div className="face-form">
-    <h3 className="face-form-heading">Add a New Face</h3>
-        <br/>
-
+      <h3 className="face-form-heading">Add a New Face</h3>
         <FormGroup validationState={this.validateName()}>
           <ControlLabel> {'Name'} </ControlLabel>
           <FormControl 
@@ -286,13 +281,11 @@ export default class FaceForm extends React.Component {
             onChange={this.props.getInput} />
         </FormGroup> 
 
+        <FormGroup>{
+          this.props.editMode ? <div><ControlLabel>{'Image:'}</ControlLabel><Row className="show-grid">{uploadedPhotos}</Row></div> : null
+        }</FormGroup>
+
         <FormGroup validationState={this.validatePhotos()}>
-          <ControlLabel> {'Image:'} </ControlLabel>
-          <Dropzone ref="dropzone" onDrop={this.onDrop} encType="multipart/form-data" multiple>
-            <Row className="show-grid">
-            {uploadedPhotos}
-            </Row>
-          </Dropzone>
           <ImagesUpload getPhotos={this.props.getPhotos} numFiles={this.props.updatePhotos.length}/>
         </FormGroup>
 
