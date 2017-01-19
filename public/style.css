@@ -102,6 +102,24 @@
     color: #a94442;
 }
 
-.fa-circle:before {
+.fa-circle {
     content: "\f111";
+}
+
+.fa-stop {
+    content: "\f04c";
+}
+
+.pause-button {
+  margin-right: 20px;
+}
+
+.record-button {
+  margin-left: 10px;
+  margin-right: 10px; 
+}
+
+.audio-upload {
+  margin-top: 30px;
+  margin-left: 20px;
 }
