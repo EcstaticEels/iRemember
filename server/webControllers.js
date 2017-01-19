@@ -33,6 +33,7 @@ cloudinary.config({
 const handleFaceForm = function(req, cb) {
   const faceForm = new multiparty.Form();
   faceForm.parse(req, function(err, fields, files) {
+    console.log('fields', fields, 'files', files)
     if (err) {
       console.log(err);
     }
