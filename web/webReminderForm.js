@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Row, Col, Grid, FormControl, FormGroup, ControlLabel, DropdownButton, MenuItem, Radio, Checkbox} from 'react-bootstrap';
+import {Button, Row, Col, Grid, FormControl, FormGroup, InputGroup, ControlLabel, DropdownButton, MenuItem, Radio, Checkbox} from 'react-bootstrap';
 
 // Be sure to include styles at some point, probably during your bootstrapping
 // import 'react-select/dist/react-select.css';
@@ -110,11 +110,11 @@ export default class ReminderForm extends React.Component {
     console.error('media error', e);
   }
 
-  validationTitle() {
+  validateTitle() {
     return this.props.title.length > 0 ? 'success': 'error';
   }
 
-  validationDate() {
+  validateDate() {
     return typeof this.props.date === 'object' ? 'success': 'error'
   }
 
@@ -132,7 +132,7 @@ export default class ReminderForm extends React.Component {
           <i className="fa fa-circle text-danger Blink"></i>LIVE</div>)
     } else if(this.state.upload) {
       return (
-        <div>
+        <div className="audio-uploading">
         <Row>
           <Button className="record-button" onClick={this.startRecording.bind(this)}>
             <i className="fa fa-circle text-danger"></i> Record</Button>
@@ -172,12 +172,25 @@ export default class ReminderForm extends React.Component {
   render() {
     return (
       <div className="reminder-form">
-        <h4>New Reminder</h4>
-        <FormGroup validationState={this.validationTitle()}>
+        <h3>New Reminder</h3>
+        <br/>
+        <FormGroup>
+          <DropdownButton 
+            title={this.props.type.slice(0,1).toUpperCase() + this.props.type.slice(1)} 
+            id="type" value={this.props.type} 
+            onSelect={(event) => this.props.getType(event)} required>
+            <MenuItem eventKey="medication" value='medication'>Medication</MenuItem>
+            <MenuItem eventKey="appointment" value='appointment'>Appointment</MenuItem>
+            <MenuItem eventKey='chores'>Chores</MenuItem>
+            <MenuItem eventKey='others'>Others</MenuItem>
+          </DropdownButton>
+        </FormGroup>
+
+        <FormGroup validationState={this.validateTitle()}>
           <ControlLabel> {'Title'} </ControlLabel>
           <FormControl 
             type="text" value={this.props.title} 
-            className="title" placeholder="Title" 
+            id="title" placeholder="Title" 
             onChange={this.props.getInput} />
         </FormGroup>
 
@@ -185,45 +198,39 @@ export default class ReminderForm extends React.Component {
           <ControlLabel> {'Notes'} </ControlLabel>
           <FormControl
             type="text" value={this.props.note} 
-            className="note" placeholder="Notes" 
+            id="note" placeholder="Notes" 
             onChange={this.props.getInput} />
         </FormGroup>
 
-        <FormGroup validationState={this.validationDate()}>
+        <FormGroup validationState={this.validateDate()}>
           <ControlLabel> {'Date & Time'} </ControlLabel>
-          <Datetime 
-            className='date' 
-            value={this.props.date}
-            onChange={(dateMoment) => {
-              this.props.handleDateChange(dateMoment);
-          }}/>
+          <InputGroup>
+            <Datetime 
+              id='date' 
+              value={this.props.date}
+              onChange={(dateMoment) => {
+                this.props.handleDateChange(dateMoment);
+            }}/>
+            <InputGroup.Addon>
+              <Radio
+                name="recurring"
+                id="recurring"
+                className="recurring"
+                type="radio"
+                value={false}
+                onChange={this.props.getBoolean}
+                checked={this.props.recurring? false: true} inline>Once</Radio>
+              <Radio
+                name="recurring"
+                id="recurring"
+                className="recurring"
+                type="radio"
+                value={true}
+                onChange={this.props.getBoolean}
+                checked={this.props.recurring? true: false} inline>Recurring</Radio>
+            </InputGroup.Addon>
+          </InputGroup>
         </FormGroup>
-
-        <FormGroup>
-          <DropdownButton title={'Type'} className="type" value={this.props.type} onChange={this.props.getInput} required>
-            <MenuItem value='medication'>Medication</MenuItem>
-            <MenuItem value='appointment'>Appointment</MenuItem>
-            <MenuItem value='chores'>Chores</MenuItem>
-            <MenuItem value='others'>Others</MenuItem>
-          </DropdownButton>
-        </FormGroup>
-
-        <FormGroup>
-            <Radio
-              name="recurring"
-              className="recurring"
-              type="radio"
-              value={false}
-              onChange={this.props.getBoolean}
-              checked={this.props.recurring? false: true} inline>Once</Radio>
-            <Radio
-              name="recurring"
-              className="recurring"
-              type="radio"
-              value={true}
-              onChange={this.props.getBoolean}
-              checked={this.props.recurring? true: false} inline>Recurring</Radio>
-          </FormGroup>
            
          <FormGroup>{
           this.props.recurring? 
