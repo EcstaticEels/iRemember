@@ -50,9 +50,72 @@ body {
   padding: 20px 10px  ;
 }
 
+.nav-tabs>li>a,
 .nav-tabs>li.active>a {
   background-image: url('http://api.thumbr.it/whitenoise-361x370.png?background=eaeaeaff&noise=626262&density=5&opacity=7');
   font-size: 17px;
+}
+
+.nav-tabs>li>a {
+  border: none;
+  border-radius: 5px 5px 0 0;
+}
+
+.caregiver-name {
+  font-family: 'Lato', sans-serif;
+  font-size: 17px;
+}
+/******************************************/
+/*********Face and Reminder-List***********/
+/******************************************/
+
+.list-group-item:first-child,
+.list-group-item {
+  border: none;
+  border-radius: 0px;
+  margin: 20px 0;
+  box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.15), 0 6px 20px 0 rgba(0, 0, 0, 0.14);
+  cursor: pointer;
+}
+
+.list-group-item:first-child {
+  margin: 0;
+}
+
+.new-reminder-btn,
+.new-face-btn {
+  font-family: 'Lato', sans-serif;
+  font-size: 40px;
+  color: white;
+  text-align: center;
+  background-color: rgba(250, 149, 129, 0.7);
+}
+
+.new-reminder-btn h2,
+.new-face-btn h2 {
+  margin: 10px;
+}
+
+.reminder-list,
+.face-list {
+  padding: 20px 0;
+}
+
+.facePic {
+  padding: 4px 6px;
+}
+
+.face-list-name {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 25px;
+}
+
+.face-list-entry {
+  display: flex;
+  padding-right: 10px;
+  align-items: center;
 }
 
 .hvr-trim {
@@ -80,74 +143,22 @@ body {
   opacity: 1;
 }
 
-.caregiver-name {
-  font-family: 'Lato', sans-serif;
-  font-size: 17px;
-}
-/******************************************/
-/****************Face-List*****************/
-/******************************************/
-
-.list-group-item:first-child,
-.list-group-item {
-  border: none;
-  border-radius: 0px;
-  margin: 20px 0;
-  box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.15), 0 6px 20px 0 rgba(0, 0, 0, 0.14);
-  cursor: pointer;
-}
-
-.list-group-item:first-child {
-  margin: 0;
-}
-
-.new-face-btn {
-  font-family: 'Lato', sans-serif;
-  font-size: 40px;
-  color: white;
-  text-align: center;
-  background-color: rgba(250, 149, 129, 0.7);
-}
-
-.new-face-btn h2 {
-  margin: 10px;
-}
-
-.face-list {
-  padding: 20px 0;
-}
-
-.facePic {
-  padding: 4px 6px;
-}
-
-.face-list-name {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 25px;
-}
-
-.face-list-entry {
-  display: flex;
-  padding-right: 10px;
-  align-items: center;
-}
-
 /******************************************/
 /****************Face-Current**************/
 /******************************************/
 
+.reminder-current,
 .face-current {
   padding: 10px 20px;
   background-color: white;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.15), 0 6px 20px 0 rgba(0, 0, 0, 0.14);
 }
 
+.reminder-current-heading,
 .face-current-heading {
   text-align: center;
   font-size: 48px;
-  margin-bottom: 25px;
+  margin: 25px 0;
   font-weight: 500;
 }
 
@@ -157,6 +168,12 @@ body {
   margin-right: auto;
 }
 
+.reminder-type,
+.reminder-audio,
+.reminder-btns,
+.reminder-description,
+.reminder-recurring,
+.reminder-time,
 .face-audio,
 .face-btns,
 .face-description {
@@ -165,9 +182,14 @@ body {
   margin-left: auto;
 }
 
+.reminder-btns,
 .face-btns {
   margin-bottom: 20px;
   margin-top: 10px;
+}
+
+.reminder-image {
+  float: right;
 }
 
 /******************************************/

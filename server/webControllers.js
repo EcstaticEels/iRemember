@@ -501,8 +501,8 @@ module.exports = {
         recurring: fields.recurring[0],
         recurringDays: fields.recurringDays[0]
       }
-      if(audioUrl || fields.audio) {
-        updateObj.audio = fields.audio[0]
+      if (audioUrl) {
+        updateObj.audio = audioUrl
       }
       db.Reminder.update(updateObj, {
         where: {
