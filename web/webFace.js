@@ -248,6 +248,7 @@ class Face extends React.Component {
   }
 
   getPhotos(e){
+    console.log('target', e.target)
     e.preventDefault();
     e.persist();
 
