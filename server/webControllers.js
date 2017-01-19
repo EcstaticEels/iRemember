@@ -418,6 +418,7 @@ module.exports = {
               .then(result => {
                 resultArr[index].push(result);
                 count++;
+                console.log('increased count in the true block')
                 if (count === detectArr.length) {
                   res.status(200).send(JSON.stringify(resultArr));
                 }
@@ -427,6 +428,7 @@ module.exports = {
             resultArr[index] = [false];
           }
           count++;
+          console.log('increased count in the outer block')
           if (count === detectArr.length) {
             res.status(200).send(JSON.stringify(resultArr));
           }
@@ -463,10 +465,12 @@ module.exports = {
         })
         .then(patient => {
           console.log('patient', patient.token)
-          sdk.sendPushNotificationAsync({
-            exponentPushToken: patient.token, // The push token for the app user you want to send the notification to 
-            message: "New Reminder Added"
-          });
+          if (patient.token !== null) {
+            sdk.sendPushNotificationAsync({
+              exponentPushToken: patient.token, // The push token for the app user you want to send the notification to 
+              message: "New Reminder Added"
+            });
+          }
         })
       })
     });
@@ -495,8 +499,8 @@ module.exports = {
         recurring: fields.recurring[0],
         recurringDays: fields.recurringDays[0]
       }
-      if(audioUrl || fields.audio) {
-        updateObj.audio = fields.audio[0]
+      if (audioUrl) {
+        updateObj.audio = audioUrl
       }
       db.Reminder.update(updateObj, {
         where: {
@@ -510,10 +514,12 @@ module.exports = {
           }
         })
         .then(patient => {
-          sdk.sendPushNotificationAsync({
-            exponentPushToken: patient.token, // The push token for the app user you want to send the notification to 
-            message: "New Reminder Added"
-          });
+          if (patient.token !== null) {
+            sdk.sendPushNotificationAsync({
+              exponentPushToken: patient.token, // The push token for the app user you want to send the notification to 
+              message: "New Reminder Added"
+            });
+          }
         })
       })
       .then(updatedReminder => {
