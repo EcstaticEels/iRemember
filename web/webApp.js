@@ -76,18 +76,19 @@ class App extends React.Component {
 
   render() {
     return (
-
         <div className="app-body">
           <Grid fluid>
-            <Nav />
+            <Nav className="primary-nav" />
           </Grid>
 
-          <Grid>
-            <Tab changeView={this.changeView.bind(this)}/>
-            {this.props.children && React.cloneElement(this.props.children, {
-              handleLogout: this.handleLogout.bind(this),
-              getUserInfo: this.getUserInfo.bind(this)
-            })}
+          <Grid className="app-grid">
+            <div className="app-grid-secondary">
+              <Tab changeView={this.changeView.bind(this)}/>
+              {this.props.children && React.cloneElement(this.props.children, {
+                handleLogout: this.handleLogout.bind(this),
+                getUserInfo: this.getUserInfo.bind(this)
+              })}
+            </div>
           </Grid>
           
         </div>
