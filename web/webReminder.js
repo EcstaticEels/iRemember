@@ -122,7 +122,7 @@ class Reminder extends React.Component {
       this.setState({
         showForm: bool,
         date: '',
-        type: 'medication',
+        type: 'Medication',
         recurring: false,
         note: '',
         img: '',
