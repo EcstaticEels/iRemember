@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
   },
   reminderTitle: {
     color: '#FBFBF2',
-    fontSize: 40,
+    fontSize: 35,
     fontFamily: 'quicksand-regular',
     textShadowColor: '#888',
     textShadowOffset: {width: 0, height: 1},
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
   },
   reminderTimeDate: {
     color: '#FBFBF2',
-    fontSize: 30,
+    fontSize: 25,
     fontFamily: 'quicksand-regular',
     textShadowColor: '#888',
     textShadowOffset: {width: 0, height: 1},

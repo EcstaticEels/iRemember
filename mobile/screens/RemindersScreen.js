@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
     color: '#FBFBF2',
     alignSelf: 'center',
     // paddingLeft: 20,
-    fontSize: 30,
+    fontSize: 25,
     fontFamily: 'quicksand-regular',
     textShadowColor: '#888',
     textShadowOffset: {width: 0, height: 1},
