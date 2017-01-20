@@ -29,7 +29,7 @@ export default class NoFaceFoundScreen extends React.Component {
         style={styles.container}
         contentContainerStyle={styles.contentContainer}>
           <View style={styles.iconContainer}>
-            <Ionicons name='help' size={300} color='#FBFBF2' />
+            <Ionicons name='warning' size={300} color='#FBFBF2' />
           </View>
           <View style={styles.infoTextContainer}> 
             <Text style={styles.infoText}> 

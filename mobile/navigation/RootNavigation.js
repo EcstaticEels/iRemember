@@ -207,7 +207,9 @@ export default class RootNavigation extends React.Component {
         console.log('this is the person', person)
         return person.json()
         .then((personJSON) => {
+          console.log('THIS IS THE PERSON', personJSON)
           if (personJSON.name === this.state.name) {
+
             Store.update('id', personJSON.id);
             this.setState({
               id: personJSON.id,
