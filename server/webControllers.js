@@ -147,6 +147,7 @@ module.exports = {
   addFace: (req, res) => {
     handleFaceForm(req, (urlArray, audioUrl, fields) => {
       let personGroupId = req.user.personGroupID;
+      console.log(personGroupId)
       request.post({
         headers: microsoftHeaders,
         url: `https://api.projectoxford.ai/face/v1.0/persongroups/${personGroupId}/persons`,
@@ -488,7 +489,11 @@ module.exports = {
     })
     .then(reminders => {
       res.status(200).send(JSON.stringify({reminders: reminders}));
-    });
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500);
+    })
   },
   updateReminder: (req, res) => { 
     handleReminderForm(req, (audioUrl, fields) => {
@@ -539,8 +544,8 @@ module.exports = {
     });
   },
   setup: (req, res) => {
-    let newPersonGroupId = `ecstatic-eels-3-${req.user.id}` //why is this not working
-    let patientGroupId = `ecstatic-eels-patients-1` //we don't need to change this much
+    let newPersonGroupId = `ecstatic-eels-11-${req.user.id}` //why is this not working
+    let patientGroupId = `ecstatic-eels-patients-3` //we don't need to change this much
     handleSetupForm(req, (patientPhotoArray, fields) => {
       request.post({
         headers: microsoftHeaders,
