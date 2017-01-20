@@ -22,6 +22,7 @@ export default class FailedLoginScreen extends React.Component {
   }
 
   render () {
+    console.log('RENDERING FAILED NAME SCREEN')
     return (
       <ScrollView 
         style={styles.container}
