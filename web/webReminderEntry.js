@@ -16,7 +16,7 @@ var ReminderEntry = (props) => {
         <Col md={7}>
           <div className="reminder-list-container">
             <h4 className="reminder-list-time">{Moment(props.data.date).calendar(null, {sameElse: 'MM/DD/YYYY hh:mm a'}).toString()}</h4>
-            <h3 className="reminder-list-title">{props.data.title}</h3>
+            <h4 className="reminder-list-title">{props.data.title}</h4>
           </div>
         </Col>
       </div>
