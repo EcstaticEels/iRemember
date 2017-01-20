@@ -238,13 +238,13 @@ export default class FaceForm extends React.Component {
         imageInfo: 'This image has only one face, which matches the faces previously uploaded for this subject. It is good to upload!'
       },
       found_no_match: {
-        imageInfo: 'This image has only one face, but matches the face of a different subject previously uploaded.'
+        imageInfo: 'This image has only one face, but it matches the face of a different subject previously uploaded.'
       },
       not_found: {
-        imageInfo: 'This image has only one face, but does not match the faces previously uploaded for this subject or any other faces previously uploaded.'
+        imageInfo: 'This image has only one face, but it does not match the faces previously uploaded for this subject or any other faces previously uploaded.'
       },
       multiple_candidates: {
-        imageInfo: 'This image has only one face, but matches the faces of multiple subjects previously uploaded.'
+        imageInfo: 'This image has only one face, but it matches the faces of multiple subjects previously uploaded.'
       }
     }
 
@@ -316,7 +316,7 @@ export default class FaceForm extends React.Component {
         {audioView}
         <br />
       </label>) : null;
-    const spinner = <span><img src={'/ring.svg'} /></span>
+    const spinner = <span><img src={'/default.svg'} /></span>
 
 
 

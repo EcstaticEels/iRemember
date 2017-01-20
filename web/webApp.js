@@ -15,6 +15,7 @@ import NotFound from './web404.js';
 import Signin from './webSignin.js';
 import Setup from './webSetup.js';
 import Signout from './webSignout.js';
+import Home from './webHome.js';
 
 @observer
 class App extends React.Component {
@@ -36,6 +37,7 @@ class App extends React.Component {
       }.bind(this),
       error: function(err) {
         console.log('error', err);
+        browserHistory.push('/signin')
       }
     });
   }
@@ -104,10 +106,21 @@ const requireAuth = function(nextState, replace) {
   }
 };
 
+const redirectTo = function(nextState, replace) {
+  console.log('you are logged in, redirect to reminders');
+  if (caregiverName.get()) {
+    replace({
+      pathname: '/reminders',
+      state: { nextPathname: nextState.location.pathname }
+    });
+  }
+}
+
 
 ReactDOM.render((
   <Router history={browserHistory}>
     <Route path="/" component={App}>
+      <IndexRoute component={Home} onEnter={redirectTo}/>
       <Route path="/signin" component={Signin}/>
       <Route path="/signout" component={Signout}/>
       <Route path="/setup" component={Setup} onEnter={requireAuth}/>
