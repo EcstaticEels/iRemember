@@ -46,6 +46,7 @@ export default class RemindersScreen extends React.Component {
         return mobx.toJS(reminder);
       }))
     }
+    console.log('we are in the reminders constructor')
   }
 
   static route = {
@@ -78,7 +79,21 @@ export default class RemindersScreen extends React.Component {
     })
   }
 
+  _onSignal() {
+    var getReminders = Store.getReminders();
+    getReminders.then((reminders)=> {
+      var rows = dataSource.cloneWithRows(reminders)
+      this.setState({
+        dataSource: rows
+      })
+    })
+    Store.update('updated', false)
+  }
+
   render() {
+    if(Store.updated){
+      this._onSignal();
+    }
     return (
       <View style={styles.container}>
         <ListView
