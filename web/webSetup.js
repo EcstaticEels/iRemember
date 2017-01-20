@@ -19,12 +19,6 @@ export default class Setup extends React.Component {
     }
   }
 
-  getPhotos(event){
-    this.setState({
-      updatePhotos: event.target.files
-    });
-  }
-
   getInput(event) {
     var key = event.target.getAttribute('class');
     var value = event.target.value;
@@ -35,9 +29,10 @@ export default class Setup extends React.Component {
     });
   }
 
-  getPhotos(event){
+  getPhotos(e){
+    var files = e.target ? e.target.files : e
     this.setState({
-      updatePatientPhotos: event.target.files
+      updatePatientPhotos: files
     });
   }
 
@@ -52,6 +47,7 @@ export default class Setup extends React.Component {
     for (var key in this.state.updatePatientPhotos) {
       formData.append('patientPhoto', this.state.updatePatientPhotos[key]);
     }
+    console.log('about to send request to post setup', this.state.updatePatientPhotos)
     $.ajax({
       method: 'POST',
       url: '/web/setup',
@@ -101,7 +97,7 @@ export default class Setup extends React.Component {
           </Row>
           <Row className="show-grid">
             <label>Upload photos of patient:
-              <ImagesUpload getPhotos={this.getPhotos.bind(this)}/>
+              <ImagesUpload uploadedPhotos={this.state.updatePatientPhotos} getPhotos={this.getPhotos.bind(this)}/>
               <br />
             </label>
           </Row>

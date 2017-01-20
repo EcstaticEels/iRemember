@@ -14,8 +14,6 @@ import MSR from 'msr';
 import {observer} from 'mobx-react';
 import {faceForm} from './webMobxStore';
 
-import Dropzone from 'react-dropzone'
-
 export default class FaceForm extends React.Component {
   constructor(props) {
     super(props);
@@ -242,20 +240,19 @@ export default class FaceForm extends React.Component {
     var thumbnailPhotos = this.props.handleCloudinaryUrl(cloudinaryUrls, '134', '94', 'thumb');
     var uploadedPhotos = this.props.editMode ?       
       (<label>
-        <div>
+        <div className="uploaded-face-photos-form">
         {thumbnailPhotos.length > 0 ? thumbnailPhotos.map((val, ind) => {
-          if(ind % 5 === 0) {
+          if(ind % 4 === 0) {
             return <img src={val} key={ind} className="preview-img front" />
           } else {
             return <img src={val} key={ind} className="preview-img" />
           }
         }) : null}
         </div>
-        <br />
       </label>) : null;
     var audioView = this.props.audio ? <ReactAudioPlayer src={this.props.audio} /> : <h4>No audio set for this face</h4>;
     var uploadedAudio = this.props.editMode ? 
-      (<label>Current Uploaded Audio face:
+      (<label>Current Uploaded Audio Face:
         <br />
         {audioView}
         <br />
@@ -266,9 +263,7 @@ export default class FaceForm extends React.Component {
 
     return (
     <div className="face-form">
-    <h3>New face</h3>
-        <br/>
-
+      <h3 className="face-form-heading">Add a New Face</h3>
         <FormGroup validationState={this.validateName()}>
           <ControlLabel> {'Name'} </ControlLabel>
           <FormControl 
@@ -286,14 +281,19 @@ export default class FaceForm extends React.Component {
             onChange={this.props.getInput} />
         </FormGroup> 
 
+        <FormGroup>{
+
+          this.props.editMode ? 
+            <div>
+              <ControlLabel>{'Image:'}</ControlLabel>
+              <Row className="show-grid" id="edit-thumbnail">{uploadedPhotos}</Row>
+            </div> : null
+        }</FormGroup>
+
         <FormGroup validationState={this.validatePhotos()}>
-          <ControlLabel> {'Image:'} </ControlLabel>
-          <Dropzone ref="dropzone" onDrop={this.onDrop} encType="multipart/form-data" multiple>
-            <Row className="show-grid">
-            {uploadedPhotos}
-            </Row>
-          </Dropzone>
-          <ImagesUpload getPhotos={this.props.getPhotos} numFiles={this.props.updatePhotos.length}/>
+          <ImagesUpload 
+            getPhotos={this.props.getPhotos} 
+            uploadedPhotos={this.props.updatePhotos}/>
         </FormGroup>
 
         <ControlLabel> {'Audio Message'} </ControlLabel>
@@ -342,7 +342,7 @@ export default class FaceForm extends React.Component {
           <button onClick={this.handleCloseModal}>Close Modal</button>
         </ReactModal>
 
-      <Button bsSize='small' className="btn-submit" onClick={this.props.submitForm}>Submit</Button>
+      <Button bsSize='small' className="face-form-submit-btn" onClick={this.props.submitForm}>Submit</Button>
 
     </div>
     );

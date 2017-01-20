@@ -46,7 +46,7 @@ export default class FaceCurrent extends React.Component {
     } else {
       currentView = (
         <div className="face-current">
-          <h2>Add a person to {patientName.get()}'s face gallery</h2>
+          <h2 className="no-face-current">Add a person to {patientName.get()}'s face gallery</h2>
         </div>
       );
     }

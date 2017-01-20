@@ -2,6 +2,24 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 300;
 }
 
+html, body, #app, .app-grid, .app-body, .app-window, .app-body, .app-grid-secondary {
+  height: 100%;
+}
+
+.app-window {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: -82px;
+}
+
+/*
+.app-body {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}*/
+
 /***************************************/
 /**************General******************/
 /***************************************/
@@ -29,12 +47,13 @@ body {
 .navbar {
   background-color: rgba(139, 172, 189, 0.7);
   min-height: 60px;
-  border: 1px solid white;
+  border: 1px solid #D0D0D0;
 }
 
 .navbar-brand {
   font-size: 35px;
   font-family: 'Lato', sans-serif;
+  text-shadow: 0 1px 1px #888;
 }
 
 .navbar-default .navbar-brand {
@@ -63,13 +82,16 @@ body {
   border-bottom-color: transparent;
 }
 
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
+  border: 1px solid #fff;
+  border-bottom-color: transparent;
+}
 .nav-tabs>li>a {
   border: none;
   border-radius: 5px 5px 0 0;
 }
 
 .caregiver-name {
-  font-family: 'Lato', sans-serif;
   font-size: 17px;
 }
 /******************************************/
@@ -190,6 +212,10 @@ body {
   margin-right: auto;
 }
 
+.image-gallery-content {
+  padding-bottom: 10px;
+}
+
 .reminder-type,
 .reminder-audio,
 .reminder-btns,
@@ -206,12 +232,45 @@ body {
 
 .reminder-btns,
 .face-btns {
-  margin-bottom: 20px;
-  margin-top: 10px;
+  margin-bottom: 35px;
+  margin-top: 25px;
 }
 
-.reminder-image {
-  float: right;
+.btn {
+  border-radius: 3px;
+  padding: 7px 15px;
+  border: none;
+}
+.btn-edit, 
+.btn-delete {
+  background-color: rgba(250, 149, 129, 0.7);;
+  margin-right: 10px;
+  color: white;
+}
+
+.btn-delete {
+  padding: 10px 25px;
+  font-size: 14px;
+}
+
+.btn-edit {
+  padding: 10px 16px;
+  font-size: 14px;
+}
+
+#edit-thumbnail {
+  width: 120%;
+  margin-left: -51px;
+}
+
+input[type=file]{
+  width:90px;
+  color:transparent;
+}
+
+.no-face-current,
+.no-reminder-current {
+  text-align: center;
 }
 
 /******************************************/
@@ -225,6 +284,7 @@ body {
   max-height: 400px;
   margin: 50px 60px;
 }
+
 
 .image-preview-info {
   margin: 60px;
@@ -248,6 +308,67 @@ body {
   background: white;
   z-index: 9999;
 }
+
+/************************************************/
+/****************Forms***************************/
+/************************************************/
+.form-control {
+  border-radius: 0px;
+}
+
+.input-group-addon {
+  border-radius: 0px;
+}
+
+.record-button {
+  margin-left: 15px;
+}
+
+.face-form,
+.reminder-form {
+  padding-left: 42px;
+  padding-right: 42px;
+  padding-top: 25px;
+}
+
+.face-form-heading,
+.reminder-form-heading {
+  text-align: center;
+  font-size: 40px;
+}
+
+.face-form-submit-btn,
+.reminder-form-submit-btn,
+.reminder-type-btn {
+  background-color: rgba(250, 149, 129, 0.7);
+  color: white;
+}
+.face-form-submit-btn,
+.reminder-form-submit-btn {
+  margin-bottom: 30px;
+}
+
+.reminder-form-btns {
+  margin-bottom: 25px;
+}
+
+.uploaded-face-photos-form {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    width: 666px;
+    margin-left: 10px;
+}
+
+.record-button, 
+.upload-button {
+  border: 1px solid #D0D0D0;
+}
+
+.record-button {
+  margin-right: 15px;
+}
+
 /************************************************/
 /****************Sign In*************************/
 /************************************************/
@@ -255,10 +376,6 @@ body {
 .sign-in-container {
     display: flex;
     justify-content: center;
-}
-
-.sign-in-header {
-
 }
 
 .sign-in-box {
@@ -307,18 +424,17 @@ body {
   margin-right: 15px;
 }
 
-.record-button {
-  margin-left: 40px;
+/*.record-button {
   margin-top: 20px;
   margin-bottom: 19px;
   margin-right: 15px; 
-}
+}*/
 
-.audio-upload {
+/*.audio-upload {
   margin-top: 1px;
   margin-left: 3px;
   margin-bottom: 19px;
-}
+}*/
 
 .recorded-audio-box {
   margin-left: 80px;
@@ -338,20 +454,43 @@ body {
 }
 
 .rdtPicker {
-  margin-top: 38px;
+  margin-top: 38px !important;
 }
 
 .preview-img {
-  margin-right: 10px;
+  padding-right: 15px;
+  padding-bottom: 15px;
 }
 
-.front {
-  margin-left: 30px;
-  margin-bottom: 10px;
+
+.dropzone {
+  display: block;
+  width: 100%;
+  height: 165px;
+  border-width: 2px;
+  border-color: rgb(102, 102, 102);
+  border-style: dashed;
+  border-radius: 5px;
 }
 
-/*.dropzone {
-  height: 750px;
-  width: 250px;
-}*/
+.dropzone-text {
+  text-align: center;
+  margin-top: 66px;
+}
+
+.image-upload {
+  margin-top: 5px;
+}
+
+.photos-num {
+  margin-left: 8px;
+  margin-top: 2px;
+}
+
+#edit-thumbnail {
+  padding-left: 42px;
+  padding-right: 42px;
+  align-content: center;
+  width: 100%;
+}
 
