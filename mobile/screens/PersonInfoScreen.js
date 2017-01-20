@@ -90,8 +90,8 @@ const styles = StyleSheet.create({
     flex: 4
   },
   personImage: {
-    height: 300,
-    width: 300,
+    height: 250,
+    width: 250,
   },
   personName: {
     color: '#FBFBF2',
