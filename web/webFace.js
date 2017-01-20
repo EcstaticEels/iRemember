@@ -249,9 +249,13 @@ class Face extends React.Component {
   }
 
   getPhotos(e){
-    console.log('target', e.target)
-    e.preventDefault();
-    e.persist();
+    if (e.target) {
+      var files = e.target.files;
+      e.preventDefault();
+      e.persist();
+    } else {
+      var files = e;
+    }
 
     var data = [];      // The results
     var pending = 0;    // How many outstanding operations we have
@@ -270,7 +274,7 @@ class Face extends React.Component {
     }
     updateTest = updateTest.bind(this)
 
-    Array.prototype.forEach.call(e.target.files, function(file, index) {
+    Array.prototype.forEach.call(files, function(file, index) {
         // Read this file, remember it in `data` using the same index
         // as the file entry
         var fr = new FileReader();
@@ -278,7 +282,7 @@ class Face extends React.Component {
           data[index] = fr.result;
           --pending;
           if (pending == 0) {
-            updateTest(e.target.files, data)
+            updateTest(files, data)
           }
         }
         fr.readAsDataURL(file);
@@ -313,26 +317,12 @@ class Face extends React.Component {
     });
   }
 
-  validForm() {
-    if(this.state.subjectName.length < 3){
-      return false;
-    }
-    if(!this.state.editMode && this.state.updatePhotos.length < 1) {
-      return false;
-    }
-    return true;
-  }
-
   submitForm(event) {
     console.log('audio', faceForm.audioFile)
     event.preventDefault();
     this.setState({
       loader: true
     });
-    var valid = this.validForm();
-    if (!valid){
-      return window.alert("Invalid Form");
-    }
     var formData = new FormData();
     formData.append('subjectName', this.state.subjectName);
     formData.append('description', this.state.description);

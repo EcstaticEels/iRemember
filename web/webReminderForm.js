@@ -111,7 +111,7 @@ export default class ReminderForm extends React.Component {
   }
 
   validateTitle() {
-    return this.props.title.length > 0 ? 'success': 'error';
+    return this.props.title.length > 0 && this.props.title.length < 40? 'success': 'error';
   }
 
   validateDate() {
@@ -136,7 +136,7 @@ export default class ReminderForm extends React.Component {
         <Row>
           <Button className="record-button" onClick={this.startRecording.bind(this)}>
             <i className="fa fa-circle text-danger"></i> Record</Button>
-          <Button className="upload-button" onClick={this.showUpload.bind(this)}>Upload</Button>
+          <Button className="upload-button" onClick={this.showUpload.bind(this)}>Upload a File</Button>
         </Row>
         <div className="recorded-audio-box">
           <AudioUpload getAudio={this.getAudio.bind(this)}/></div>
@@ -146,7 +146,7 @@ export default class ReminderForm extends React.Component {
       return (<Row>
         <Button className="record-button" onClick={this.startRecording.bind(this)}>
           <i className="fa fa-circle text-danger"></i> Record</Button>
-        <Button className="upload-button" onClick={this.showUpload.bind(this)}>Upload</Button>
+        <Button className="upload-button" onClick={this.showUpload.bind(this)}>Upload a File</Button>
       </Row>)
     }
   }
@@ -172,10 +172,10 @@ export default class ReminderForm extends React.Component {
   render() {
     return (
       <div className="reminder-form">
-        <h3>Add a New Reminder</h3>
-        <br/>
+        <h3 className="reminder-form-heading">Add a New Reminder</h3>
         <FormGroup>
           <DropdownButton 
+            className='reminder-type-btn'
             title={this.props.type.slice(0,1).toUpperCase() + this.props.type.slice(1)} 
             id="type" value={this.props.type} 
             onSelect={(event) => this.props.getType(event)} required>
@@ -206,6 +206,7 @@ export default class ReminderForm extends React.Component {
           <ControlLabel> {'Date & Time'} </ControlLabel>
           <InputGroup>
             <Datetime 
+              className='datetime'
               id='date' 
               value={this.props.date}
               onChange={(dateMoment) => {
@@ -267,14 +268,14 @@ export default class ReminderForm extends React.Component {
         }</FormGroup>
 
         <ControlLabel> {'Audio Message'} </ControlLabel>
-        <FormGroup>{this.audioPart()}</FormGroup>
+        <FormGroup className="reminder-form-btns">{this.audioPart()}</FormGroup>
 
         <FormGroup>{
           this.state.recorded || (this.props.editMode && reminderForm.audioUrl)? 
           <audio src={reminderForm.audioUrl} controls></audio> : null
         }</FormGroup>
         
-        <Button type="submit" value="Submit" onClick={this.props.submitForm}>Submit</Button>
+        <Button className="reminder-form-submit-btn" type="submit" value="Submit" onClick={this.props.submitForm}>Submit</Button>
 
       </div>
     );
