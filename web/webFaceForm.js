@@ -282,7 +282,7 @@ export default class FaceForm extends React.Component {
         </FormGroup> 
 
         <FormGroup>{
-          this.props.editMode ? <div><ControlLabel>{'Image:'}</ControlLabel><Row className="show-grid">{uploadedPhotos}</Row></div> : null
+          this.props.editMode ? <div><ControlLabel>{'Image:'}</ControlLabel><Row className="show-grid" id="edit-thumbnail">{uploadedPhotos}</Row></div> : null
         }</FormGroup>
 
         <FormGroup validationState={this.validatePhotos()}>
