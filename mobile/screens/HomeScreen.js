@@ -195,7 +195,7 @@ export default class HomeScreen extends React.Component {
 
             this.setState({
               weatherDescription: description.charAt(0).toUpperCase() + description.slice(1),
-              // weatherIcon: weatherIcons[dayNight][iconKey],
+              weatherIcon: weatherIcons[dayNight][iconKey],
               loading: false
             });
           })
@@ -249,13 +249,14 @@ export default class HomeScreen extends React.Component {
           style={styles.container}
           contentContainerStyle={styles.contentContainer}>
 
-          <View style={styles.timeContainer}>
-            <Text style={styles.timeText}>
-              {this.state.dateTime.time}
-            </Text>
-          </View>
 
           <View style={styles.dateContainer}>
+
+            <View style={styles.innerDateContainer}>
+              <Text style={styles.timeText}>
+                {this.state.dateTime.time}
+              </Text>
+            </View>
 
             <View style={styles.innerDateContainer}>
               <Text style={styles.dateText}> {moment().format('dddd')} </Text>
@@ -278,22 +279,30 @@ export default class HomeScreen extends React.Component {
       ) 
     } else {
       return (
+        <ScrollView
+          style={styles.container}
+          contentContainerStyle={styles.contentContainer}>
 
-        <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-          <View style={styles.timeContainer}>
-            <Text style={styles.timeText}>
-              {this.state.dateTime.time}
-            </Text>
-          </View>
 
           <View style={styles.dateContainer}>
-            <Text style={styles.dateText}> {moment().format('dddd')} </Text>
+
+            <View style={styles.innerDateContainer}>
+              <Text style={styles.timeText}>
+                {this.state.dateTime.time}
+              </Text>
+            </View>
+
+            <View style={styles.innerDateContainer}>
+              <Text style={styles.dateText}> {moment().format('dddd')} </Text>
+            </View>
+
+            <View style={styles.innerDateContainer}>
+              <Text style={styles.dateText}>{moment().format('MMMM DD, YYYY')}</Text>
+            </View>
+
           </View>
 
-          <View style={styles.dateContainer}>
-            <Text style={styles.dateText}>{moment().format('MMMM DD, YYYY')}</Text>
-          </View>
-          <ActivityIndicator size='large' />
+          <ActivityIndicator size='large' color='#FBFBF2' />
         </ScrollView>
       );
     }
@@ -304,39 +313,31 @@ export default class HomeScreen extends React.Component {
 //hide top bar in exponent?
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#5897B2',
+    backgroundColor: '#8bacbd',
   },
   contentContainer: {
-    paddingTop: 0,
     height: 300,
     flexDirection: 'column',
     justifyContent: 'space-between',
     flex: 1
   },
   dateContainer: {
-    flex: 1,
+    flex: 3,
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#5897B2',
+    backgroundColor: '#8bacbd',
     paddingTop: 10,
-    paddingBottom: 10
-  },
-  timeContainer : {
-    backgroundColor: '#FF8A9C',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    paddingTop: 10,
-    paddingBottom: 10
+    paddingBottom: 10,
   },
   weatherContainer : {
-    backgroundColor: '#FF8A9C',
+    flex: 1,
+    backgroundColor: '#FA9581',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     paddingTop: 10,
-    paddingBottom: 10
+    paddingBottom: 10,
   },
   homepageContentIcon: {
     height: 120,
@@ -346,24 +347,33 @@ const styles = StyleSheet.create({
     color: '#FBFBF2',
     fontSize: 70,
     paddingRight: 40,
-    fontFamily: 'quicksand-regular'
+    fontFamily: 'quicksand-regular',
+    textShadowColor: '#888',
+    textShadowOffset: {width: 0, height: 1},
+    textShadowRadius: 1
   },
   timeText: {
-    fontSize: 70, 
+    fontSize: 90, 
     color: '#FBFBF2',
-    fontFamily: 'quicksand-regular'
+    fontFamily: 'quicksand-regular',
+    textShadowColor: '#888',
+    textShadowOffset: {width: 0, height: 1},
+    textShadowRadius: 1
   }, 
   dateText: {
     color: '#FBFBF2',
-    fontSize: 50,
-    fontFamily: 'quicksand-regular'
+    fontSize: 40,
+    fontFamily: 'quicksand-regular',
+    textShadowColor: '#888',
+    textShadowOffset: {width: 0, height: 1},
+    textShadowRadius: 1
   },
   activityIndicator: {
     alignSelf: 'center',
   },
   innerDateContainer: {
     alignItems: 'center',
-    backgroundColor: '#5897B2',
+    backgroundColor: '#8bacbd',
     paddingTop: 5,
   },
 });

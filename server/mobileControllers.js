@@ -42,6 +42,7 @@ module.exports = {
       }
     })
     .then(caregiver => {
+      console.log('THIS IS THE CAREGIVER', caregiver)
       const detectParams = {
         "returnFaceId": "true",
         "returnFaceLandmarks": "false"
