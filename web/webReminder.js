@@ -1,6 +1,8 @@
 import React from 'react';
 import $ from 'jquery';
 import {Button, Grid, Row, Col} from 'react-bootstrap';
+import {browserHistory} from 'react-router';
+
 
 import ReminderList from './webReminderList.js';
 import ReminderCurrent from './webReminderCurrent.js';
@@ -70,6 +72,7 @@ class Reminder extends React.Component {
       }.bind(this),
       error: function(err) {
         console.log('error', err);
+        browserHistory.push('/500');
       }
     });
   }
@@ -248,6 +251,7 @@ class Reminder extends React.Component {
       },
       error: function(err) {
         console.log('error', err);
+        browserHistory.push('/500');
       }
     })
   }
@@ -336,6 +340,7 @@ class Reminder extends React.Component {
       },
       error: function(err) {
         console.log('error', err);
+        browserHistory.push('/500');
       }
     });
   }
