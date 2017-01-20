@@ -48,9 +48,9 @@ export default class PhotosScreen extends React.Component {
         this.setState({loading: true})
         this.uploadImageAsync(photo.uri)
         .then((response) => {
+          console.log('THIS IS THE RESPONSE', response)
           return response.json().then(responseJSON => {
             this.setState({loading: false})
-            console.log(responseJSON)
             if(responseJSON.message === 'No faces detected') {
               this._goToNoFacesFoundPage()
             }
@@ -87,6 +87,7 @@ export default class PhotosScreen extends React.Component {
 uploadImageAsync(uri) {
   let date = Date.now();
   let patientId = this.props.route.params.state.id;
+  // let patientId = 1;
 
   let apiUrl = `${baseUrl}/mobile/identify?date=${date}&patientId=${patientId}`;
 
@@ -122,7 +123,7 @@ uploadImageAsync(uri) {
     if (this.state.loading) {
       return (
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-          <ActivityIndicator size='large' />
+          <ActivityIndicator size='large' color='white' />
         </ScrollView>
       );
     } else {
@@ -139,7 +140,7 @@ uploadImageAsync(uri) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#2c3e50'
+    backgroundColor: '#8bacbd'
   },
   ActivityIndicator: {
     alignSelf: 'center'

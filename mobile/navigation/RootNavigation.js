@@ -190,8 +190,12 @@ export default class RootNavigation extends React.Component {
     this.setState({name: text});
   }
 
-  _failedLogin() {
-    this.props.navigator.push(Router.getRoute('failedLogin'))
+  _failedFaceLogin() {
+    this.props.navigator.push(Router.getRoute('failedFaceLogin'))
+  }
+
+  _failedNameLogin() {
+    this.props.navigator.push(Router.getRoute('failedNameLogin'))
   }
 
   handleTextSubmit () {
@@ -199,19 +203,20 @@ export default class RootNavigation extends React.Component {
     .then((photo) => {
       this.uploadImageAsync(photo.uri)
       .then((person) => {
+        console.log('this is the person', person)
         return person.json()
-        .then((person) => {
-          if (person.name === this.state.name) {
+        .then((personJSON) => {
+          if (personJSON.name === this.state.name) {
             this.setState({authenticated: true})
           } else {
-            this._failedLogin()
+            this._failedNameLogin()
           }
         })
-        .catch((err) => {
-          console.log('BRO WE CANT AUTHENTICATE U')
-          console.log('ERROR', err)
-          this._failedLogin()
-        })
+      })
+      .catch((err) => {
+        console.log('BRO WE CANT AUTHENTICATE U')
+        console.log('ERROR', err)
+        this._failedFaceLogin()
       })
     })
   }  
@@ -229,13 +234,24 @@ export default class RootNavigation extends React.Component {
 
   render() {
 
-    // if (!this.state.fingerprint || !this.state.authenticated) {
-    //   return (
-    //     <StackNavigation
-    //       initialRoute={Router.getRoute('login', {authFunction: this.authFunction, state:this.state, handleTextChange: this.handleTextChange, handleTextSubmit: this.handleTextSubmit})}/>
-    //       // initialRoute='login' />
-    //   )
-    // } else {
+    if (!this.state.fingerprint || !this.state.authenticated) {
+      return (
+        <StackNavigation
+        defaultRouteConfig={{
+          navigationBar: {
+            backgroundColor: '#FA9581',
+            titleStyle: {
+              // color: '#FBFBF2',
+              fontFamily: 'quicksand-regular',
+              fontSize: 30,
+            },
+            tintColor: '#FBFBF2'
+          }
+        }} 
+        initialRoute={Router.getRoute('login', {authFunction: this.authFunction, state:this.state, handleTextChange: this.handleTextChange, handleTextSubmit: this.handleTextSubmit})}/>
+          // initialRoute='login' />
+      )
+    } else {
       return (
         <TabNavigation
           // tabBarColor='#9EBDFF'
@@ -247,26 +263,68 @@ export default class RootNavigation extends React.Component {
           <TabNavigationItem
             id="home"
             style={styles.tabItem}
+            selectedStyle={styles.selectedTab}
             renderIcon={isSelected => this._renderIcon('home', isSelected)}>
-            <StackNavigation initialRoute={Router.getRoute('home', {state: this.state})}/>
+            <StackNavigation 
+            defaultRouteConfig={{
+              navigationBar: {
+                backgroundColor: '#FA9581',
+                titleStyle: {
+                  // color: '#FBFBF2',
+                  fontFamily: 'quicksand-regular',
+                  fontSize: 30,
+                },
+                tintColor: '#FBFBF2'
+              }
+            }} 
+            initialRoute={Router.getRoute('home', {state: this.state})}/>
           </TabNavigationItem>
           <TabNavigationItem
             id="reminders"
             style={styles.tabItem}
+            selectedStyle={styles.selectedTab}
             renderIcon={isSelected => this._renderIcon('bell', isSelected)}>
-            <StackNavigation initialRoute={Router.getRoute('reminders', {state: this.state})}/>
+            <StackNavigation
+            defaultRouteConfig={{
+              navigationBar: {
+                backgroundColor: '#FA9581',
+                titleStyle: {
+                  // color: '#FBFBF2',
+                  fontFamily: 'quicksand-regular',
+                  fontSize: 30,
+                },
+                tintColor: '#FBFBF2'
+              }
+            }} 
+            initialRoute={Router.getRoute('reminders', {state: this.state})}/>
           </TabNavigationItem>
 
           <TabNavigationItem
             id="photos"
             style={styles.tabItem}
+            selectedStyle={styles.selectedTab}
             renderIcon={isSelected => this._renderIcon('camera', isSelected)}>
-            <StackNavigation initialRoute={Router.getRoute('photos', {state: this.state})}/>
+            <StackNavigation 
+            defaultRouteConfig={{
+              navigationBar: {
+              backgroundColor: '#FA9581',
+                titleStyle: {
+                  // color: '#FBFBF2',
+                  fontFamily: 'quicksand-regular',
+                  fontSize: 30,
+                  textShadowColor: '#888',
+                  textShadowOffset: {width: 0, height: 1},
+                  textShadowRadius: 1
+                },
+                tintColor: '#FBFBF2'
+              }
+            }} 
+            initialRoute={Router.getRoute('photos', {state: this.state})}/>
           </TabNavigationItem>
         </TabNavigation>
       );
 
-    // }
+    }
   }
 
   _renderIcon(name, isSelected) {
@@ -274,9 +332,7 @@ export default class RootNavigation extends React.Component {
       <FontAwesome
         name={name}
         size={80}
-        color={isSelected ? Colors.tabIconSelected : '#777'}
-        style={styles.tabItem}
-        selectedStyle={styles.tabItem} 
+        color={isSelected ? Colors.tabIconSelected : '#777'} 
       />
     );
   }
@@ -487,12 +543,19 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   selectedTab: {
-    color: Colors.tabIconSelected,
-    borderLeftWidth: 1,
-    borderLeftColor: '#777'
+    borderRightWidth: 1,
+    borderRightColor: '#777'
   },
   tabItem: {
     borderRightWidth: 1,
     borderRightColor: '#777'
+  },
+  iconCaption: {
+    color: '#777',
+    fontSize: 10,
+    fontFamily: 'quicksand-regular',
+    textShadowColor: '#888',
+    textShadowOffset: {width: 0, height: 1},
+    textShadowRadius: 1
   }
 });
