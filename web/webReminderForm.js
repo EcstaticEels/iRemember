@@ -111,7 +111,7 @@ export default class ReminderForm extends React.Component {
   }
 
   validateTitle() {
-    return this.props.title.length > 0 ? 'success': 'error';
+    return this.props.title.length > 0 && this.props.title.length < 40? 'success': 'error';
   }
 
   validateDate() {
@@ -206,6 +206,7 @@ export default class ReminderForm extends React.Component {
           <ControlLabel> {'Date & Time'} </ControlLabel>
           <InputGroup>
             <Datetime 
+              className='datetime'
               id='date' 
               value={this.props.date}
               onChange={(dateMoment) => {

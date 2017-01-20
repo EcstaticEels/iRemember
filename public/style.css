@@ -445,7 +445,7 @@ input[type=file]{
 }
 
 .rdtPicker {
-  margin-top: 38px;
+  margin-top: 38px !important;
 }
 
 .preview-img {
@@ -480,5 +480,12 @@ input[type=file]{
 .photos-num {
   margin-left: 8px;
   margin-top: 2px;
+}
+
+#edit-thumbnail {
+  padding-left: 42px;
+  padding-right: 42px;
+  align-content: center;
+  width: 100%;
 }
 

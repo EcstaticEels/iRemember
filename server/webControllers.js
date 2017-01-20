@@ -181,12 +181,12 @@ module.exports = {
               if (err) {
                 console.log(err);
               }
-              result.push(body);
               db.FacePhoto.create({
                 photo: url,
                 faceId: face.get('id')
               })
               .then(() => {
+                result.push(body);
                 if (urlArray.length === result.length) {
                   request.post({
                     headers: microsoftHeaders,
@@ -201,7 +201,10 @@ module.exports = {
               });
             });
           });
-        });
+        })
+        .catch(err => {
+          console.log('error in addFace cntrl', err)
+        })
       });
     });
   },
@@ -400,7 +403,7 @@ module.exports = {
                       console.log(err);
                     }
                     var parsedIdentifyBody = JSON.parse(body);
-                    console.log('identify results', parsedIdentifyBody[0].candidates)
+                    console.log('identify results', parsedIdentifyBody)
                     if (parsedIdentifyBody[0].candidates.length === 0) {
                       resolve("not_found");
                     } else if (parsedIdentifyBody[0].candidates.length === 1) {
@@ -536,7 +539,7 @@ module.exports = {
     });
   },
   setup: (req, res) => {
-    let newPersonGroupId = `ecstatic-eels-2-${req.user.id}` //why is this not working
+    let newPersonGroupId = `ecstatic-eels-3-${req.user.id}` //why is this not working
     let patientGroupId = `ecstatic-eels-patients-1` //we don't need to change this much
     handleSetupForm(req, (patientPhotoArray, fields) => {
       request.post({
@@ -563,12 +566,12 @@ module.exports = {
                 if (err) {
                   console.log(err);
                 }
-                result.push(body);
                 db.PatientPhoto.create({
                   photo: patientPhoto,
                   patientId: patient.get('id')
                 })
                 .then(() => {
+                  result.push(body);
                   if (patientPhotoArray.length === result.length) {
                     request.post({
                       headers: microsoftHeaders,
