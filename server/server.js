@@ -101,13 +101,11 @@ app.post('/web/identify', ensureAuthenticated, webControllers.addFace);
 app.put('/web/identify', ensureAuthenticated, webControllers.updateFace);
 app.get('/web/identify', ensureAuthenticated, webControllers.retrieveFaces);
 app.delete('/web/identify', ensureAuthenticated, webControllers.deleteFace);
-
 app.post('/web/reminders', ensureAuthenticated, webControllers.addReminder);
 app.get('/web/reminders', ensureAuthenticated, webControllers.retrieveReminders);
 app.put('/web/reminders', ensureAuthenticated, webControllers.updateReminder);
 app.delete('/web/reminders', ensureAuthenticated, webControllers.deleteReminder);
 app.post('/web/setup', ensureAuthenticated, webControllers.setup);
-
 app.post('/web/detect', ensureAuthenticated, webControllers.detectFaces);
 
 //Mobile
@@ -154,6 +152,10 @@ app.get('/user', function(req, res) {
       .then(patient => {
         res.status(200).send(JSON.stringify({caregiver: req.user, patient: patient}))
       })
+      .catch(err => {
+        console.log('err in get /user', err);
+        res.status(500);
+      })
     } else {
       res.status(200).send(JSON.stringify({caregiver: req.user}));
     }
@@ -169,8 +171,12 @@ app.get('/auth/google/callback',
   }); 
 
 app.get('/logout', function(req, res){
-  req.session.destroy(function (err) {
-    res.status(200).send('logged out'); 
+  req.session.destroy(function(err) {
+    if (err) {
+      res.status(500);
+    } else {
+      res.status(200).send('logged out'); 
+    }
   });
 });
 
