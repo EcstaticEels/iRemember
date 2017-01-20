@@ -240,7 +240,7 @@ export default class FaceForm extends React.Component {
     var thumbnailPhotos = this.props.handleCloudinaryUrl(cloudinaryUrls, '134', '94', 'thumb');
     var uploadedPhotos = this.props.editMode ?       
       (<label>
-        <div>
+        <div className="uploaded-face-photos-form">
         {thumbnailPhotos.length > 0 ? thumbnailPhotos.map((val, ind) => {
           if(ind % 4 === 0) {
             return <img src={val} key={ind} className="preview-img front" />
@@ -263,9 +263,7 @@ export default class FaceForm extends React.Component {
 
     return (
     <div className="face-form">
-    <h3>New Face</h3>
-        <br/>
-
+      <h3 className="face-form-heading">Add a New Face</h3>
         <FormGroup validationState={this.validateName()}>
           <ControlLabel> {'Name'} </ControlLabel>
           <FormControl 
@@ -284,6 +282,7 @@ export default class FaceForm extends React.Component {
         </FormGroup> 
 
         <FormGroup>{
+
           this.props.editMode ? 
             <div>
               <ControlLabel>{'Image:'}</ControlLabel>
@@ -343,7 +342,7 @@ export default class FaceForm extends React.Component {
           <button onClick={this.handleCloseModal}>Close Modal</button>
         </ReactModal>
 
-      <Button bsSize='small' className="btn-submit" onClick={this.props.submitForm}>Submit</Button>
+      <Button bsSize='small' className="face-form-submit-btn" onClick={this.props.submitForm}>Submit</Button>
 
     </div>
     );

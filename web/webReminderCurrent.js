@@ -61,7 +61,7 @@ export default class ReminderCurrent extends React.Component {
     } else {
       reminderCurrentView = (
         <div className="face-current">
-          <h2>Add a reminder for {patientName.get()}</h2>
+          <h2 className="no-reminder-current">Add a reminder for {patientName.get()}</h2>
         </div>
       )
     }
