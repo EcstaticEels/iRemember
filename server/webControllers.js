@@ -622,8 +622,8 @@ module.exports = {
     });
   },
   setup: (req, res) => {
-    let newPersonGroupId = `ecstatic-eels-11-${req.user.id}` //why is this not working
-    let patientGroupId = `ecstatic-eels-patients-3` //we don't need to change this much
+    let newPersonGroupId = `ecstatic-eels-69-${req.user.id}` //why is this not working
+    let patientGroupId = `ecstatic-eels-patients-4` //we don't need to change this much
     handleSetupForm(req, (patientPhotoArray, fields) => {
       request.post({
         headers: microsoftHeaders,
