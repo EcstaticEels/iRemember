@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     textShadowColor: '#888',
     textShadowOffset: {width: 0, height: 1},
     textShadowRadius: 1,
-    fontSize: 35,
+    fontSize: 30,
     textAlign: 'center'
   },
   infoTextContainer: {
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     textShadowColor: '#888',
     textShadowOffset: {width: 0, height: 1},
     textShadowRadius: 1,
-    fontSize: 50,
+    fontSize: 40,
     textAlign: 'center'
   },
   promptTextContainer: {
