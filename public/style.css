@@ -147,6 +147,10 @@ body {
   align-items: center;
 }
 
+.reminder-graphic {
+  margin-left: 15px;
+}
+
 .reminder-entry {
   display: flex;
   align-items: center;
@@ -202,7 +206,7 @@ body {
 .face-current-heading {
   text-align: center;
   font-size: 48px;
-  margin: 25px 0;
+  margin: 25px 15px;
   font-weight: 500;
 }
 
@@ -278,13 +282,25 @@ input[type=file]{
 /******************************************/
 
 .preview-image {
-  height: 50%;
-  width: 50%;
-  max-width: 400px;
-  max-height: 400px;
-  margin: 50px 60px;
+  height: 100px;
 }
 
+.fa-check-circle-o,
+.fa-times-circle-o {
+  font-size: 50px;
+}
+
+.x-icon {
+  color: #FD675F;
+}
+
+.check-icon {
+  color: #1fa67a;
+}
+
+.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+  vertical-align: center;
+}
 
 .image-preview-info {
   margin: 60px;
@@ -378,9 +394,14 @@ input[type=file]{
     justify-content: center;
 }
 
+.sign-in-header {
+  margin: 0;
+}
+
 .sign-in-box {
-      background-color: white;
-    padding: 100px 150px;
+  background-color: white;
+  padding: 100px 150px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.15), 0 6px 20px 0 rgba(0, 0, 0, 0.14);
 }
 
 /************************************************/

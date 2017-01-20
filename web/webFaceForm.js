@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Row, Col, Grid, FormControl, FormGroup, ControlLabel} from 'react-bootstrap';
+import {Button, Row, Col, Grid, FormControl, FormGroup, ControlLabel, Table} from 'react-bootstrap';
 import ImagesUpload from './webImagesUpload.js';
 import AudioUpload from './webAudioUpload.js';
 import ReactModal from 'react-modal';
@@ -230,6 +230,65 @@ export default class FaceForm extends React.Component {
   // }
 
   render() {
+    var optionsForDetectIdentify = {
+      undefined: {
+        imageInfo: 'This image is good to upload!'
+      },
+      found_match: {
+        imageInfo: 'This image has only one face, which matches the faces previously uploaded for this subject. It is good to upload!'
+      },
+      found_no_match: {
+        imageInfo: 'This image has only one face, but matches the face of a different subject previously uploaded.'
+      },
+      not_found: {
+        imageInfo: 'This image has only one face, but does not match the faces previously uploaded for this subject or any other faces previously uploaded.'
+      },
+      multiple_candidates: {
+        imageInfo: 'This image has only one face, but matches the faces of multiple subjects previously uploaded.'
+      }
+    }
+
+    var imagePreview = this.props.imagePreviewUrls.length > 0  && this.props.detectArr.length > 0? (
+      <Table>
+        <thead>
+          <tr>
+            <th>Uploaded Image</th>
+            <th>Result</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+        {
+          this.props.imagePreviewUrls.map((imagePreview, ind) => {
+            var previewResultMsg;
+            if (this.props.detectArr[ind][0] === true) {
+              previewResultMsg = optionsForDetectIdentify[this.props.detectArr[ind][1]].imageInfo;
+            } else if (this.props.detectArr[ind][0] === null) {
+              previewResultMsg = "No faces detected in this photo--please upload a new image with the above guidelines.";
+            } else if (this.props.detectArr[ind][0] === false) {
+              previewResultMsg = "Multiple faces were detected in this photo--please upload a new image depicting only the subject's face";
+            }
+
+            var previewResultGraphic;
+            if (this.props.detectArr[ind][0] === null || this.props.detectArr[ind][0] === false) {
+              previewResultGraphic = <i className="fa fa-times-circle-o x-icon" aria-hidden="true"></i>;
+            } else if (this.props.detectArr[ind][0] === true && (this.props.detectArr[ind][1] === undefined || this.props.detectArr[ind][1] === 'found_match')) {
+              previewResultGraphic = <i className="fa fa-check-circle-o check-icon" aria-hidden="true"></i>;
+            } else {
+              previewResultGraphic = <i className="fa fa-times-circle-o x-icon" aria-hidden="true"></i>;
+            }
+            return (
+              <tr key={ind}>
+                <td><img src={imagePreview} className='preview-image' /></td>
+                <td>{previewResultGraphic}</td>
+                <td>{previewResultMsg}</td>
+              </tr>
+            );
+          })
+        }
+        </tbody>
+      </Table>
+    ) : null;
     if (this.props.errorText === 'Name is a required field') {
       var nameError = this.props.errorText;
     }
@@ -330,12 +389,7 @@ export default class FaceForm extends React.Component {
 
             <div>
               <Loader show={this.state.loader} message={spinner} foregroundStyle={{color: 'white'}} backgroundStyle={{backgroundColor: 'white'}} className="spinner">
-              {this.props.imagePreviewUrls.length > 0 ? 
-                this.props.imagePreviewUrls.map((imagePreview, ind) => {
-                  return (<ImagePreviewEntry photo={imagePreview} index={ind} key={ind} success={this.props.detectArr[ind]} />);
-                }) 
-                : <h1>No images detected</h1>
-              } 
+                {imagePreview}
               </Loader>
             </div>
           </div>

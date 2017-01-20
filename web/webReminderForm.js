@@ -176,7 +176,7 @@ export default class ReminderForm extends React.Component {
         <FormGroup>
           <DropdownButton 
             className='reminder-type-btn'
-            title={this.props.type.slice(0,1).toUpperCase() + this.props.type.slice(1)} 
+            title={this.props.type} 
             id="type" value={this.props.type} 
             onSelect={(event) => this.props.getType(event)} required>
             <MenuItem eventKey="Medication" value='Medication'>Medication</MenuItem>
