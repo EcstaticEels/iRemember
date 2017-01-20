@@ -266,7 +266,7 @@ export default class FaceForm extends React.Component {
             } else if (this.props.detectArr[ind][0] === null) {
               previewResultMsg = "No faces detected in this photo--please upload a new image with the above guidelines.";
             } else if (this.props.detectArr[ind][0] === false) {
-              previewResultMsg = "Multiple faces were detected in this photo--please upload a new image depicting only the subject's face";
+              previewResultMsg = "Multiple faces were detected in this photo--please upload a new image depicting only the subject's face.";
             }
 
             var previewResultGraphic;
