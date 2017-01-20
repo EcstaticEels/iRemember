@@ -27,13 +27,16 @@ const handleFaceForm = function(req, cb) {
     console.log('fields', fields, 'files', files)
     if (err) {
       console.log(err);
-      res.status(500);
+      res.status(400);
     }
     const urlArray = [];
     if (Object.keys(files).length > 0) { //if there are files
       if (files.photo) { //if there are photo files
         files.photo.forEach(function(file) {
-          cloudinary.uploader.upload(file.path, function(result) { 
+          cloudinary.uploader.upload(file.path, function(result) {
+            if (result.error) {
+              res.status(400);
+            }
             urlArray.push(result.url);
             if (urlArray.length === files.photo.length) {
               if (files.audio) { //if there are also audio files
@@ -43,7 +46,7 @@ const handleFaceForm = function(req, cb) {
                     function(error, result) {
                       if (error) {  
                         console.log(error);
-                        res.status(500);
+                        res.status(400);
                       }
                       cb(urlArray, result.url, fields);        
                   });
@@ -61,7 +64,7 @@ const handleFaceForm = function(req, cb) {
             function(error, result) {
               if (error) {
                 console.log(error);
-                res.status(500);
+                res.status(400);
               }
               cb(null, result.url, fields);        
           });
@@ -78,13 +81,16 @@ const handleDetect = function(req, cb) {
   detectForm.parse(req, function(err, fields, files) {
     if (err) {
       console.log(err);
-      res.status(500);
+      res.status(400);
     }
     const detectArr = [];
     var count= 0;
     if (files.detectPhoto) { //if there are photo files
       files.detectPhoto.forEach(function(photo, index) {
         cloudinary.uploader.upload(photo.path, function(result) { 
+          if (result.error) {
+            res.status(400);
+          }
           detectArr[index] = result.url
           count++;
           if (count === files.detectPhoto.length) {
@@ -101,12 +107,15 @@ const handleSetupForm = function(req, cb) {
   setupForm.parse(req, function(err, fields, files) {
     if (err) {
       console.log(err);
-      res.status(500);
+      res.status(400);
     }
     const patientPhotoArray = [];
     if (Object.keys(files).length > 0) {
       files.patientPhoto.forEach(function(file) {
         cloudinary.uploader.upload(file.path, function(result) { 
+          if (result.error) {
+            res.status(400);
+          }
           patientPhotoArray.push(result.url);
           if (patientPhotoArray.length === files.patientPhoto.length) {
             cb(patientPhotoArray, fields);
@@ -122,7 +131,7 @@ const handleReminderForm = function(req, cb) {
   reminderForm.parse(req, function(err, fields, files) {
     if (err) {
       console.log(err);
-      res.status(500);
+      res.status(400);
     }
     const urlArray = [];
     if (Object.keys(files).length > 0) {
@@ -132,7 +141,7 @@ const handleReminderForm = function(req, cb) {
           function(error, result) {
             if (error) {
               console.log(error);
-              res.status(500);
+              res.status(400);
             }
             cb(result.url, fields);        
         });
@@ -158,7 +167,7 @@ module.exports = {
       }, (err, response, body) => {
         if (err) {
           console.log(err);
-          res.status(500);
+          res.status(400);
         }
         let createdPerson = JSON.parse(body);
         db.Face.create({
@@ -180,7 +189,7 @@ module.exports = {
             }, (err, response, body) => {
               if (err) {
                 console.log(err);
-                res.status(500)
+                res.status(400);
               }
               db.FacePhoto.create({
                 photo: url,
@@ -195,16 +204,23 @@ module.exports = {
                   }, (err, response, body) => {
                     if (err) {
                       console.log(err);
+                      res.status(400);
+                    } else {
+                      res.status(201).send(JSON.stringify(face));
                     }
-                    res.status(201).send(JSON.stringify(face));
                   });
                 }
-              });
+              })
+              .catch(err => {
+                console.log(err);
+                res.status(400);
+              })
             });
           });
         })
         .catch(err => {
-          console.log('error in addFace cntrl', err)
+          console.log(err);
+          res.status(400);
         })
       });
     });
@@ -254,18 +270,31 @@ module.exports = {
                       }, (err, response, body) => {
                         if (err) {
                           console.log(err);
+                          res.status(400);
                         }
                         res.status(201).send('Person and face successfully updated, train API call made');
                       });
                     }
-                  });
+                  })
+                  .catch(err => {
+                    console.log(err);
+                    res.status(400);
+                  })
               });
             });
           } else {
             res.status(201).send('Person updated');
           }
-        });
-      });
+        })
+        .catch(err => {
+          console.log(err);
+          res.status(400)
+        })
+      })
+      .catch(err => {
+        console.log(err);
+        res.status(400)
+      })
     });
   },
   retrieveFaces: (req, res) => {
@@ -293,15 +322,27 @@ module.exports = {
               photos: facePhotos
             }
             resolve(faceObj);
-          });
+          })
+          .catch(err => {
+            console.log(err);
+            res.status(400);
+          })
         });
       }
       let promisifiedFindFaces = faces.map(findFace);
       Promise.all(promisifiedFindFaces)
       .then(faceObjArray => {
         res.status(200).send(JSON.stringify({faces: faceObjArray}));
-      });
-    });
+      })
+      .catch(err => {
+        console.log(err);
+        res.status(400);
+      })
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(400);
+    })
   },
   deleteFace: (req, res) => {
     let faceId = req.body.faceId;
@@ -324,14 +365,14 @@ module.exports = {
           }, (err, response, body) => {
             if (err) {
               console.log(err);
+              res.status(400)
             }
-            console.log('trained person group call made');
             db.FacePhoto.destroy({
               where: {
                 faceId: faceId
               }
             })
-            .then( (resp) => {
+            .then(resp => {
               console.log('facephoto destroy', resp)
               db.Face.destroy({
                 where: {
@@ -341,11 +382,23 @@ module.exports = {
               .then( (resp) => {
                 console.log('face destroy', resp);
                 res.status(200).send('face and facephotos deleted');
-              });
+              })
+              .catch(err => {
+                console.log(err);
+                res.status(400);
+              })
+            })
+            .catch(err => {
+              console.log(err);
+              res.status(400);
             })
           });
         }
       );
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(400);
     })
   },
   detectFaces: (req, res) => {
@@ -372,6 +425,7 @@ module.exports = {
         }, function(err, response, body) {
           if (err) {
             console.log(err);
+            res.status(400);
           }
           console.log('body from detect', body)
           var parsedData = JSON.parse(body);
@@ -379,7 +433,6 @@ module.exports = {
             resultArr[index] = [null];
           } else if (parsedData.length === 1) {
             resultArr[index] = [true];
-
             if (fields.faceId) {
               return new Promise((resolve, reject) => {
                 var faceId = fields.faceId[0];
@@ -402,6 +455,7 @@ module.exports = {
                   }, function(err, response, body) {
                     if (err) {
                       console.log(err);
+                      res.status(400);
                     }
                     var parsedIdentifyBody = JSON.parse(body);
                     console.log('identify results', parsedIdentifyBody)
@@ -418,6 +472,10 @@ module.exports = {
                     }
                   });        
                 })
+                .catch(err => {
+                  console.log(err);
+                  res.status(400);
+                })
               })
               .then(result => {
                 resultArr[index].push(result);
@@ -426,7 +484,11 @@ module.exports = {
                 if (count === detectArr.length) {
                   res.status(200).send(JSON.stringify(resultArr));
                 }
-              });
+              })
+              .catch(err => {
+                console.log(err);
+                res.status(400);
+              })
             }
           } else if (parsedData.length > 1) {
             resultArr[index] = [false];
@@ -438,11 +500,9 @@ module.exports = {
           }
         });        
       });
-
     });
   },
   addReminder: (req, res) => {
-    console.log(req.body.audio)
     handleReminderForm(req, (audioUrl, fields) => {
       console.log('audio', audioUrl, 'fields', fields)
       db.Reminder.create({ 
@@ -457,15 +517,13 @@ module.exports = {
         registered: false,
         patientId: req.user.patientId
       })
-        .then(reminder => {
-          console.log('res', reminder)
-          res.status(201).send(JSON.stringify(reminder));
-        })
-        .then(() => {
-          db.Patient.findOne({
-            where: {
-              id: req.user.patientId
-            }
+      .then(reminder => {
+        console.log('res', reminder)
+        res.status(201).send(JSON.stringify(reminder));
+        db.Patient.findOne({
+          where: {
+            id: req.user.patientId
+          }
         })
         .then(patient => {
           console.log('patient', patient.token)
@@ -476,6 +534,14 @@ module.exports = {
             });
           }
         })
+        .catch(err => {
+          console.log(err);
+          res.status(400);
+        })
+      })
+      .catch(err => {
+        console.log(err);
+        res.status(400);
       })
     });
   },
@@ -492,7 +558,7 @@ module.exports = {
     })
     .catch(err => {
       console.log(err);
-      res.status(500);
+      res.status(400);
     })
   },
   updateReminder: (req, res) => { 
@@ -518,7 +584,7 @@ module.exports = {
       .then(reminder => {
         db.Patient.findOne({
           where: {
-            id: reminder.patientId
+            id: req.user.patientId
           }
         })
         .then(patient => {
@@ -529,10 +595,19 @@ module.exports = {
             });
           }
         })
+        .catch(err => {
+          console.log(err);
+          res.status(400);
+        })
       })
       .then(updatedReminder => {
+        console.log('are we getting an updatedReminder', updatedReminder);
         res.status(200).send(JSON.stringify(updatedReminder));
-      });
+      })
+      .catch(err => {
+        console.log(err);
+        res.status(400);
+      })
     })
   },
 
@@ -541,6 +616,10 @@ module.exports = {
     db.Reminder.update({registered: null}, { where: {id: reminderId}})
     .then(updatedReminder => {
       res.status(200).send('updated reminder to delete in mobile');
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(400);
     });
   },
   setup: (req, res) => {
@@ -554,6 +633,10 @@ module.exports = {
           "name": fields.patientName[0]
         })
       }, (err, response, body) => {
+        if (err) {
+          console.log(err);
+          res.status(400);
+        }
         let createdPerson = JSON.parse(body);
         db.Patient.create({
           name: fields.patientName[0],
@@ -570,6 +653,7 @@ module.exports = {
               }, (err, response, body) => {
                 if (err) {
                   console.log(err);
+                  res.status(400);
                 }
                 db.PatientPhoto.create({
                   photo: patientPhoto,
@@ -584,6 +668,7 @@ module.exports = {
                     }, (err, response, body) => {
                       if (err) {
                         console.log(err);
+                        res.status(400);
                       }
                       db.Caregiver.update(
                         {
@@ -604,18 +689,31 @@ module.exports = {
                         }, (err, response, body) => {
                           if (err) {
                             console.log(err);
+                            res.status(400);
                           }
                           console.log('caregiver and patient associated');
                           res.status(201).send(JSON.stringify({patient: patient, caregiver: caregiver}));
                         })
-                      });
+                      })
+                      .catch(err => {
+                        console.log(err);
+                        res.status(400);
+                      })
                     });
                   }
-                });
+                })
+                .catch(err => {
+                  console.log(err);
+                  res.status(400);
+                })
               }
             );
           });
         })
+        .catch(err => {
+          console.log(err);
+          res.status(400);
+        });
       });
     });
   }
