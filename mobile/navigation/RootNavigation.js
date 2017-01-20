@@ -196,8 +196,9 @@ export default class RootNavigation extends React.Component {
         console.log('this is the person', person)
         return person.json()
         .then((personJSON) => {
-          console.log('THIS IS THE PERSON', personJSON)
-          if (personJSON.name === this.state.name) {
+          var input = this.state.name.trim().split(' ');
+          var firstName = personJSON.name.trim().split(' ');
+          if (input[0].toLowerCase() === firstName[0].toLowerCase()) {
 
             Store.update('id', personJSON.id);
             this.setState({
@@ -230,24 +231,24 @@ export default class RootNavigation extends React.Component {
 
   render() {
 
-    if (!this.state.fingerprint || !this.state.authenticated) {
-      return (
-        <StackNavigation
-        defaultRouteConfig={{
-          navigationBar: {
-            backgroundColor: '#FA9581',
-            titleStyle: {
-              // color: '#FBFBF2',
-              fontFamily: 'quicksand-regular',
-              fontSize: 30,
-            },
-            tintColor: '#FBFBF2'
-          }
-        }} 
-        initialRoute={Router.getRoute('login', {authFunction: this.authFunction, state:this.state, handleTextChange: this.handleTextChange, handleTextSubmit: this.handleTextSubmit})}/>
-          // initialRoute='login' />
-      )
-    } else {
+    // if (!this.state.fingerprint || !this.state.authenticated) {
+    //   return (
+    //     <StackNavigation
+    //     defaultRouteConfig={{
+    //       navigationBar: {
+    //         backgroundColor: '#FA9581',
+    //         titleStyle: {
+    //           // color: '#FBFBF2',
+    //           fontFamily: 'quicksand-regular',
+    //           fontSize: 30,
+    //         },
+    //         tintColor: '#FBFBF2'
+    //       }
+    //     }} 
+    //     initialRoute={Router.getRoute('login', {authFunction: this.authFunction, state:this.state, handleTextChange: this.handleTextChange, handleTextSubmit: this.handleTextSubmit})}/>
+    //       // initialRoute='login' />
+    //   )
+    // } else {
       return (
         <TabNavigation
           // tabBarColor='#9EBDFF'
@@ -320,7 +321,7 @@ export default class RootNavigation extends React.Component {
         </TabNavigation>
       );
 
-    }
+    // }
   }
 
   _renderIcon(name, isSelected) {
