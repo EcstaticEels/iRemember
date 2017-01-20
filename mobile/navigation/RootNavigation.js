@@ -187,6 +187,7 @@ export default class RootNavigation extends React.Component {
   }
 
   handleTextChange (text) {
+    Store.update('name', text);
     this.setState({name: text});
   }
 
@@ -208,7 +209,12 @@ export default class RootNavigation extends React.Component {
         .then((personJSON) => {
           console.log('THIS IS THE PERSON', personJSON)
           if (personJSON.name === this.state.name) {
-            this.setState({authenticated: true, id: personJSON.id})
+
+            Store.update('id', personJSON.id);
+            this.setState({
+              id: personJSON.id,
+              authenticated: true
+            })
           } else {
             this._failedNameLogin()
           }
@@ -235,24 +241,24 @@ export default class RootNavigation extends React.Component {
 
   render() {
 
-    if (!this.state.fingerprint || !this.state.authenticated) {
-      return (
-        <StackNavigation
-        defaultRouteConfig={{
-          navigationBar: {
-            backgroundColor: '#FA9581',
-            titleStyle: {
-              // color: '#FBFBF2',
-              fontFamily: 'quicksand-regular',
-              fontSize: 30,
-            },
-            tintColor: '#FBFBF2'
-          }
-        }} 
-        initialRoute={Router.getRoute('login', {authFunction: this.authFunction, state:this.state, handleTextChange: this.handleTextChange, handleTextSubmit: this.handleTextSubmit})}/>
-          // initialRoute='login' />
-      )
-    } else {
+    // if (!this.state.fingerprint || !this.state.authenticated) {
+    //   return (
+    //     <StackNavigation
+    //     defaultRouteConfig={{
+    //       navigationBar: {
+    //         backgroundColor: '#FA9581',
+    //         titleStyle: {
+    //           // color: '#FBFBF2',
+    //           fontFamily: 'quicksand-regular',
+    //           fontSize: 30,
+    //         },
+    //         tintColor: '#FBFBF2'
+    //       }
+    //     }} 
+    //     initialRoute={Router.getRoute('login', {authFunction: this.authFunction, state:this.state, handleTextChange: this.handleTextChange, handleTextSubmit: this.handleTextSubmit})}/>
+    //       // initialRoute='login' />
+    //   )
+    // } else {
       return (
         <TabNavigation
           // tabBarColor='#9EBDFF'
@@ -325,7 +331,7 @@ export default class RootNavigation extends React.Component {
         </TabNavigation>
       );
 
-    }
+    // }
   }
 
   _renderIcon(name, isSelected) {
