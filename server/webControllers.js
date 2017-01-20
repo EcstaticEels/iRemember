@@ -526,7 +526,6 @@ module.exports = {
           }
         })
         .then(patient => {
-          console.log('patient', patient.token)
           if (patient.token !== null) {
             sdk.sendPushNotificationAsync({
               exponentPushToken: patient.token, // The push token for the app user you want to send the notification to 
