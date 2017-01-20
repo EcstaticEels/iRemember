@@ -74,7 +74,7 @@ export default class RootNavigation extends React.Component {
     //       // console.log('reminder', reminder, 'localNotification', localNotification, 'schedulingOptions', schedulingOptions)
     //     })
     // })
-
+    
     this.setUpReminders();
   }
 
