@@ -17,7 +17,7 @@ export default class Home extends React.Component {
           <br />
           iRemember gives caregivers the ability to set reminders for their patients and provides an interface 
           to help patients recognize important people in their lives using their mobile devices.</h2>
-          <a href="/auth/google" className="get-started-now-text"><Button bsSize='large' className="get-started-now">Sign in to get started now!</Button></a>
+          <a href="/auth/google" className="get-started-now-text"><Button bsSize='large' className="get-started-now">Sign up to get started now!</Button></a>
         </div>
       </div>
     </div>

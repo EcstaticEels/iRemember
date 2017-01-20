@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#8bacbd',
   },
   contentContainer: {
-    height: 300,
+    height: 600,
     flexDirection: 'column',
     justifyContent: 'space-around',
     flex: 1
@@ -74,7 +74,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    flex: 1
+    flex: 1,
+    paddingLeft: 10,
+    paddingRight: 10
   },
   personNameContainer: {
     flexDirection: 'row',
@@ -108,5 +110,6 @@ const styles = StyleSheet.create({
     textShadowColor: '#888',
     textShadowOffset: {width: 0, height: 1},
     textShadowRadius: 1,
+    paddingTop: 5
   }
 });
