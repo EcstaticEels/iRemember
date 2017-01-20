@@ -105,20 +105,9 @@ export default class RootNavigation extends React.Component {
   _handleNotification = ({origin, data, remote}) => {
     console.log('origin', origin, 'data', data, 'remote', remote)
     if (origin === 'received' && remote) {
-
-    //Testing
-    // var getReminders = Store.getReminders();
-    //   getReminders.then((reminders)=> {
-    //     Notifications.scheduleLocalNotificationAsync({title: 'title', body: 'body'}, {
-    //       time: (new Date()).getTime() + 3000
-    //     })
-    //       .then(newNotificationId => {
-    //         console.log('exponent notification scheduled')
-    //         // console.log('reminder', reminder, 'localNotification', localNotification, 'schedulingOptions', schedulingOptions)
-    //       })
-    //   })
-
+      console.log('from server')
       this.setUpReminders();
+      Store.update('updated', true);
     } else if(origin === 'received' && !remote) {
       var message = data[1];
       if(data[2]) message += ':' + data[2];
@@ -423,13 +412,11 @@ export default class RootNavigation extends React.Component {
   registerLocalNotification(reminder) {
     var that = this;
     var reminderId = reminder.id || 0;
-    console.log('why??')
     return new Promise((resolve, reject) => {
-      console.log('reminder', reminder)
+      console.log('reminder', reminder, reminder.date)
       if (!reminder || reminder.registered) {
           resolve(false);
       } else {
-        console.log('how about here/')
         var localNotification = {
           title: reminder.title,
           body: reminder.note || ' ',
@@ -442,7 +429,6 @@ export default class RootNavigation extends React.Component {
         //cancel all LocalNotifications already associated with this reminder
         that.cancelNotifications(reminder.notificationId);
         var time = new Date(reminder.date);
-        console.log('reminder date', reminder.date)
 
         if (reminder.recurring) {
           var recurringDays = mobx.toJS(reminder.recurringDays);

@@ -153,7 +153,7 @@ module.exports = {
       }
       const parsedDetectBody = JSON.parse(body);
       console.log('detection results', parsedDetectBody);
-      const personGroupId = 'ecstatic-eels-patients-1' //CHANGE TO PATIENT
+      const personGroupId = 'ecstatic-eels-patients-3' //CHANGE TO PATIENT
       if (parsedDetectBody.length === 1) { 
         var bodyForIdentification = {    
           "personGroupId": personGroupId, 
@@ -219,8 +219,9 @@ module.exports = {
   },
 
   retrieveReminders: function(req, res) {
+    console.log('getting reminders', req.body)
     var patientId = Number(urlModule.parse(req.url).query.slice(10));
-    patientId = 1;
+    console.log('patientId', patientId)
     db.Reminder.findAll({
       where: {
         patientId: patientId
