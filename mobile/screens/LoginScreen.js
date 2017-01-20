@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
   },
   nameTextInput: {
     height: 100,
-    fontSize: 80,
+    fontSize: 70,
     borderColor: '#FBFBF2',
     borderWidth: 3,
     color: '#FBFBF2',
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     textShadowColor: '#888',
     textShadowOffset: {width: 0, height: 1},
     textShadowRadius: 1,
-    fontSize: 30,
+    fontSize: 25,
     textAlign: 'center'
   },
   infoTextContainer: {
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     textShadowColor: '#888',
     textShadowOffset: {width: 0, height: 1},
     textShadowRadius: 1,
-    fontSize: 40,
+    fontSize: 35,
     textAlign: 'center'
   },
   promptTextContainer: {
