@@ -21,7 +21,7 @@ class Reminder extends React.Component {
       showForm: false,
       editMode: false,
       date: Moment().format(),
-      type: 'medication',
+      type: 'Medication',
       recurring: false,
       selectedDays: {
         Monday: false,
