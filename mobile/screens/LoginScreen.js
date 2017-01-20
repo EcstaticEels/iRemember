@@ -29,10 +29,10 @@ export default class LoginScreen extends React.Component {
   render () {
     this.props.route.params.authFunction()
       return (
-        <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+        <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer} >
           <View style={styles.promptTextContainer}>
             <Text style={styles.promptText}>
-              Please enter your first name below:
+              Please enter your first name below, and click "Done" in the keyboard when completed.
             </Text>
           </View>
           <View style={styles.nameTextInputContainer}>
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     textShadowColor: '#888',
     textShadowOffset: {width: 0, height: 1},
     textShadowRadius: 1,
-    fontSize: 35,
+    fontSize: 30,
     textAlign: 'center'
   },
   promptTextContainer: {

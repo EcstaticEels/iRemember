@@ -194,11 +194,12 @@ module.exports = {
                   }
                 })
                 .then(identifiedPerson => {
+                  const newCloudinaryUrl = identifiedPerson.photo.slice(0, 49) + `w_250,h_250,c_250,g_face/a_auto_right/` + identifiedPerson.photo.slice(49);
                   const identifiedPersonObj = {
                     dbId: identifiedPerson.id,
                     name: identifiedPerson.name,
                     description: identifiedPerson.description,
-                    photo: identifiedPerson.photo,
+                    photo: newCloudinaryUrl,
                     audio: identifiedPerson.audio
                   }
                   resolve(identifiedPersonObj);
@@ -213,8 +214,9 @@ module.exports = {
           }
         });
       } else { //no faces detected in the photo
-          console.log('HIT ELSE BLOCK')
-          res.sendStatus(404)      }
+        console.log('HIT ELSE BLOCK')
+        res.sendStatus(404)      
+      }
     });
   },
 
