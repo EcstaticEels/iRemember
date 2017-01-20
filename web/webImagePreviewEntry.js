@@ -64,9 +64,12 @@ export default class ImagePreviewEntry extends React.Component {
         })
       }
     }
-    
-
   }
+          // <Col xs={6} md={6} >
+          //   <div className="image-preview-info">
+          //     <p>{this.state.imageInfo}</p>
+          //   </div>
+          // </Col>
 
 
 //REMEMBER TO CLEAR DETECT ARRAY AFTER ABANDONING FORM
@@ -75,16 +78,9 @@ export default class ImagePreviewEntry extends React.Component {
     return (
       <div key={this.props.index} >
         <Row className="show-grid">
-          <Col xs={6} md={6} >
-            <div className='preview-image-container' >
-              <img src={this.props.photo} key={this.props.index} className='preview-image' style={this.state.imageStyle}/>
-            </div>
-          </Col>
-          <Col xs={6} md={6} >
-            <div className="image-preview-info">
-              <p>{this.state.imageInfo}</p>
-            </div>
-          </Col>
+          <div className='preview-image-container' >
+            <img src={this.props.photo} key={this.props.index} className='preview-image' style={this.state.imageStyle}/>
+          </div>
         </Row>
       </div>
     );
