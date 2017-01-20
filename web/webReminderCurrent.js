@@ -16,7 +16,7 @@ export default class ReminderCurrent extends React.Component {
     var recurringView = !!this.props.current.recurring ? 
       (<div className="reminder-recurring">
         <h3 className='reminder-current-header'>Recurring Days:</h3>
-        <h5>{this.props.current.recurringDays}</h5>
+        <h5>{this.props.current.recurringDays.split(',').join(', ')}</h5>
       </div>) : null;
     var reminderCurrentView;
     if (!!this.props.current.title) {

@@ -526,7 +526,6 @@ module.exports = {
           }
         })
         .then(patient => {
-          console.log('patient', patient.token)
           if (patient.token !== null) {
             sdk.sendPushNotificationAsync({
               exponentPushToken: patient.token, // The push token for the app user you want to send the notification to 
@@ -623,8 +622,8 @@ module.exports = {
     });
   },
   setup: (req, res) => {
-    let newPersonGroupId = `ecstatic-eels-69-${req.user.id}` //why is this not working
-    let patientGroupId = `ecstatic-eels-patients-4` //we don't need to change this much
+    let newPersonGroupId = `ecstatic-eels-5-${req.user.id}` //why is this not working
+    let patientGroupId = `ecstatic-eels-patients-5` //we don't need to change this much
     handleSetupForm(req, (patientPhotoArray, fields) => {
       request.post({
         headers: microsoftHeaders,
