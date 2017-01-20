@@ -445,11 +445,12 @@ input[type=file]{
   margin-right: 15px;
 }
 
-/*.record-button {
+.record-button {
+  margin-left: 40px;
   margin-top: 20px;
   margin-bottom: 19px;
   margin-right: 15px; 
-}*/
+}
 
 /*.audio-upload {
   margin-top: 1px;
