@@ -324,7 +324,7 @@ export default class FaceForm extends React.Component {
     <div className="face-form">
       <h3 className="face-form-heading">Add a New Face</h3>
         <FormGroup validationState={this.validateName()}>
-          <ControlLabel> {'Name'} </ControlLabel>
+          <ControlLabel> {'Name:'} </ControlLabel>
           <FormControl 
             type="text" value={this.props.subjectName} 
             id='subjectName' placeholder='Name' 
@@ -333,7 +333,7 @@ export default class FaceForm extends React.Component {
 
 
         <FormGroup>
-          <ControlLabel> {'Description'} </ControlLabel>
+          <ControlLabel> {'Description:'} </ControlLabel>
           <FormControl
             type="text" value={this.props.description} 
             id='description' placeholder='Description' 
@@ -344,7 +344,7 @@ export default class FaceForm extends React.Component {
 
           this.props.editMode ? 
             <div>
-              <ControlLabel>{'Image:'}</ControlLabel>
+              <ControlLabel>{'Previously Uploaded Images:'}</ControlLabel>
               <Row className="show-grid" id="edit-thumbnail">{uploadedPhotos}</Row>
             </div> : null
         }</FormGroup>
@@ -355,7 +355,7 @@ export default class FaceForm extends React.Component {
             uploadedPhotos={this.props.updatePhotos}/>
         </FormGroup>
 
-        <ControlLabel> {'Audio Message'} </ControlLabel>
+        <ControlLabel> {'Previously Uploaded Audio Message:'} </ControlLabel>
         <FormGroup>{this.audioPart()}</FormGroup>
 
         <FormGroup>{
