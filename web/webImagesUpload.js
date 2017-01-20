@@ -24,7 +24,7 @@ export default class ImagesUpload extends React.Component {
   render() {
     return (
       <div className="image-upload" name="file" encType="multipart/form-data">
-        <ControlLabel> {'Image:'} </ControlLabel>
+        <ControlLabel> {'Upload an Image:'} </ControlLabel>
         <Dropzone className='dropzone' onDrop={this.props.getPhotos} encType="multipart/form-data" multiple>
           <h3 className='dropzone-text'>Drop files here or click to upload.</h3>
         </Dropzone>

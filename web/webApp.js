@@ -16,7 +16,7 @@ import Signin from './webSignin.js';
 import Setup from './webSetup.js';
 import Signout from './webSignout.js';
 import Home from './webHome.js';
-
+import ServerError from './webError.js';
 @observer
 class App extends React.Component {
   constructor(props) {
@@ -123,6 +123,7 @@ ReactDOM.render((
       <IndexRoute component={Home} onEnter={redirectTo}/>
       <Route path="/signin" component={Signin}/>
       <Route path="/signout" component={Signout}/>
+      <Route path="/500" component={ServerError} />
       <Route path="/setup" component={Setup} onEnter={requireAuth}/>
       <Route path="/reminders" component={Reminder} onEnter={requireAuth}/>
       <Route path="/face" component={Face} onEnter={requireAuth}/>
