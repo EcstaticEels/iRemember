@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
   },
   personName: {
     color: '#FBFBF2',
-    fontSize: 70,
+    fontSize: 60,
     fontFamily: 'quicksand-regular',
     textShadowColor: '#888',
     textShadowOffset: {width: 0, height: 1},
@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
   },
   personInfo: {
     color: '#FBFBF2',
-    fontSize: 30,
+    fontSize: 25,
     fontFamily: 'quicksand-regular',
     textShadowColor: '#888',
     textShadowOffset: {width: 0, height: 1},
