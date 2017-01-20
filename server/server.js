@@ -39,7 +39,7 @@ const ensureAuthenticated = function(req, res, next) {
   if (req.isAuthenticated()) { 
     return next(); 
   }
-  res.status(401).send('you are not logged in'); 
+  res.status(401).send('You are not logged in'); 
 }
 
 //Google Strategy for Passport
