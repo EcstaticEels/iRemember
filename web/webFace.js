@@ -1,6 +1,8 @@
 import React from 'react';
 import $ from 'jquery';
 import {Button, Row, Col, Grid} from 'react-bootstrap';
+import {browserHistory} from 'react-router';
+
 
 import FaceList from './webFaceList.js';
 import FaceCurrent from './webFaceCurrent.js';
@@ -68,6 +70,7 @@ class Face extends React.Component {
       }.bind(this),
       error: function (err) {
         console.log('error', err);
+        browserHistory.push('/500');
       }
     });
   }
@@ -91,6 +94,7 @@ class Face extends React.Component {
       },
       error: function(err) {
         console.log('error', err);
+        browserHistory.push('/500');
       }
     })
   }
@@ -129,6 +133,7 @@ class Face extends React.Component {
       }.bind(this),
       error: function(err) {
         console.log('error', err);
+        browserHistory.push('/500');
       }
     });
   }
@@ -368,17 +373,10 @@ class Face extends React.Component {
       },
       error: function (err) {
         console.log('error', err);
+        browserHistory.push('/500');
       }
     });
   }
-
-
-        // <div>
-        // {
-        //   this.state.showForm ? null :  
-        //     <Button bsSize="large" className="btn-addNew" bsStyle="primary" onClick={ () => this.displayForm.call(this, true, false)}>ADD A NEW FACE</Button>
-        // }
-        // </div>
 
   render() {
     const spinner = <span><img src={'/default.svg'} /></span>
