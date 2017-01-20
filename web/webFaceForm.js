@@ -242,7 +242,7 @@ export default class FaceForm extends React.Component {
       (<label>
         <div>
         {thumbnailPhotos.length > 0 ? thumbnailPhotos.map((val, ind) => {
-          if(ind % 5 === 0) {
+          if(ind % 4 === 0) {
             return <img src={val} key={ind} className="preview-img front" />
           } else {
             return <img src={val} key={ind} className="preview-img" />
@@ -282,11 +282,18 @@ export default class FaceForm extends React.Component {
         </FormGroup> 
 
         <FormGroup>{
-          this.props.editMode ? <div><ControlLabel>{'Image:'}</ControlLabel><Row className="show-grid" id="edit-thumbnail">{uploadedPhotos}</Row></div> : null
+
+          this.props.editMode ? 
+            <div>
+              <ControlLabel>{'Image:'}</ControlLabel>
+              <Row className="show-grid" id="edit-thumbnail">{uploadedPhotos}</Row>
+            </div> : null
         }</FormGroup>
 
         <FormGroup validationState={this.validatePhotos()}>
-          <ImagesUpload getPhotos={this.props.getPhotos} numFiles={this.props.updatePhotos.length}/>
+          <ImagesUpload 
+            getPhotos={this.props.getPhotos} 
+            uploadedPhotos={this.props.updatePhotos}/>
         </FormGroup>
 
         <ControlLabel> {'Audio Message'} </ControlLabel>
