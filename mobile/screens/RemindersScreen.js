@@ -7,7 +7,8 @@ import {
   ListView,
   Picker,
   Image,
-  TouchableHighlight
+  TouchableHighlight,
+  RefreshControl
 } from 'react-native';
 
 import {
@@ -40,10 +41,12 @@ export default class RemindersScreen extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
+      isRefreshing: false,
       dataSource: dataSource.cloneWithRows(Store.reminders.map((reminder) => {
         return mobx.toJS(reminder);
       }))
     }
+    console.log('we are in the reminders constructor')
   }
 
   static route = {
@@ -61,7 +64,36 @@ export default class RemindersScreen extends React.Component {
     this.props.navigator.push(Router.getRoute('reminder'))
   }
 
+  _onRefresh() {
+    this.setState({
+      isRefreshing: true
+    })
+    var getReminders = Store.getReminders();
+    getReminders.then((reminders)=> {
+      console.log('reminders', reminders)
+      var rows = dataSource.cloneWithRows(reminders)
+      this.setState({
+        dataSource: rows,
+        isRefreshing: false
+      })
+    })
+  }
+
+  _onSignal() {
+    var getReminders = Store.getReminders();
+    getReminders.then((reminders)=> {
+      var rows = dataSource.cloneWithRows(reminders)
+      this.setState({
+        dataSource: rows
+      })
+    })
+    Store.update('updated', false)
+  }
+
   render() {
+    if(Store.updated){
+      this._onSignal();
+    }
     return (
       <View style={styles.container}>
         <ListView
@@ -76,6 +108,12 @@ export default class RemindersScreen extends React.Component {
             </TouchableHighlight> 
           }
           renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.separator} />}
+          refreshControl={
+            <RefreshControl 
+              refreshing={this.state.isRefreshing} 
+              onRefresh={this._onRefresh.bind(this)} 
+              tintColor="#ffffff"/>
+          }
         />
       </View>
     );

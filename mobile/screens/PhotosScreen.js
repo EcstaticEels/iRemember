@@ -132,6 +132,7 @@ uploadImageAsync(uri) {
           style={styles.container}
           contentContainerStyle={this.props.route.getContentContainerStyle()}>
         </ScrollView>
+
       );
     }
   }
