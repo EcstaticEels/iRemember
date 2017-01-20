@@ -212,6 +212,10 @@ body {
   margin-right: auto;
 }
 
+.image-gallery-content {
+  padding-bottom: 10px;
+}
+
 .reminder-type,
 .reminder-audio,
 .reminder-btns,
@@ -281,6 +285,7 @@ input[type=file]{
   margin: 50px 60px;
 }
 
+
 .image-preview-info {
   margin: 60px;
 }
@@ -347,8 +352,12 @@ input[type=file]{
   margin-bottom: 25px;
 }
 
-.face-form-uploaded-photos {
-
+.uploaded-face-photos-form {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    width: 666px;
+    margin-left: 10px;
 }
 
 .record-button, 
@@ -449,14 +458,10 @@ input[type=file]{
 }
 
 .preview-img {
-  margin-right: 10px;
+  padding-right: 15px;
+  padding-bottom: 15px;
 }
 
-.front {
-  margin-left: 30px;
-  margin-bottom: 10px;
-  margin-top: 10px;
-}
 
 .dropzone {
   display: block;

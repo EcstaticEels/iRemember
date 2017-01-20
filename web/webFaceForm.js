@@ -240,7 +240,7 @@ export default class FaceForm extends React.Component {
     var thumbnailPhotos = this.props.handleCloudinaryUrl(cloudinaryUrls, '134', '94', 'thumb');
     var uploadedPhotos = this.props.editMode ?       
       (<label>
-        <div>
+        <div className="uploaded-face-photos-form">
         {thumbnailPhotos.length > 0 ? thumbnailPhotos.map((val, ind) => {
           if(ind % 4 === 0) {
             return <img src={val} key={ind} className="preview-img front" />
