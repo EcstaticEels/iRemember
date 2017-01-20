@@ -219,8 +219,9 @@ module.exports = {
   },
 
   retrieveReminders: function(req, res) {
+    console.log('getting reminders', req.body)
     var patientId = Number(urlModule.parse(req.url).query.slice(10));
-    patientId = 1;
+    console.log('patientId', patientId)
     db.Reminder.findAll({
       where: {
         patientId: patientId
