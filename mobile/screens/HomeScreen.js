@@ -345,7 +345,7 @@ const styles = StyleSheet.create({
   },
   weatherText: {
     color: '#FBFBF2',
-    fontSize: 70,
+    fontSize: 60,
     paddingRight: 40,
     fontFamily: 'quicksand-regular',
     textShadowColor: '#888',
@@ -353,7 +353,7 @@ const styles = StyleSheet.create({
     textShadowRadius: 1
   },
   timeText: {
-    fontSize: 90, 
+    fontSize: 80, 
     color: '#FBFBF2',
     fontFamily: 'quicksand-regular',
     textShadowColor: '#888',
@@ -362,7 +362,7 @@ const styles = StyleSheet.create({
   }, 
   dateText: {
     color: '#FBFBF2',
-    fontSize: 40,
+    fontSize: 35,
     fontFamily: 'quicksand-regular',
     textShadowColor: '#888',
     textShadowOffset: {width: 0, height: 1},
