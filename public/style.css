@@ -346,10 +346,12 @@ input[type=file]{
   border-radius: 0px;
 }
 
+.pause-button,
 .record-button {
   margin-left: 15px;
 }
 
+.pause-button:hover,
 .upload-button:hover,
 .record-button:hover {
   background-color: #e6e6e6;
@@ -443,10 +445,11 @@ input[type=file]{
 }
 
 .get-started-now {
-  background-color: rgba(250, 149, 129, 0.7);
+  background-color: rgba(250, 149, 129, 0.8);
   color: white;
   padding: 14px 22px;
   margin-top: 15px;
+  border-radius: 5px;
 }
 
 .get-started-now-text {
@@ -454,6 +457,8 @@ input[type=file]{
 }
 .get-started-now-text:hover {
   color: white;
+  background-color: rgba(222, 132, 114, 1);
+  text-decoration-color: none;
 }
 
 .home-description {
@@ -495,15 +500,9 @@ input[type=file]{
 }
 
 .pause-button {
-  margin-left: 40px;
-  margin-top: 20px;
-  margin-bottom: 19px;
+  margin-left: 0;
   margin-right: 15px;
-}
-
-.recorded-audio-box {
-  margin-left: 80px;
-  margin-top: 20px;
+  border: 1px solid grey;
 }
 
 .recurringDays {

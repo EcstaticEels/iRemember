@@ -187,7 +187,7 @@ export default class ReminderForm extends React.Component {
         </FormGroup>
 
         <FormGroup validationState={this.validateTitle()}>
-          <ControlLabel> {'Title'} </ControlLabel>
+          <ControlLabel> {'Title:'} </ControlLabel>
           <FormControl 
             type="text" value={this.props.title} 
             id="title" placeholder="Title" 
@@ -195,7 +195,7 @@ export default class ReminderForm extends React.Component {
         </FormGroup>
 
         <FormGroup>
-          <ControlLabel> {'Notes'} </ControlLabel>
+          <ControlLabel> {'Notes:'} </ControlLabel>
           <FormControl
             type="text" value={this.props.note} 
             id="note" placeholder="Notes" 
@@ -203,7 +203,7 @@ export default class ReminderForm extends React.Component {
         </FormGroup>
 
         <FormGroup validationState={this.validateDate()}>
-          <ControlLabel> {'Date & Time'} </ControlLabel>
+          <ControlLabel> {'Date & Time:'} </ControlLabel>
           <InputGroup>
             <Datetime 
               className='datetime'
@@ -267,7 +267,7 @@ export default class ReminderForm extends React.Component {
           </FormGroup> : null
         }</FormGroup>
 
-        <ControlLabel> {'Audio Message'} </ControlLabel>
+        <ControlLabel> {'Previously Uploaded Audio Message:'} </ControlLabel>
         <FormGroup className="reminder-form-btns">{this.audioPart()}</FormGroup>
 
         <FormGroup>{
