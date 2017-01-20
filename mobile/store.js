@@ -11,10 +11,8 @@ class Store {
   }
 
   //Observable variables
-  @observable patient = {
-    name: 'John Smith',
-    id: 3
-  };
+  @observable name = 'John';
+  @observable id = 3;
   @observable reminders = [];
   @observable current = { "id": 1, "date": "2017-01-10T13:01:00.000Z", "type": "medication", "note": "mdsfm", "recurring": true, "recurringDays": "Monday,Tuesday", "notificationId": null, "registered": false, "audio": null, "title": "sdmf,", "createdAt": "2017-01-11T00:18:58.000Z", "updatedAt": "2017-01-11T00:18:58.000Z", "patientId": 1, "caregiverId": 1 };
 
@@ -29,7 +27,7 @@ class Store {
 
   //Reminder Actions
   @action getReminders() {
-    var patientId = this.patient.id;
+    var patientId = this.id;
     return new Promise((resolve, reject) => {
       axios.get(baseUrl + '/mobile/reminders', {
         params: {

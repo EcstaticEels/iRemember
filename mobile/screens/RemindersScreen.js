@@ -58,7 +58,7 @@ export default class RemindersScreen extends React.Component {
 
   _goToReminder = (reminder) => {
     Store.current = reminder;
-    this.props.navigator.push(Router.getRoute('reminder'), {reminder: reminder})
+    this.props.navigator.push(Router.getRoute('reminder'))
   }
 
   render() {
@@ -70,7 +70,7 @@ export default class RemindersScreen extends React.Component {
           renderRow={(reminder) =>
             <TouchableHighlight onPress={() => this._goToReminder(reminder)}>
               <View style={styles.reminderView}> 
-                <Ionicons style={styles.reminderImage} name={images[reminder.type]} size={50} color='#FBFBF2' /> 
+                <Ionicons style={styles.reminderImage} name={images[reminder.type || 'Medication']} size={50} color='#FBFBF2' /> 
                 <Text style={styles.reminderText}>{reminder.title}</Text>
               </View>
             </TouchableHighlight> 
