@@ -4,6 +4,7 @@ import {observable, autorun, action} from "mobx";
 import axios from 'axios';
 import baseUrl from './ip.js';
 
+
 class Store {
   constructor () {
     this.update = this.update.bind(this);
@@ -27,6 +28,7 @@ class Store {
 
   //Reminder Actions
   @action getReminders() {
+    console.log('this is baseUrl', baseUrl)
     var patientId = this.id;
     return new Promise((resolve, reject) => {
       axios.get(baseUrl + '/mobile/reminders', {

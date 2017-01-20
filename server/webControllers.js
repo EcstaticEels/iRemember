@@ -20,15 +20,6 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET 
 });
 
-// const handleCloudinaryUrls = function(urlArray) {
-//   var newCloudinaryUrlArray = [];
-//   for (var i = 0; i < urlArray.length; i++) {
-//     var newUrl = urlArray[i].slice(0, 49) + 'w_640,h_450,c_fill,g_face/' + urlArray[i].slice(49);
-//     newCloudinaryUrlArray.push(newUrl);
-//   }
-//   return newCloudinaryUrlArray;
-// }
-
 //Helper function to upload photos to cloudinary
 const handleFaceForm = function(req, cb) {
   const faceForm = new multiparty.Form();
@@ -36,6 +27,7 @@ const handleFaceForm = function(req, cb) {
     console.log('fields', fields, 'files', files)
     if (err) {
       console.log(err);
+      res.status(500);
     }
     const urlArray = [];
     if (Object.keys(files).length > 0) { //if there are files
@@ -51,6 +43,7 @@ const handleFaceForm = function(req, cb) {
                     function(error, result) {
                       if (error) {  
                         console.log(error);
+                        res.status(500);
                       }
                       cb(urlArray, result.url, fields);        
                   });
@@ -68,6 +61,7 @@ const handleFaceForm = function(req, cb) {
             function(error, result) {
               if (error) {
                 console.log(error);
+                res.status(500);
               }
               cb(null, result.url, fields);        
           });
@@ -84,6 +78,7 @@ const handleDetect = function(req, cb) {
   detectForm.parse(req, function(err, fields, files) {
     if (err) {
       console.log(err);
+      res.status(500);
     }
     const detectArr = [];
     var count= 0;
@@ -106,6 +101,7 @@ const handleSetupForm = function(req, cb) {
   setupForm.parse(req, function(err, fields, files) {
     if (err) {
       console.log(err);
+      res.status(500);
     }
     const patientPhotoArray = [];
     if (Object.keys(files).length > 0) {
@@ -126,6 +122,7 @@ const handleReminderForm = function(req, cb) {
   reminderForm.parse(req, function(err, fields, files) {
     if (err) {
       console.log(err);
+      res.status(500);
     }
     const urlArray = [];
     if (Object.keys(files).length > 0) {
@@ -135,6 +132,7 @@ const handleReminderForm = function(req, cb) {
           function(error, result) {
             if (error) {
               console.log(error);
+              res.status(500);
             }
             cb(result.url, fields);        
         });
@@ -159,6 +157,7 @@ module.exports = {
       }, (err, response, body) => {
         if (err) {
           console.log(err);
+          res.status(500);
         }
         let createdPerson = JSON.parse(body);
         db.Face.create({
@@ -180,6 +179,7 @@ module.exports = {
             }, (err, response, body) => {
               if (err) {
                 console.log(err);
+                res.status(500)
               }
               db.FacePhoto.create({
                 photo: url,
