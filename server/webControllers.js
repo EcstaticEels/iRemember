@@ -623,7 +623,7 @@ module.exports = {
   },
   setup: (req, res) => {
     let newPersonGroupId = `ecstatic-eels-5-${req.user.id}` //why is this not working
-    let patientGroupId = `ecstatic-eels-patients-5` //we don't need to change this much
+    let patientGroupId = `ecstatic-eels-patients-deploy-0` //we don't need to change this much
     handleSetupForm(req, (patientPhotoArray, fields) => {
       request.post({
         headers: microsoftHeaders,
