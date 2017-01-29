@@ -44,7 +44,13 @@ module.exports = function(grunt) {
         stats: {
             colors: true
         },
-        watch: true
+        watch: true,
+        externals: {
+          'cheerio': 'window',
+          'react/addons': 'react',
+          'react/lib/ExecutionEnvironment': 'react',
+          'react/lib/ReactContext': 'react',
+        }
       }
     },
 

@@ -17,6 +17,7 @@ import Setup from './webSetup.js';
 import Signout from './webSignout.js';
 import Home from './webHome.js';
 import ServerError from './webError.js';
+
 @observer
 class App extends React.Component {
   constructor(props) {
@@ -131,3 +132,5 @@ ReactDOM.render((
     </Route>
   </Router>
   ), document.getElementById('app'));
+
+module.exports = App;
