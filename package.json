@@ -29,6 +29,13 @@
       "transform-decorators-legacy"
     ]
   },
+  "eslintConfig": {
+      "env": {
+          "browser": true,
+          "node": true
+      },
+      "parser": "babel-eslint"
+  },
   "homepage": "https://github.com/EcstaticEels/iRemember#readme",
   "devDependencies": {
     "babel": "^6.5.2",
@@ -38,11 +45,20 @@
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
     "babel-preset-es2015": "^6.18.0",
     "babel-preset-react": "^6.16.0",
-    "mocha": "^3.2.0",
+    "babel-preset-stage-2": "^6.18.0",
     "chai": "^3.5.0",
     "chai-http": "^3.0.0",
-    "babel-preset-stage-2": "^6.18.0",
-    "webpack": "^2.1.0-beta.26",
+    "grunt": "^1.0.1",
+    "grunt-contrib-cssmin": "^1.0.2",
+    "grunt-contrib-uglify": "^2.0.0",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-eslint": "^19.0.0",
+    "grunt-mocha-test": "^0.13.2",
+    "grunt-nodemon": "^0.4.2",
+    "grunt-shell": "^2.1.0",
+    "grunt-webpack": "^2.0.1",
+    "mocha": "^3.2.0",
+    "webpack": "^2.2.0",
     "webpack-closure-compiler": "^2.1.2"
   },
   "dependencies": {
