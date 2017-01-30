@@ -6,18 +6,6 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
-    // concat: {
-    //   options: {
-    //     // define a string to put between each file in the concatenated output
-    //     separator: ';'
-    //   },
-    //   dist: {
-    //     // the files to concatenate
-    //     src: ['public/client/**/*.js'],
-    //     // the location of the resulting JS file
-    //     dest: 'public/dist/client.js'
-    //   }
-    // },
 
     webpack: {
       webApp: {
@@ -44,7 +32,7 @@ module.exports = function(grunt) {
         stats: {
             colors: true
         },
-        watch: true,
+        watch: false,
         externals: {
           'cheerio': 'window',
           'react/addons': 'react',
@@ -54,14 +42,14 @@ module.exports = function(grunt) {
       }
     },
     
-    // mochaTest: {
-    //   test: {
-    //     options: {
-    //       reporter: 'spec'
-    //     },
-    //     src: ['test/**/*.js']
-    //   }
-    // },
+    mochaTest: {
+      test: {
+        options: {
+          reporter: 'spec'
+        },
+        src: ['Test/Server/serverTest.js']
+      }
+    },
 
     nodemon: {
       dev: {
@@ -121,14 +109,13 @@ module.exports = function(grunt) {
         command: 'git commit'
       },
       prodServer: {
-        command: 'git push live master'
+        command: 'git push upstream master'
       }
     }
   });
 
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
-  // grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-eslint');
   grunt.loadNpmTasks('grunt-mocha-test');
@@ -144,12 +131,12 @@ module.exports = function(grunt) {
   // Main grunt tasks
   ////////////////////////////////////////////////////
 
-  // grunt.registerTask('test', [
-  //   'mochaTest'
-  // ]);
+  grunt.registerTask('test', [
+    'mochaTest'
+  ]);
 
   grunt.registerTask('build', [
-    'eslint', 'webpack', 'uglify', 'cssmin'
+   'eslint', 'mochaTest', 'webpack', 'uglify', 'cssmin'
   ]);
 
   // grunt.registerTask('upload', function(n) {

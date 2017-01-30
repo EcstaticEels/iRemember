@@ -6,7 +6,8 @@
   "scripts": {
     "start": "nodemon server/server.js",
     "webpack": "webpack --config webpack.config.js --progress --colors --watch",
-    "test": "mocha ./Test/Client/.enzymeSetup.js ./Test/Client/webTest.js ./Test/Client --recursive"
+    "test": "mocha ./Test/Client/.enzymeSetup.js ./Test/Client/webTest.js ./Test/Client --recursive",
+    "backend-test": "mocha Test/Server/"
   },
   "repository": {
     "type": "git",
