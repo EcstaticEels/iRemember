@@ -61,6 +61,7 @@ class Reminder extends React.Component {
       method: 'GET',
       url: '/web/reminders',
       success: function(res) {
+        console.log(res);
         var reminders = JSON.parse(res).reminders;
         reminders.forEach(function(reminder) {
           reminder.date = new Date(reminder.date);

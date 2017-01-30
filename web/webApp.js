@@ -32,7 +32,7 @@ class App extends React.Component {
     var that = this;
     $.ajax({
       method: 'GET',
-      url: '/user',
+      url: '/auth/user',
       success: function(res) {
         cb(res);
       }.bind(this),
@@ -95,7 +95,6 @@ class App extends React.Component {
     )
   }
 }
-
 
 const requireAuth = function(nextState, replace) {
   console.log('in require auth allow next:', !!caregiverName.get())

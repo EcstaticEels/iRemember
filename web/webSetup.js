@@ -50,7 +50,7 @@ export default class Setup extends React.Component {
     console.log('about to send request to post setup', this.state.updatePatientPhotos)
     $.ajax({
       method: 'POST',
-      url: '/web/setup',
+      url: '/web/faces/setup',
       data: formData,
       processData: false,
       contentType: false,

@@ -219,7 +219,7 @@ describe('Web controllers', function() {
     });
   });
 
-  describe('Requests to /web/identify', function() {
+  describe('Requests to /web/faces', function() {
       var dbConnection;
 
     beforeEach(function(done) {
@@ -247,7 +247,7 @@ describe('Web controllers', function() {
     describe('GET', function() {
       it('should return an object with faces associated with the test user', function(done) {
         request
-          .get('/web/identify')
+          .get('/web/faces')
           .expect(200)
           .expect('Content-Type', 'text/html; charset=utf-8')
           .end(function(err, res) {
@@ -266,7 +266,7 @@ describe('Web controllers', function() {
       it('should delete a face from the database', function(done) {
         this.timeout(10000);
         request
-          .delete('/web/identify')
+          .delete('/web/faces')
           .send({faceId: 11})
           .end(function(err, res) {
             if (err) {
@@ -287,7 +287,7 @@ describe('Web controllers', function() {
     describe('UPDATE', function() {
       it('should update a face from the database', function(done) {
         request
-          .put('/web/identify')
+          .put('/web/faces')
           .type('multipart/form-data')
           .field('subjectName', 'Taco MacArthur')
           .field('description', 'Founder of Taco Corp')
@@ -320,7 +320,7 @@ describe('Web controllers', function() {
       it('should add a face to the database', function(done) {
         this.timeout(20000);
         request
-          .post('/web/identify')
+          .post('/web/faces')
           .type('multipart/form-data')
           .field('subjectName', 'Taco MacArthur')
           .field('description', 'League doofus')

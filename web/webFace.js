@@ -47,7 +47,7 @@ class Face extends React.Component {
       formData.append('faceId', this.state.current.dbId);
     } 
     $.ajax({
-      url: '/web/detect',
+      url: '/web/faces/detect',
       method: 'POST',
       data: formData,
       processData: false, // tells jQuery not to process data
@@ -82,7 +82,7 @@ class Face extends React.Component {
     var that = this;
     $.ajax({
       method: 'DELETE',
-      url: '/web/identify',
+      url: '/web/faces',
       data: JSON.stringify({faceId: this.state.current.dbId}),
       contentType: 'application/json',
       success: function(res) {
@@ -126,7 +126,7 @@ class Face extends React.Component {
   getFaces(func) {
     $.ajax({
       method: 'GET',
-      url: '/web/identify',
+      url: '/web/faces',
       success: function(res) {
         var faces = JSON.parse(res).faces;
         func(faces);
@@ -185,7 +185,6 @@ class Face extends React.Component {
 
   getInput(event) {
     var key = event.target.getAttribute('id');
-    console.log('KEY', key)
     var value = event.target.value;
     var obj = {};
     obj[key] = value;
@@ -302,7 +301,7 @@ class Face extends React.Component {
     formData.append('audio', faceForm.audioFile);
     var that = this;
     $.ajax({
-      url: '/web/identify',
+      url: '/web/faces',
       method: this.state.editMode ? 'PUT' : 'POST',
       data: formData,
       processData: false, // tells jQuery not to process data
