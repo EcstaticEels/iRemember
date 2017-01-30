@@ -31,18 +31,15 @@ cloudinary.config({
 
 module.exports = {
   identifyFace : function(req, res) {
-    // console.log('file coming in from mobile', req.file);
     const qParams = urlModule.parse(req.url).query.split('&');
     const date = qParams[0].slice(5);
     const patientId = qParams[1].slice(10);
-    console.log('name of file', date, 'patientid ', patientId);
     db.Caregiver.findOne({
       where: {
         id: Number(patientId)
       }
     })
     .then(caregiver => {
-      console.log('THIS IS THE CAREGIVER', caregiver)
       const detectParams = {
         "returnFaceId": "true",
         "returnFaceLandmarks": "false"
@@ -91,7 +88,6 @@ module.exports = {
                   console.log('about to send this to mobile', JSON.stringify(person));
                   res.status(200).send(JSON.stringify(person));
                 } else {
-                  console.log('IS THIS NULL??', person)
                   res.status(404).send({message: 'Failed DB lookup'})
                 }
               })
@@ -124,16 +120,16 @@ module.exports = {
             }
           });
         } else if (parsedDetectBody.length > 1) { //multiple faces detected in the photo
-          console.log('HIT ELSE BLOCK')
+          console.log('multiple faces detected')
           res.status(404).send({message: 'Multiple faces detected'})
         } else { //no faces detected in the photo
+          console.log('no faces in photo');
           res.status(404).send({message: 'No faces detected'})
         }
       });
     });
   },
   loginFace : function(req, res) {
-    // console.log('file coming in from mobile', req.file);
     const qParams = urlModule.parse(req.url).query.split('&');
     const date = qParams[0].slice(5);
     console.log('name of file', date);
@@ -214,20 +210,17 @@ module.exports = {
           }
         });
       } else { //no faces detected in the photo
-        console.log('HIT ELSE BLOCK')
+        console.log('no faces detected in photo')
         res.sendStatus(404)      
       }
     });
   },
 
   retrieveReminders: function(req, res) {
-    console.log('getting reminders', req.body)
     var patientId = Number(urlModule.parse(req.url).query.slice(10));
-    console.log('patientId', patientId)
     db.Reminder.findAll({
       where: {
         patientId: patientId
-        // date: {$gte: new Date().toLocaleDateString()}
       }
     })
     .then(reminders => {
@@ -235,10 +228,8 @@ module.exports = {
     });
   },
   updateReminders: (req, res) => {
-    console.log('body', req.body)
     req.body.forEach((reminder) => {
       console.log(reminder.notificationId.join(','))
-      // console.log('updating reminder', reminder)
       db.Reminder.update(
         { 
           registered: reminder.registered,
@@ -250,7 +241,6 @@ module.exports = {
     res.status(200).send('database updated')
   },
   deleteReminders: (req, res) => {
-    console.log(req.body)
     let reminderIds = req.body.id;
     db.Reminder.destroy({ where: {id: reminderIds}})
     .then(updatedReminder => {
@@ -263,16 +253,4 @@ module.exports = {
       res.status(200).send('Token added!');
     })
   },
-  // addPushNotification: function(req, res) {
-  //   let isPushToken = sdk.isExponentPushToken(req.body.token);
- 
-  //   // To send a push notification 
-  //   // (async function () {
-  //   sdk.sendPushNotificationAsync({
-  //     exponentPushToken: req.body.token, // The push token for the app user you want to send the notification to 
-  //     message: "Reminders updated"
-  //   });
-  //   // })();
-  //   res.send('got it')
-  // }
 }
