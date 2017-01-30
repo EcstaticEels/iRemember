@@ -27,7 +27,6 @@ const handleFaceForm = function(req, cb) {
     console.log('fields', fields, 'files', files)
     if (err) {
       console.log(err);
-      res.status(400);
     }
     const urlArray = [];
     if (Object.keys(files).length > 0) { //if there are files
@@ -155,8 +154,8 @@ const handleReminderForm = function(req, cb) {
 module.exports = {
   addFace: (req, res) => {
     handleFaceForm(req, (urlArray, audioUrl, fields) => {
+      console.log('in the addface controllers')
       let personGroupId = req.user.personGroupID;
-      console.log(personGroupId)
       request.post({
         headers: microsoftHeaders,
         url: `https://api.projectoxford.ai/face/v1.0/persongroups/${personGroupId}/persons`,
@@ -358,7 +357,6 @@ module.exports = {
           headers: microsoftHeaders,
           url: `https://api.projectoxford.ai/face/v1.0/persongroups/${personGroupId}/persons/${personId}`
         }, (err, response, body) => {
-          console.log('delete from mic', response);
           request.post({
             headers: microsoftHeaders,
             url: `https://api.projectoxford.ai/face/v1.0/persongroups/${personGroupId}/train`,
@@ -373,14 +371,12 @@ module.exports = {
               }
             })
             .then(resp => {
-              console.log('facephoto destroy', resp)
               db.Face.destroy({
                 where: {
                   id: faceId
                 }
               })
-              .then( (resp) => {
-                console.log('face destroy', resp);
+              .then(resp => {
                 res.status(200).send('face and facephotos deleted');
               })
               .catch(err => {
