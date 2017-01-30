@@ -142,7 +142,7 @@ class Face extends React.Component {
     this.getFaces((faces) => {
       if (faces.length > 0) {
         this.setState({list: faces, current: faces[0]}, () => {
-          console.log('mounted webFace', this.state);
+          console.log('mounted webFace', JSON.stringify(this.state.list));
         });
       } else {
         this.setState({
