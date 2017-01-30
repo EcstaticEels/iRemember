@@ -130,7 +130,7 @@ export default class RootNavigation extends React.Component {
         Notifications.getExponentPushTokenAsync()
         .then((token) => {
           console.log(token)
-          axios.post(baseUrl + '/mobile/pushNotification', {
+          axios.post(baseUrl + '/mobile/notifications', {
             token:  token,
             id: Store.id,
           })
@@ -206,6 +206,7 @@ export default class RootNavigation extends React.Component {
               id: personJSON.id,
               authenticated: true
             })
+            this.setUpReminders();
           } else {
             this._failedNameLogin()
           }

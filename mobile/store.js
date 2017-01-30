@@ -22,14 +22,14 @@ class Store {
 
   //Change observable variable value to new value
   @action update(key, value) {
-    // console.log('before', key, that[key]);
     this[key] = value;
-    // console.log('after', key, that[key]);
+    console.log('after', key, value);
   }
 
   //Reminder Actions
   @action getReminders() {
     var patientId = this.id;
+    console.log('get reminders patientId', patientId);
     return new Promise((resolve, reject) => {
       axios.get(baseUrl + '/mobile/reminders', {
         params: {
@@ -37,6 +37,7 @@ class Store {
         }
       })
       .then(response => {
+        console.log('we just sent a reminder', response)
         var reminders = response.data.reminders;
 
         //convert string recurringDays and notificationIds to array
