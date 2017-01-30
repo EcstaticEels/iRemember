@@ -64,6 +64,7 @@
     "jsdom": "^9.9.1",
     "mocha": "^3.2.0",
     "react-addons-test-utils": "^15.4.2",
+    "supertest": "^2.0.1",
     "webpack": "^2.2.0",
     "webpack-closure-compiler": "^2.1.2"
   },

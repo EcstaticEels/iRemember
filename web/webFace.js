@@ -153,14 +153,6 @@ class Face extends React.Component {
     });
   }
 
-  // handleCropInfoUpdate(cropObj) {
-  //   this.setState({
-  //     finalCropInfo: cropObj
-  //   }, () => {
-  //     console.log('after crop, state:', this.state)
-  //   });
-  // }
-
   displayForm(bool, editMode) {
     if (editMode) {
       this.setState({
@@ -191,31 +183,11 @@ class Face extends React.Component {
     });
   }
 
-  // validateForm(key, value) {
-
-  //   if (key === 'subjectName' && value !== '') {
-  //     value = value.split('');
-  //     value[0] = value[0].toUpperCase();
-  //     value = value.join('');
-  //     console.log(value)
-  //   }
-
-  //   if (key === 'subjectName' && value === '') {
-  //     this.setState({errorText: 'Name is a required field'})
-  //   } else {
-  //     this.setState({errorText: ''})
-  //   }
-
-  // }
-
   getInput(event) {
     var key = event.target.getAttribute('id');
     console.log('KEY', key)
     var value = event.target.value;
     var obj = {};
-
-    // this.validateForm(key, value)
-
     obj[key] = value;
     obj['fieldBeingEdited'] = key;
     this.setState(obj);
@@ -295,15 +267,6 @@ class Face extends React.Component {
     });
   }
 
-
-  // getPhotoCrops(cropObj) {
-  //   this.setState({
-  //     updatePhotosInfo: cropObj
-  //   }, () => {
-  //     console.log(this.state.updatePhotosInfo);
-  //   });
-  // }
-
   handleUpdate() {
     var updatedId = this.state.current.dbId;
     var current;
@@ -323,7 +286,6 @@ class Face extends React.Component {
   }
 
   submitForm(event) {
-    console.log('audio', faceForm.audioFile)
     event.preventDefault();
     this.setState({
       loader: true
