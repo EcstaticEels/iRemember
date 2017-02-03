@@ -20,6 +20,8 @@ webFaceRouter.route('/')
 
 webFaceRouter.post('/detect', webFaceControllers.detectFaces)
 
-webFaceRouter.post('/setup', webFaceControllers.setup)
+webFaceRouter.route('/setup')
+  .post(webFaceControllers.setup)
+  .put(webFaceControllers.updateSetup)
 
 module.exports = webFaceRouter;

@@ -289,16 +289,13 @@ class Reminder extends React.Component {
     }
     var that = this;
     var formData = new FormData();
-    console.log('uncoverted date', this.state.date)
     var convertedMomentDate = Moment.utc(this.state.date).format()
-    console.log('converted date', convertedMomentDate)
     formData.append('date', convertedMomentDate);
     formData.append('recurring', this.state.recurring);
     formData.append('recurringDays', recurringDays);
     formData.append('type', this.state.type);
     formData.append('note', this.state.note);
     formData.append('title', this.state.title);
-    console.log('audio', reminderForm.audioUrl, reminderForm.audioFile)
     formData.append('registered', false);
     if (this.state.editMode) {
       formData.append('reminderId', this.state.reminderId);
@@ -334,7 +331,6 @@ class Reminder extends React.Component {
         reminderForm.audioUrl = null;
         that.editModeSwitch(false);
         that.displayForm(false, false);
-        console.log('loader state changed to false')
         that.setState({
           loader: false
         });

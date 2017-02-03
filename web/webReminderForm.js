@@ -5,7 +5,6 @@ import {Button, Row, Col, Grid, FormControl, FormGroup, InputGroup, ControlLabel
 // import 'react-select/dist/react-select.css';
 import AudioUpload from './webAudioUpload.js';
 import Moment from 'moment';
-// import { TransitionView, Calendar, DateField, DatePicker } from 'react-date-picker';
 import Datetime from 'react-datetime';
 
 import MSR from 'msr';

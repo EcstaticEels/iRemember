@@ -101,6 +101,7 @@ const handleDetect = function(req, cb) {
 const handleSetupForm = function(req, cb) {
   const setupForm = new multiparty.Form();
   setupForm.parse(req, function(err, fields, files) {
+    console.log('fields', fields, 'files', files)
     if (err) {
       console.log(err);
       res.status(400);
@@ -118,6 +119,8 @@ const handleSetupForm = function(req, cb) {
           }
         });
       });
+    } else {
+      cb(null, fields);
     }
   })
 }
@@ -468,9 +471,62 @@ module.exports = {
       });
     });
   },
+  updateSetup: (req, res) => {
+    handleSetupForm(req, (patientPhotoArray, fields) => {
+      db.Patient.update(
+        { name: fields.patientName[0] },
+        { where: {id: req.user.patientId}}
+      )
+      .then(patient => {
+        var result = [];
+        if (patientPhotoArray.length > 0) {
+          patientPhotoArray.forEach(url => {
+            request.post({
+              headers: microsoftHeaders,
+              url: `https://api.projectoxford.ai/face/v1.0/persongroups/${patient.personGroupID}/persons/${patient.personId}/persistedFaces`,
+              body: JSON.stringify({"url": url})
+            }, (err, response, body) => {
+                if (err) {
+                  console.log(err);
+                }
+                result.push(body);
+                db.PatientPhoto.create({
+                  photo: url,
+                  patientId: patient.get('id')
+                })
+                .then(() => {
+                  if (patientPhotoArray.length === result.length) {
+                    request.post({
+                      headers: microsoftHeaders,
+                      url: `https://api.projectoxford.ai/face/v1.0/persongroups/${personGroupId}/train`,
+                    }, (err, response, body) => {
+                      if (err) {
+                        console.log(err);
+                        res.status(400);
+                      }
+                      res.status(201).send('Person and face successfully updated, train API call made');
+                    });
+                  }
+                })
+                .catch(err => {
+                  console.log(err);
+                  res.status(400);
+                })
+            });
+          });
+        } else {
+          res.status(201).send('Person updated');
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        res.status(400)
+      })
+    });
+  },
   setup: (req, res) => {
-    let newPersonGroupId = `ecstatic-eels-5-${req.user.id}` //why is this not working
-    let patientGroupId = `ecstatic-eels-patients-deploy-0` //we don't need to change this much
+    let newPersonGroupId = `ecstatic-eels-5-${req.user.id}`; 
+    let patientGroupId = `ecstatic-eels-patients-deploy-0`; 
     handleSetupForm(req, (patientPhotoArray, fields) => {
       request.post({
         headers: microsoftHeaders,

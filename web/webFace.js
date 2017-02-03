@@ -3,7 +3,6 @@ import $ from 'jquery';
 import {Button, Row, Col, Grid} from 'react-bootstrap';
 import {browserHistory} from 'react-router';
 
-
 import FaceList from './webFaceList.js';
 import FaceCurrent from './webFaceCurrent.js';
 import FaceForm from './webFaceForm.js';

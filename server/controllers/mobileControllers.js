@@ -3,16 +3,6 @@ const request = require('request');
 const urlModule = require('url');
 var fs = require('fs');
 
-const aws = require('aws-sdk')
-const multer = require('multer')
-const multerS3 = require('multer-s3')
-
-const s3 = new aws.S3({
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: "us-west-1",
-});
-
 const db = require('../database/db.js');
 const sdk = require('exponent-server-sdk');
 
@@ -229,7 +219,6 @@ module.exports = {
   },
   updateReminders: (req, res) => {
     req.body.forEach((reminder) => {
-      console.log(reminder.notificationId.join(','))
       db.Reminder.update(
         { 
           registered: reminder.registered,
