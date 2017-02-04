@@ -32,7 +32,7 @@ class App extends React.Component {
     var that = this;
     $.ajax({
       method: 'GET',
-      url: '/user',
+      url: '/auth/user',
       success: function(res) {
         cb(res);
       }.bind(this),
@@ -76,7 +76,16 @@ class App extends React.Component {
     console.log('logging out, caregiver name: ', caregiverName.get(), ' needssetup: ', needsSetup.get())
     cb();
   }
-
+  
+  handleCloudinaryUrl(urlArray, w, h, type) {
+    var newCloudinaryUrlArray = [];
+    for (var i = 0; i < urlArray.length; i++) {
+      var newUrl = urlArray[i].slice(0, 49) + `w_${w},h_${h},c_${type},g_face/a_auto_right/` + urlArray[i].slice(49);
+      newCloudinaryUrlArray.push(newUrl);
+    }
+    return newCloudinaryUrlArray;
+  }
+  
   render() {
     return (
       <div className="app-body">
@@ -88,14 +97,14 @@ class App extends React.Component {
           <Tab changeView={this.changeView.bind(this)}/>
           {this.props.children && React.cloneElement(this.props.children, {
             handleLogout: this.handleLogout.bind(this),
-            getUserInfo: this.getUserInfo.bind(this)
+            getUserInfo: this.getUserInfo.bind(this),
+            handleCloudinaryUrl: this.handleCloudinaryUrl.bind(this)
           })}
         </Grid>
       </div>
     )
   }
 }
-
 
 const requireAuth = function(nextState, replace) {
   console.log('in require auth allow next:', !!caregiverName.get())

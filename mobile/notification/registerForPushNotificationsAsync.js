@@ -24,7 +24,7 @@ export default async function registerForPushNotificationsAsync() {
   console.log('token' , token)
 
   // POST the token to our backend so we can use it to send pushes from there
-  return fetch(baseUrl + '/mobile/pushNotification', {
+  return fetch(baseUrl + '/mobile/notifications', {
     method: 'POST',
     headers: {
       'Accept': 'application/json',

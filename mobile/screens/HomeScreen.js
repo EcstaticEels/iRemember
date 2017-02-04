@@ -59,13 +59,8 @@ export default class HomeScreen extends React.Component {
     },
   }
 
-  //need to render something prettier
-
   componentDidMount () {
 
-
-    // const {reminders, change} = Store;
-    // change('reminders', 'bye');
     var that = this;
     this.getTime();
     this.getWeather();
@@ -123,7 +118,7 @@ export default class HomeScreen extends React.Component {
             notificationToken: token
           });
 
-          axios.post(baseUrl + '/mobile/pushNotification', {
+          axios.post(baseUrl + '/mobile/notifications', {
             token:  token,
             id: 1,
           })

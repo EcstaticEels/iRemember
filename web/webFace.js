@@ -3,7 +3,6 @@ import $ from 'jquery';
 import {Button, Row, Col, Grid} from 'react-bootstrap';
 import {browserHistory} from 'react-router';
 
-
 import FaceList from './webFaceList.js';
 import FaceCurrent from './webFaceCurrent.js';
 import FaceForm from './webFaceForm.js';
@@ -47,7 +46,7 @@ class Face extends React.Component {
       formData.append('faceId', this.state.current.dbId);
     } 
     $.ajax({
-      url: '/web/detect',
+      url: '/web/faces/detect',
       method: 'POST',
       data: formData,
       processData: false, // tells jQuery not to process data
@@ -82,7 +81,7 @@ class Face extends React.Component {
     var that = this;
     $.ajax({
       method: 'DELETE',
-      url: '/web/identify',
+      url: '/web/faces',
       data: JSON.stringify({faceId: this.state.current.dbId}),
       contentType: 'application/json',
       success: function(res) {
@@ -114,19 +113,10 @@ class Face extends React.Component {
     });
   }
 
-  handleCloudinaryUrl(urlArray, w, h, type) {
-    var newCloudinaryUrlArray = [];
-    for (var i = 0; i < urlArray.length; i++) {
-      var newUrl = urlArray[i].slice(0, 49) + `w_${w},h_${h},c_${type},g_face/a_auto_right/` + urlArray[i].slice(49);
-      newCloudinaryUrlArray.push(newUrl);
-    }
-    return newCloudinaryUrlArray;
-  }
-
   getFaces(func) {
     $.ajax({
       method: 'GET',
-      url: '/web/identify',
+      url: '/web/faces',
       success: function(res) {
         var faces = JSON.parse(res).faces;
         func(faces);
@@ -185,7 +175,6 @@ class Face extends React.Component {
 
   getInput(event) {
     var key = event.target.getAttribute('id');
-    console.log('KEY', key)
     var value = event.target.value;
     var obj = {};
     obj[key] = value;
@@ -284,7 +273,7 @@ class Face extends React.Component {
       });
     });
   }
-
+  
   submitForm(event) {
     event.preventDefault();
     this.setState({
@@ -302,7 +291,7 @@ class Face extends React.Component {
     formData.append('audio', faceForm.audioFile);
     var that = this;
     $.ajax({
-      url: '/web/identify',
+      url: '/web/faces',
       method: this.state.editMode ? 'PUT' : 'POST',
       data: formData,
       processData: false, // tells jQuery not to process data
@@ -361,7 +350,7 @@ class Face extends React.Component {
                 list={this.state.list}
                 getInput={this.getInput.bind(this)}
                 updateCurrent={this.updateCurrent.bind(this)}
-                handleCloudinaryUrl={this.handleCloudinaryUrl.bind(this)}
+                handleCloudinaryUrl={this.props.handleCloudinaryUrl}
               />
             </div>
           </Col>
@@ -382,7 +371,7 @@ class Face extends React.Component {
                     description={this.state.description}
                     updatePhotos={this.state.updatePhotos}
                     imagePreviewUrls={this.state.imagePreviewUrls}
-                    handleCloudinaryUrl={this.handleCloudinaryUrl.bind(this)}
+                    handleCloudinaryUrl={this.props.handleCloudinaryUrl}
                     fieldBeingEdited={this.state.fieldBeingEdited}
                     removePhotos={this.removePhotos.bind(this)}
                     detectFaces={this.detectFaces.bind(this)}
@@ -394,7 +383,7 @@ class Face extends React.Component {
                   : <FaceCurrent
                       current={this.state.current}
                       edit={this.edit.bind(this)} 
-                      handleCloudinaryUrl={this.handleCloudinaryUrl.bind(this)}
+                      handleCloudinaryUrl={this.props.handleCloudinaryUrl}
                       delete={this.delete.bind(this)}
                     />
               }

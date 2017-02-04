@@ -120,7 +120,7 @@ export default class PushNotification extends React.Component {
             notificationToken: token
           });
 
-          axios.post(baseUrl + '/mobile/pushNotification', {
+          axios.post(baseUrl + '/mobile/notifications', {
             token:  token,
             id: 1,
           })

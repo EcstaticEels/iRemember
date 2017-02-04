@@ -17,7 +17,7 @@ export default class Signout extends React.Component {
   componentDidMount() {
     $.ajax({
       method: 'GET',
-      url: '/logout',
+      url: '/auth/logout',
       success: function(res) {
         this.props.handleLogout(() => {
           browserHistory.push('/')

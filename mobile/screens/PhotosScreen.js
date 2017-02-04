@@ -89,7 +89,8 @@ uploadImageAsync(uri) {
   let patientId = this.props.route.params.state.id;
   // let patientId = 1;
 
-  let apiUrl = `${baseUrl}/mobile/identify?date=${date}&patientId=${patientId}`;
+
+  let apiUrl = `${baseUrl}/mobile/faces?date=${date}&patientId=${patientId}`;
 
   let uriParts = uri.split('.');
   let fileType = uriParts[uri.length - 1];
@@ -98,9 +99,7 @@ uploadImageAsync(uri) {
   formData.append('picture', {
     uri: uri,
     name: date + '.jpeg',
-    type: 'image/jpeg',
-    // patientId: this.props.route.params.id,
-    // patientName: this.props.route.params.name
+    type: 'image/jpeg'
   });
 
   let options = {
@@ -117,9 +116,6 @@ uploadImageAsync(uri) {
 
 
   render() {
-
-    // this.takePhoto()
-
     if (this.state.loading) {
       return (
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
