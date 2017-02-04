@@ -16,7 +16,6 @@ authRouter.get('/google/callback',
   }); 
 
 authRouter.get('/user', function(req, res) {
-  var userObj;
   if (req.user) {
     if (req.user.patientId) {
       db.Patient.findOne({
