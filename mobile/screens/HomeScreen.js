@@ -59,8 +59,8 @@ export default class HomeScreen extends React.Component {
     },
   }
 
-
   componentDidMount () {
+
     var that = this;
     this.getTime();
     this.getWeather();

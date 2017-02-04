@@ -273,7 +273,7 @@ class Face extends React.Component {
       });
     });
   }
-
+  
   submitForm(event) {
     event.preventDefault();
     this.setState({
