@@ -17,10 +17,7 @@ class WebNav extends React.Component {
   }
 
   render() {
-    var loggedInMsg = !!caregiverName.get() ? <NavItem className="caregiver-name">Logged in as: {caregiverName.get()}</NavItem> : null;
-    var signInBtn = !caregiverName.get() ?  <NavItem href="/signin">Sign In</NavItem> : null;
-    var signOutBtn = !!caregiverName.get() ? <NavItem href="/signout">Sign Out</NavItem> : null;
-    return (
+    var nav = !!caregiverName.get() ? (
       <Navbar>
         <Navbar.Header>
           <Navbar.Brand>
@@ -28,12 +25,13 @@ class WebNav extends React.Component {
           </Navbar.Brand>
         </Navbar.Header>
         <Nav pullRight>
-          {loggedInMsg}
-          {signInBtn}
-          {signOutBtn}
+          <NavItem className="caregiver-name">Logged in as: {caregiverName.get()}</NavItem>
+          <NavItem href="/signin">Sign In</NavItem> 
+          <NavItem href="/signout">Sign Out</NavItem>
         </Nav>
       </Navbar>
-    );
+    ) : null;
+    return nav;
   }
 }
 
