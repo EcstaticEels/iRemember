@@ -11,12 +11,12 @@ export default class Home extends React.Component {
     <div className="home-container-secondary">
       <div className="home-container">
         <div className="home-box">
-          <h2 className="home-description">iRemember is an application designed to help caregivers support patients 
+          <h2 className="home-description">iRemember is an application designed to help family caregivers support loved ones 
           struggling with Alzheimer's Disease and other forms of dementia. 
           <br />
           <br />
-          iRemember gives caregivers the ability to set reminders for their patients and provides an interface 
-          to help patients recognize important people in their lives using their mobile devices.</h2>
+          iRemember gives caregivers the ability to set reminders for their loved ones and provides an interface 
+          to help loved ones recognize important people in their lives using their mobile devices.</h2>
           <a href="/auth/google" className="get-started-now-text"><Button bsSize='large' className="get-started-now">Sign up to get started now!</Button></a>
         </div>
       </div>

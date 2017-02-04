@@ -120,26 +120,26 @@ export default class Setup extends React.Component {
 
     return (
         <Loader show={this.state.loader} message={spinner} foregroundStyle={{color: 'white'}} backgroundStyle={{backgroundColor: 'white'}} className="spinner">
-        <form>
-          <Row className="show-grid">
-            <h1>{patientHeader}</h1>
-          </Row>
-          <Row className="show-grid">
-            {patientPhotos}
-          </Row>
-          <Row className="show-grid">
-            <label>
-              Patient Name:
-              <input type="text" value={this.state.patientName} className="patientName" placeholder="Patient Name" onChange={this.getInput.bind(this)}/>
-              <br/>
-            </label>
-          </Row>
-          <Row className="show-grid">
-            <ImagesUpload uploadedPhotos={this.state.updatePatientPhotos} getPhotos={this.getPhotos.bind(this)}/>
-            <br />
-          </Row>
-          <input type="submit" value="Submit" onClick={this.submitForm.bind(this)} />
-        </form>
+          <form>
+            <Row className="show-grid">
+              <h1>{patientHeader}</h1>
+            </Row>
+            <Row className="show-grid">
+              {patientPhotos}
+            </Row>
+            <Row className="show-grid">
+              <label>
+                Patient Name:
+                <input type="text" value={this.state.patientName} className="patientName" placeholder="Patient Name" onChange={this.getInput.bind(this)}/>
+                <br/>
+              </label>
+            </Row>
+            <Row className="show-grid">
+              <ImagesUpload uploadedPhotos={this.state.updatePatientPhotos} getPhotos={this.getPhotos.bind(this)}/>
+              <br />
+            </Row>
+            <input type="submit" value="Submit" onClick={this.submitForm.bind(this)} />
+          </form>
         </Loader>
     );
   }
