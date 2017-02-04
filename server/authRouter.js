@@ -9,7 +9,7 @@ authRouter.get('/google',
 
 authRouter.get('/google/callback', 
   passport.authenticate('google', { 
-    failureRedirect: '/'
+    failureRedirect: '/signin'
   }), function(req, res) {
     console.log('req.user', req.user)
     res.redirect('/');
