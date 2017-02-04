@@ -47,13 +47,21 @@ class Reminder extends React.Component {
     var that = this
     var mapIcons = (type) => {
       if (type === 'Medication') {
-        return '/pill_logo1.jpg';
-      } else if (type === 'Appointment') {
-        return '/appointment_logo3.jpg';
+        return '/medical.png';
+      } else if (type === 'Event') {
+        return '/christmas.png';
       } else if (type === 'Chores') {
-        return '/chores.jpg'; 
-      } else {
-        return '/reminder_logo.jpg';
+        return '/sweep.png'; 
+      } else if (type === 'Social Engagement') {
+        return '/people.png';
+      } else if (type === 'Doctor Appointment') {
+        return '/doctor.png';
+      } else if (type === 'Groceries') {
+        return '/groceries.png';
+      } else if (type === 'Exercise') {
+        return '/bicycle.png';
+      } else if (type === 'Other') {
+        return '/bell.png';
       }
     }
 
