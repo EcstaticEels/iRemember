@@ -38,7 +38,7 @@ class App extends React.Component {
       }.bind(this),
       error: function(err) {
         console.log('error', err);
-        browserHistory.push('/signin')
+        browserHistory.push('/')
       }
     });
   }
@@ -73,8 +73,6 @@ class App extends React.Component {
   handleLogout(cb) {
     caregiverName.set('');
     needsSetup.set(false);
-    console.log('logging out, caregiver name: ', caregiverName.get(), ' needssetup: ', needsSetup.get())
-    cb();
   }
 
   handleCloudinaryUrl(urlArray, w, h, type) {
@@ -110,14 +108,13 @@ const requireAuth = function(nextState, replace) {
   console.log('in require auth allow next:', !!caregiverName.get())
   if (!caregiverName.get()) {
     replace({
-      pathname: '/signin',
+      pathname: '/',
       state: { nextPathname: nextState.location.pathname }
     });
   }
 };
 
 const redirectTo = function(nextState, replace) {
-  console.log('you are logged in, redirect to reminders');
   if (caregiverName.get()) {
     replace({
       pathname: '/reminders',
@@ -131,7 +128,6 @@ ReactDOM.render((
   <Router history={browserHistory}>
     <Route path="/" component={App}>
       <IndexRoute component={Home} onEnter={redirectTo}/>
-      <Route path="/signin" component={Signin}/>
       <Route path="/signout" component={Signout}/>
       <Route path="/500" component={ServerError} />
       <Route path="/setup" component={Setup} onEnter={requireAuth}/>

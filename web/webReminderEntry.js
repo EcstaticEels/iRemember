@@ -11,7 +11,7 @@ var ReminderEntry = (props) => {
     <Row className="show-grid">
       <div className="reminder-entry" onClick={changeCurrent}>
         <Col md={5}>
-          <img className="reminder-graphic" src={props.data.img} height="100" width="100"/>
+          <img className="reminder-graphic" src={props.data.img} height="75" width="75"/>
         </Col>
         <Col md={7}>
           <div className="reminder-list-container">

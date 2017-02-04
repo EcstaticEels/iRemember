@@ -179,9 +179,13 @@ export default class ReminderForm extends React.Component {
             id="type" value={this.props.type} 
             onSelect={(event) => this.props.getType(event)} required>
             <MenuItem eventKey="Medication" value='Medication'>Medication</MenuItem>
-            <MenuItem eventKey="Appointment" value='Appointment'>Appointment</MenuItem>
+            <MenuItem eventKey="Event" value='Event'>Event</MenuItem>
             <MenuItem eventKey='Chores' value="Chores">Chores</MenuItem>
-            <MenuItem eventKey='Others' value="Others">Others</MenuItem>
+            <MenuItem eventKey='Social Engagement' value="Social Engagement">Social Engagement</MenuItem>
+            <MenuItem eventKey='Doctor Appointment' value="Doctor Appointment">Doctor Appointment</MenuItem>
+            <MenuItem eventKey='Groceries' value="Groceries">Groceries</MenuItem>
+            <MenuItem eventKey='Exercise' value="Exercise">Exercise</MenuItem>
+            <MenuItem eventKey='Other' value="Other">Other</MenuItem>
           </DropdownButton>
         </FormGroup>
 
