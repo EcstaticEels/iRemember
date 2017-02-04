@@ -450,7 +450,7 @@ input[type=file]{
   height: 90%;
   margin: 0px;
   padding: 0px;
-  background-image: url("homepage2x.jpg");
+  background-image: url("bitmap@2x.jpg");
   background-size:cover;
 }
 

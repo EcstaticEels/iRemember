@@ -14,17 +14,16 @@ export default class Home extends React.Component {
         <p className="home-description">Designed to help caregivers support patients struggling with Alzheimer’s Disease and other forms of dementia.</p>
         <p className="home-bullet">With 
           <span className="home-bullet bold-text"> iRemember</span>
-          , you can: 
+          , you can:</p>
           <ul className="home-bullet-list">
             <li>set reminders</li>
             <li>help care recipients recognize loved ones</li> 
             <li>easy mobile app</li>
           </ul>
-        </p>
         <button className="sign-up-button">
           <a href="/auth/google" className="sign-up-button-text">Sign up now</a>
         </button>
-        <a href="/signin" className="sign-in">Sign in</a>
+        <a href="/auth/google" className="sign-in">Sign in</a>
       </div>
     </Grid>
     )    
