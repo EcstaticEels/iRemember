@@ -77,6 +77,15 @@ class App extends React.Component {
     cb();
   }
 
+  handleCloudinaryUrl(urlArray, w, h, type) {
+    var newCloudinaryUrlArray = [];
+    for (var i = 0; i < urlArray.length; i++) {
+      var newUrl = urlArray[i].slice(0, 49) + `w_${w},h_${h},c_${type},g_face/a_auto_right/` + urlArray[i].slice(49);
+      newCloudinaryUrlArray.push(newUrl);
+    }
+    return newCloudinaryUrlArray;
+  }
+
   render() {
     return (
       <div className="app-body">
@@ -88,7 +97,8 @@ class App extends React.Component {
           <Tab changeView={this.changeView.bind(this)}/>
           {this.props.children && React.cloneElement(this.props.children, {
             handleLogout: this.handleLogout.bind(this),
-            getUserInfo: this.getUserInfo.bind(this)
+            getUserInfo: this.getUserInfo.bind(this),
+            handleCloudinaryUrl: this.handleCloudinaryUrl.bind(this)
           })}
         </Grid>
       </div>

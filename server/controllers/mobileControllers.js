@@ -3,7 +3,7 @@ const request = require('request');
 const urlModule = require('url');
 var fs = require('fs');
 
-const db = require('../database/db.js');
+const db = require('../../database/db.js');
 const sdk = require('exponent-server-sdk');
 
 //headers for the Microsoft Face API

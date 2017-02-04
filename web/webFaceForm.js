@@ -292,7 +292,6 @@ export default class FaceForm extends React.Component {
     if (this.props.errorText === 'Name is a required field') {
       var nameError = this.props.errorText;
     }
-
     var cloudinaryUrls = this.props.photos.map(function(photoObj) {
       return photoObj.photo;
     });

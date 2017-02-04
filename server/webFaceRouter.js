@@ -20,8 +20,9 @@ webFaceRouter.route('/')
 
 webFaceRouter.post('/detect', webFaceControllers.detectFaces)
 
-webFaceRouter.route('/setup')
+webFaceRouter.route('/patients')
   .post(webFaceControllers.setup)
   .put(webFaceControllers.updateSetup)
+  .get(webFaceControllers.getPatients)
 
 module.exports = webFaceRouter;

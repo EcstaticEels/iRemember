@@ -113,15 +113,6 @@ class Face extends React.Component {
     });
   }
 
-  handleCloudinaryUrl(urlArray, w, h, type) {
-    var newCloudinaryUrlArray = [];
-    for (var i = 0; i < urlArray.length; i++) {
-      var newUrl = urlArray[i].slice(0, 49) + `w_${w},h_${h},c_${type},g_face/a_auto_right/` + urlArray[i].slice(49);
-      newCloudinaryUrlArray.push(newUrl);
-    }
-    return newCloudinaryUrlArray;
-  }
-
   getFaces(func) {
     $.ajax({
       method: 'GET',
@@ -359,7 +350,7 @@ class Face extends React.Component {
                 list={this.state.list}
                 getInput={this.getInput.bind(this)}
                 updateCurrent={this.updateCurrent.bind(this)}
-                handleCloudinaryUrl={this.handleCloudinaryUrl.bind(this)}
+                handleCloudinaryUrl={this.props.handleCloudinaryUrl}
               />
             </div>
           </Col>
@@ -380,7 +371,7 @@ class Face extends React.Component {
                     description={this.state.description}
                     updatePhotos={this.state.updatePhotos}
                     imagePreviewUrls={this.state.imagePreviewUrls}
-                    handleCloudinaryUrl={this.handleCloudinaryUrl.bind(this)}
+                    handleCloudinaryUrl={this.props.handleCloudinaryUrl}
                     fieldBeingEdited={this.state.fieldBeingEdited}
                     removePhotos={this.removePhotos.bind(this)}
                     detectFaces={this.detectFaces.bind(this)}
@@ -392,7 +383,7 @@ class Face extends React.Component {
                   : <FaceCurrent
                       current={this.state.current}
                       edit={this.edit.bind(this)} 
-                      handleCloudinaryUrl={this.handleCloudinaryUrl.bind(this)}
+                      handleCloudinaryUrl={this.props.handleCloudinaryUrl}
                       delete={this.delete.bind(this)}
                     />
               }

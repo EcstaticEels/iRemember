@@ -1,7 +1,7 @@
 const cloudinary = require('cloudinary');
 const multiparty = require('multiparty');
 const request = require('request');
-const db = require('../database/db.js');
+const db = require('../../database/db.js');
 const sdk = require('exponent-server-sdk');
 
 //Set up cloudinary--env variables in .env file

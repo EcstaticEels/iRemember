@@ -1,7 +1,7 @@
 const cloudinary = require('cloudinary');
 const multiparty = require('multiparty');
 const request = require('request');
-const db = require('../database/db.js');
+const db = require('../../database/db.js');
 
 //headers for the Microsoft Face API
 const microsoftHeaders = {
@@ -471,52 +471,80 @@ module.exports = {
       });
     });
   },
+  getPatients: (req, res) => {
+    db.PatientPhoto.findAll({
+      where: {
+        patientId: req.user.patientId
+      }
+    })
+    .then(patientPhotos => {
+      db.Patient.findOne({
+        where: {
+          id: req.user.patientId
+        }
+      })
+      .then(patient => {
+        res.status(201).send(JSON.stringify({patientPhotos: patientPhotos, patientName: patient.name}));
+      })
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(400);
+    })
+  },
   updateSetup: (req, res) => {
     handleSetupForm(req, (patientPhotoArray, fields) => {
       db.Patient.update(
         { name: fields.patientName[0] },
         { where: {id: req.user.patientId}}
       )
-      .then(patient => {
-        var result = [];
-        if (patientPhotoArray.length > 0) {
-          patientPhotoArray.forEach(url => {
-            request.post({
-              headers: microsoftHeaders,
-              url: `https://api.projectoxford.ai/face/v1.0/persongroups/${patient.personGroupID}/persons/${patient.personId}/persistedFaces`,
-              body: JSON.stringify({"url": url})
-            }, (err, response, body) => {
-                if (err) {
-                  console.log(err);
-                }
-                result.push(body);
-                db.PatientPhoto.create({
-                  photo: url,
-                  patientId: patient.get('id')
-                })
-                .then(() => {
-                  if (patientPhotoArray.length === result.length) {
-                    request.post({
-                      headers: microsoftHeaders,
-                      url: `https://api.projectoxford.ai/face/v1.0/persongroups/${personGroupId}/train`,
-                    }, (err, response, body) => {
-                      if (err) {
-                        console.log(err);
-                        res.status(400);
-                      }
-                      res.status(201).send('Person and face successfully updated, train API call made');
-                    });
+      .then(() => {
+        db.Patient.findOne({
+          where: {
+            id: req.user.patientId
+          }
+        })
+        .then(patient => {
+          var result = [];
+          if (patientPhotoArray) {
+            patientPhotoArray.forEach(url => {
+              request.post({
+                headers: microsoftHeaders,
+                url: `https://api.projectoxford.ai/face/v1.0/persongroups/${patient.personGroupID}/persons/${patient.personId}/persistedFaces`,
+                body: JSON.stringify({"url": url})
+              }, (err, response, body) => {
+                  if (err) {
+                    console.log(err);
                   }
-                })
-                .catch(err => {
-                  console.log(err);
-                  res.status(400);
-                })
+                  result.push(body);
+                  db.PatientPhoto.create({
+                    photo: url,
+                    patientId: req.user.patientId
+                  })
+                  .then(() => {
+                    if (patientPhotoArray.length === result.length) {
+                      request.post({
+                        headers: microsoftHeaders,
+                        url: `https://api.projectoxford.ai/face/v1.0/persongroups/${patient.personGroupId}/train`,
+                      }, (err, response, body) => {
+                        if (err) {
+                          console.log(err);
+                          res.status(400);
+                        }
+                        res.status(201).send('Patient updated and model trained');
+                      });
+                    }
+                  })
+                  .catch(err => {
+                    console.log(err);
+                    res.status(400);
+                  })
+              });
             });
-          });
-        } else {
-          res.status(201).send('Person updated');
-        }
+          } else {
+            res.status(201).send('Patient updated');
+          }
+        })
       })
       .catch(err => {
         console.log(err);
@@ -547,70 +575,72 @@ module.exports = {
         })
         .then(patient => {
           let result = [];
-          patientPhotoArray.forEach(patientPhoto => {
-            request.post({
-              headers: microsoftHeaders,
-              url: `https://api.projectoxford.ai/face/v1.0/persongroups/${patientGroupId}/persons/${createdPerson.personId}/persistedFaces`,
-              body: JSON.stringify({"url": patientPhoto})
-              }, (err, response, body) => {
-                if (err) {
-                  console.log(err);
-                  res.status(400);
-                }
-                db.PatientPhoto.create({
-                  photo: patientPhoto,
-                  patientId: patient.get('id')
-                })
-                .then(() => {
-                  result.push(body);
-                  if (patientPhotoArray.length === result.length) {
-                    request.post({
-                      headers: microsoftHeaders,
-                      url: `https://api.projectoxford.ai/face/v1.0/persongroups/${patientGroupId}/train`,
-                    }, (err, response, body) => {
-                      if (err) {
-                        console.log(err);
-                        res.status(400);
-                      }
-                      db.Caregiver.update(
-                        {
-                          patientId: patient.get('id'),
-                          personGroupID: newPersonGroupId
-                        }, 
-                        {
-                          where: {
-                            id: req.user.id
-                          }
-                        }
-                      )
-                      .then(caregiver => {
-                        request.put({
-                          headers: microsoftHeaders,
-                          url: `https://api.projectoxford.ai/face/v1.0/persongroups/${newPersonGroupId}`,
-                          body: JSON.stringify({"name": newPersonGroupId})
-                        }, (err, response, body) => {
-                          if (err) {
-                            console.log(err);
-                            res.status(400);
-                          }
-                          console.log('caregiver and patient associated');
-                          res.status(201).send(JSON.stringify({patient: patient, caregiver: caregiver}));
-                        })
-                      })
-                      .catch(err => {
-                        console.log(err);
-                        res.status(400);
-                      })
-                    });
+          if (patientPhotoArray) {
+            patientPhotoArray.forEach(patientPhoto => {
+              request.post({
+                headers: microsoftHeaders,
+                url: `https://api.projectoxford.ai/face/v1.0/persongroups/${patientGroupId}/persons/${createdPerson.personId}/persistedFaces`,
+                body: JSON.stringify({"url": patientPhoto})
+                }, (err, response, body) => {
+                  if (err) {
+                    console.log(err);
+                    res.status(400);
                   }
-                })
-                .catch(err => {
-                  console.log(err);
-                  res.status(400);
-                })
-              }
-            );
-          });
+                  db.PatientPhoto.create({
+                    photo: patientPhoto,
+                    patientId: patient.get('id')
+                  })
+                  .then(() => {
+                    result.push(body);
+                    if (patientPhotoArray.length === result.length) {
+                      request.post({
+                        headers: microsoftHeaders,
+                        url: `https://api.projectoxford.ai/face/v1.0/persongroups/${patientGroupId}/train`,
+                      }, (err, response, body) => {
+                        if (err) {
+                          console.log(err);
+                          res.status(400);
+                        }
+                        db.Caregiver.update(
+                          {
+                            patientId: patient.get('id'),
+                            personGroupID: newPersonGroupId
+                          }, 
+                          {
+                            where: {
+                              id: req.user.id
+                            }
+                          }
+                        )
+                        .then(caregiver => {
+                          request.put({
+                            headers: microsoftHeaders,
+                            url: `https://api.projectoxford.ai/face/v1.0/persongroups/${newPersonGroupId}`,
+                            body: JSON.stringify({"name": newPersonGroupId})
+                          }, (err, response, body) => {
+                            if (err) {
+                              console.log(err);
+                              res.status(400);
+                            }
+                            console.log('caregiver and patient associated');
+                            res.status(201).send(JSON.stringify({patient: patient, caregiver: caregiver}));
+                          })
+                        })
+                        .catch(err => {
+                          console.log(err);
+                          res.status(400);
+                        })
+                      });
+                    }
+                  })
+                  .catch(err => {
+                    console.log(err);
+                    res.status(400);
+                  })
+                }
+              );
+            });
+          } 
         })
         .catch(err => {
           console.log(err);

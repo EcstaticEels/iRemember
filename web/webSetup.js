@@ -15,8 +15,28 @@ export default class Setup extends React.Component {
     this.state = {
       updatePatientPhotos: '',
       patientName: '',
-      loader: false
+      loader: false,
+      patientPhotos: []
     }
+  }
+
+  componentDidMount() {
+    $.ajax({
+      method: 'GET',
+      url: '/web/faces/patients',
+      success: function(res) {
+        var parsed = JSON.parse(res);
+        this.setState({
+          patientPhotos: parsed.patientPhotos,
+          patientName: parsed.patientName
+        }, () => {
+          console.log(this.state);
+        })
+      }.bind(this),
+      error: function(err) {
+        console.log('error', err);
+      }
+    })
   }
 
   getInput(event) {
@@ -47,27 +67,30 @@ export default class Setup extends React.Component {
     for (var key in this.state.updatePatientPhotos) {
       formData.append('patientPhoto', this.state.updatePatientPhotos[key]);
     }
-    console.log('about to send request to post setup', this.state.updatePatientPhotos)
+    var method = 'POST';
+    if (caregiverName.get() && !needsSetup.get()) {
+      method = 'PUT';
+    }
     $.ajax({
-      method: 'POST',
-      url: '/web/faces/setup',
+      method: method,
+      url: '/web/faces/patients',
       data: formData,
       processData: false,
       contentType: false,
       success: function(res) {
-        var parsedData = JSON.parse(res);
-        console.log('patient', parsedData);
-        needsSetup.set(false);
-        console.log('needsSetup now', needsSetup.get())
-        this.props.getUserInfo(() => {
-          if (res) {
-            var parsed = JSON.parse(res);
-            caregiverName.set(parsed.caregiver.name);
-            if (parsed.patient) {
-              patientName.set(parsed.patient.name);
+        if (caregiverName.get() && needsSetup.get()) {
+          var parsedData = JSON.parse(res);
+          needsSetup.set(false);
+          this.props.getUserInfo(() => {
+            if (res) {
+              var parsed = JSON.parse(res);
+              caregiverName.set(parsed.caregiver.name);
+              if (parsed.patient) {
+                patientName.set(parsed.patient.name);
+              }
             }
-          }
-        })
+          })
+        }
         that.setState({
           loader: false
         }, () => {
@@ -81,12 +104,28 @@ export default class Setup extends React.Component {
   }
 
   render() {
-    const spinner = <span><img src={'/default.svg'} /></span>
+    const spinner = <span><img src={'/default.svg'} /></span>;
+    const patientHeader = needsSetup.get() ? 'Add your patient' : 'Update your patient';
+    var cloudinaryUrls = this.state.patientPhotos.map(function(photoObj) {
+      return photoObj.photo;
+    });
+    var thumbnailPhotos = this.props.handleCloudinaryUrl(cloudinaryUrls, '134', '94', 'thumb');
+    var patientPhotos = !needsSetup.get() ?       
+      (<label>
+        <div className="setup-face-form">
+        {thumbnailPhotos.length > 0 ? thumbnailPhotos.map((val, ind) => {
+          return <img src={val} key={ind} className="preview-img front" />
+        }) : null}
+        </div>
+      </label>) : null;
     return (
         <Loader show={this.state.loader} message={spinner} foregroundStyle={{color: 'white'}} backgroundStyle={{backgroundColor: 'white'}} className="spinner">
         <form>
           <Row className="show-grid">
-            <h1>Setup Your Account</h1>
+            <h1>{patientHeader}</h1>
+          </Row>
+          <Row className="show-grid">
+            {patientPhotos}
           </Row>
           <Row className="show-grid">
             <label>
@@ -96,10 +135,8 @@ export default class Setup extends React.Component {
             </label>
           </Row>
           <Row className="show-grid">
-            <label>Upload photos of patient:
-              <ImagesUpload uploadedPhotos={this.state.updatePatientPhotos} getPhotos={this.getPhotos.bind(this)}/>
-              <br />
-            </label>
+            <ImagesUpload uploadedPhotos={this.state.updatePatientPhotos} getPhotos={this.getPhotos.bind(this)}/>
+            <br />
           </Row>
           <input type="submit" value="Submit" onClick={this.submitForm.bind(this)} />
         </form>
