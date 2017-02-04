@@ -38,7 +38,6 @@ export default class Setup extends React.Component {
       }
     })
   }
-
   getInput(event) {
     var key = event.target.getAttribute('class');
     var value = event.target.value;
@@ -118,6 +117,7 @@ export default class Setup extends React.Component {
         }) : null}
         </div>
       </label>) : null;
+
     return (
         <Loader show={this.state.loader} message={spinner} foregroundStyle={{color: 'white'}} backgroundStyle={{backgroundColor: 'white'}} className="spinner">
         <form>

@@ -89,6 +89,7 @@ uploadImageAsync(uri) {
   let patientId = this.props.route.params.state.id;
   // let patientId = 1;
 
+
   let apiUrl = `${baseUrl}/mobile/faces?date=${date}&patientId=${patientId}`;
 
   let uriParts = uri.split('.');

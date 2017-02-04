@@ -61,7 +61,6 @@ class Reminder extends React.Component {
       method: 'GET',
       url: '/web/reminders',
       success: function(res) {
-        console.log(res);
         var reminders = JSON.parse(res).reminders;
         reminders.forEach(function(reminder) {
           reminder.date = new Date(reminder.date);
@@ -289,6 +288,7 @@ class Reminder extends React.Component {
     }
     var that = this;
     var formData = new FormData();
+
     var convertedMomentDate = Moment.utc(this.state.date).format()
     formData.append('date', convertedMomentDate);
     formData.append('recurring', this.state.recurring);

@@ -1,3 +1,4 @@
+
 const express = require('express');
 const path = require('path');
 const request = require('request');
@@ -83,6 +84,7 @@ app.use('/scripts', express.static(path.join(__dirname, '..', 'node_modules')))
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
 //Serve index.html at every other route that comes to server
+
 app.get('*', function (req, res) {
   res.sendFile(path.join(__dirname, '..', 'public/webIndex.html'));
 });
@@ -92,3 +94,4 @@ app.listen(3000, function () {
 });
 
 module.exports = app;
+

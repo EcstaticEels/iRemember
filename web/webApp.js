@@ -76,7 +76,7 @@ class App extends React.Component {
     console.log('logging out, caregiver name: ', caregiverName.get(), ' needssetup: ', needsSetup.get())
     cb();
   }
-
+  
   handleCloudinaryUrl(urlArray, w, h, type) {
     var newCloudinaryUrlArray = [];
     for (var i = 0; i < urlArray.length; i++) {
@@ -85,7 +85,7 @@ class App extends React.Component {
     }
     return newCloudinaryUrlArray;
   }
-
+  
   render() {
     return (
       <div className="app-body">

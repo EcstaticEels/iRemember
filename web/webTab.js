@@ -20,6 +20,7 @@ class Tab extends React.Component {
         <LinkContainer to="/face" className="link">
           <NavItem>Face</NavItem>
         </LinkContainer>
+
         <LinkContainer to="/setup" className="link">
           <NavItem>Setup</NavItem>
         </LinkContainer>
