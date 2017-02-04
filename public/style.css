@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
 h1, h2, h3, h4, h5, h6 {
   font-weight: 300;
 }
@@ -5,6 +7,10 @@ h1, h2, h3, h4, h5, h6 {
 html, body, #app, .app-grid, .app-body, .app-window, .app-body, .app-grid-secondary,
 .home-container-secondary {
   height: 100%;
+}
+
+.app-grid {
+  margin-top: -82px; 
 }
 
 .app-window {
@@ -27,7 +33,7 @@ html, body, #app, .app-grid, .app-body, .app-window, .app-body, .app-grid-second
 body {
   font-family: 'Roboto', sans-serif;
   font-weight: 300;
-  background-image: url('http://api.thumbr.it/whitenoise-361x370.png?background=eaeaeaff&noise=626262&density=5&opacity=7');
+  background-color: white;
 }
 
 .container-fluid {
@@ -46,19 +52,24 @@ body {
 /**************Navigation Bars*************/
 /******************************************/
 .navbar {
-  background-color: rgba(139, 172, 189, 0.7);
+  /*background-color: rgba(139, 172, 189, 0.7);*/
+  background-color: white;
   min-height: 60px;
   border: 1px solid #D0D0D0;
+  margin: 0px;
 }
 
 .navbar-brand {
   font-size: 35px;
   font-family: 'Lato', sans-serif;
-  text-shadow: 0 1px 1px #888;
+}
+
+.navbar-header {
+  padding-top: 3px;
 }
 
 .navbar-default .navbar-brand {
-  color: white;
+  color: #f7bba9;
 }
 
 .tabNav {
@@ -71,7 +82,7 @@ body {
 
 .navbar-default .navbar-nav>li>a {
   font-size: 15px;
-  color: white;
+  color: '#404040';
   padding: 20px 10px  ;
 }
 
@@ -435,35 +446,153 @@ input[type=file]{
 /****************Home****************************/
 /************************************************/
 
-.home-container {
-  margin-top: -82px;
+.landing {
+  height: 90%;
+  margin: 0px;
+  padding: 0px;
+  background-image: url("homepage2x.jpg");
+  background-size:cover;
 }
 
 .home-box {
-  background-color: white;
-  padding: 30px 40px;
+  position: absolute;
+  top: 25%;
+  right: 10%;
+  width: 500px;
+  height: 350px;
+  padding: 40px;
+  border-radius: 10px;
+  background-color: #ffffff;
 }
 
-.get-started-now {
-  background-color: rgba(250, 149, 129, 0.8);
-  color: white;
-  padding: 14px 22px;
-  margin-top: 15px;
-  border-radius: 5px;
-}
-
-.get-started-now-text {
-  color: white;
-}
-.get-started-now-text:hover {
-  color: white;
-  background-color: rgba(222, 132, 114, 1);
-  text-decoration-color: none;
+.home-logo {
+  width: 400px;
+  height: 42px;
+  font-family: Roboto;
+  font-size: 36px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #4d4d4d;
 }
 
 .home-description {
-  line-height: 1.3;
+  width: 400px;
+  height: 38px;
+  font-family: Roboto;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #9b9b9b;
+  line-height: 1.6;
+  margin-top: 5px;
 }
+
+.home-bullet {
+  font-family: Roboto;
+  font-size: 17px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #9b9b9b;
+  margin-top: 30px;
+}
+
+.home-bullet .bold-text {
+  font-family: Roboto;
+  color: #313131;
+}
+
+.home-bullet-list {
+  list-style: none;
+  line-height: 22px;
+  padding: 0;
+  margin: 0;
+}
+
+.home-bullet-list li {
+  padding-left: 2em; 
+  text-indent: -.7em;
+}
+
+.home-bullet-list li::before {
+  content: "• ";
+  color: #f7bba9;
+}
+
+.sign-up-button {
+  width: 125px;
+  background-color: rgba(250, 149, 129, 0.8);
+  color: white;
+  border: none;
+  padding: 14px 22px;
+  margin-top: 15px;
+  margin-right: 15px;
+  border-radius: 5px;
+  background-color: #f7bba9;
+}
+
+.sign-up-button-text {
+  width: 78px;
+  height: 19px;
+  font-family: Roboto;
+  font-size: 15px;
+  font-weight: lighter;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #ffffff;
+}
+
+.sign-in {
+  width: 44px;
+  height: 19px;
+  font-family: Roboto;
+  font-size: 15px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  text-decoration: underline;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #898989;
+}
+
+/*.sign-up-button {
+  width: 44px;
+  height: 19px;
+  font-family: Roboto;
+  font-size: 14px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #898989;
+}*/
+
+/*.get-started-now-text:hover {
+  color: white;
+  background-color: rgba(222, 132, 114, 1);
+  text-decoration-color: none;
+}*/
+
+/*.sign-up-button-text {
+  color: white;
+}
+.sign-up-button-text:hover {
+  color: white;
+  text-decoration-color: none;
+}*/
 
 /************************************************/
 /****************Other***************************/
@@ -557,4 +686,3 @@ input[type=file]{
   align-content: center;
   width: 100%;
 }
-

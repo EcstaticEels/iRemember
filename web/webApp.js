@@ -91,14 +91,14 @@ class App extends React.Component {
           <Nav className="primary-nav" />
         </Grid>
 
-        <Grid className="app-grid">
+        <div className="app-grid">
           <Tab changeView={this.changeView.bind(this)}/>
           {this.props.children && React.cloneElement(this.props.children, {
             handleLogout: this.handleLogout.bind(this),
             getUserInfo: this.getUserInfo.bind(this),
             handleCloudinaryUrl: this.handleCloudinaryUrl.bind(this)
           })}
-        </Grid>
+        </div>
       </div>
     )
   }
