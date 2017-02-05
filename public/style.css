@@ -9,10 +9,6 @@ html, body, #app, .app-grid, .app-body, .app-window, .app-body, .app-grid-second
   height: 100%;
 }
 
-.app-grid {
-  margin-top: -82px; 
-}
-
 .app-window {
   display: flex;
   align-items: center;
@@ -55,8 +51,10 @@ body {
   /*background-color: rgba(139, 172, 189, 0.7);*/
   background-color: white;
   min-height: 60px;
-  border: 1px solid #D0D0D0;
+  /*border: 1px solid #D0D0D0;*/
   margin: 0px;
+  box-shadow: 0 3px 7px -5px grey;
+  border-radius: 0;
 }
 
 .navbar-brand {
@@ -73,11 +71,20 @@ body {
 }
 
 .tabNav {
-  margin-bottom: 30px;
+  margin: 25px 0 0 0;
+  width: 1170px;
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.tab-wrapper {
+  background-color: #eff2f4;
+  border-bottom: 1px solid #ddd;
 }
 
 .nav-tabs {
-  border-bottom: 1px solid #fff;
+  border: 0;
 }
 
 .navbar-default .navbar-nav>li>a {
@@ -88,16 +95,9 @@ body {
 
 .nav-tabs>li>a,
 .nav-tabs>li.active>a {
-  background-image: url('http://api.thumbr.it/whitenoise-361x370.png?background=eaeaeaff&noise=626262&density=5&opacity=7');
   font-size: 17px;
-  border: 1px solid #fff;
-  border-bottom-color: transparent;
 }
 
-.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
-  border: 1px solid #fff;
-  border-bottom-color: transparent;
-}
 .nav-tabs>li>a {
   border: none;
   border-radius: 5px 5px 0 0;
