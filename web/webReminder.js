@@ -353,7 +353,7 @@ class Reminder extends React.Component {
   render() {
     const spinner = <span><img src={'/default.svg'} /></span>
     return (
-      <div>
+      <Grid>
         <Row className="show-grid">
           <Col xs={6} md={4}>
             <div className="reminder">
@@ -402,7 +402,7 @@ class Reminder extends React.Component {
             </div>
           </Col>
         </Row>
-      </div>
+      </Grid>
     )
   }
 }
