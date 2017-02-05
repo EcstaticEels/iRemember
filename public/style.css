@@ -106,6 +106,27 @@ body {
 .caregiver-name {
   font-size: 17px;
 }
+
+/******************************************/
+/******************Setup*******************/
+/******************************************/
+
+.patient-header {
+  margin: 0 0 30px 0;
+}
+
+.patient-name-input {
+  margin: 8px 0 0 0;
+  padding: 8px;
+  font-weight: 300;
+}
+
+.save-btn {
+  font-family: Roboto;
+  font-size: 17px;
+  color: #ffffff;
+}
+
 /******************************************/
 /*********Face and Reminder-List***********/
 /******************************************/
@@ -528,9 +549,8 @@ input[type=file]{
   color: #f7bba9;
 }
 
-.sign-up-button {
+.sign-up-button, .save-btn {
   width: 125px;
-  background-color: rgba(250, 149, 129, 0.8);
   color: white;
   border: none;
   padding: 14px 22px;
