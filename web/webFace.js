@@ -336,8 +336,8 @@ class Face extends React.Component {
         <Row className="face-wrapper">
           <Col xs={4}>
             <div className="face">
-              <div className="list-group-item new-face-btn hvr-trim" onClick={ () => this.displayForm.call(this, true, false)}>
-                <h2>Add a New Face</h2>
+              <div className="new-face-btn hvr-trim" onClick={ () => this.displayForm.call(this, true, false)}>
+                <h2>Add a new face</h2>
               </div>
               <FaceList 
                 showForm={this.state.showForm}
