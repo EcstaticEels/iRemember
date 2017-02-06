@@ -131,7 +131,7 @@ body {
 /*********Face and Reminder-List***********/
 /******************************************/
 
-.face-wrapper {
+.face-wrapper, .reminder-wrapper {
   margin-top: 30px;
 }
 
@@ -159,20 +159,14 @@ body {
   font-size: 40px;
   color: white;
   text-align: center;
+  height: 60px;
+  border-radius: 6px !important;
   background-color: rgba(250, 149, 129, 0.7);
 }
 
 .new-reminder-btn h2,
 .new-face-btn h2 {
   margin: 0px;
-}
-
-.new-face-btn {
-  height: 60px;
-  border-radius: 6px !important;
-}
-
-.new-face-btn h2 {
   padding-top: 12px;
 }
 
@@ -289,13 +283,16 @@ body {
   font-size: 16px;
 }
 
-.reminder-current-heading,
+/*.reminder-current-heading,
 .face-current-heading {
   text-align: center;
   font-size: 48px;
   margin-bottom: 20px;
   font-weight: 500;
-}
+}*/
+
+
+
 
 .face-right {
   padding-left: 30px;
@@ -320,7 +317,7 @@ body {
   padding-bottom: 10px;
 }
 
-.reminder-type,
+/*.reminder-type,
 .reminder-audio,
 .reminder-btns,
 .reminder-description,
@@ -332,7 +329,7 @@ body {
   width: 562px;
   margin-right: auto;
   margin-left: auto;
-}
+}*/
 
 .reminder-btns,
 .face-btns {
