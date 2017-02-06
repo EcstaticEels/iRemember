@@ -472,25 +472,29 @@ module.exports = {
     });
   },
   getPatients: (req, res) => {
-    db.PatientPhoto.findAll({
-      where: {
-        patientId: req.user.patientId
-      }
-    })
-    .then(patientPhotos => {
-      db.Patient.findOne({
+    if (req.user.patientId) {
+      db.PatientPhoto.findAll({
         where: {
-          id: req.user.patientId
+          patientId: req.user.patientId
         }
       })
-      .then(patient => {
-        res.status(201).send(JSON.stringify({patientPhotos: patientPhotos, patientName: patient.name}));
+      .then(patientPhotos => {
+        db.Patient.findOne({
+          where: {
+            id: req.user.patientId
+          }
+        })
+        .then(patient => {
+          res.status(201).send(JSON.stringify({patientPhotos: patientPhotos, patientName: patient.name}));
+        })
       })
-    })
-    .catch(err => {
-      console.log(err);
-      res.status(400);
-    })
+      .catch(err => {
+        console.log(err);
+        res.status(400);
+      })
+    } else {
+      res.status(204);
+    }
   },
   updateSetup: (req, res) => {
     handleSetupForm(req, (patientPhotoArray, fields) => {
@@ -531,7 +535,7 @@ module.exports = {
                           console.log(err);
                           res.status(400);
                         }
-                        res.status(201).send('Patient updated and model trained');
+                        res.status(201).send(JSON.stringify({patient: patient}));
                       });
                     }
                   })
@@ -542,7 +546,7 @@ module.exports = {
               });
             });
           } else {
-            res.status(201).send('Patient updated');
+            res.status(201).send(JSON.stringify({patient: patient}));
           }
         })
       })

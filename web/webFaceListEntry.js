@@ -10,14 +10,20 @@ var FaceEntry = (props) => {
 
   return (
     <Row className="show-grid">
-      <div onClick={changeCurrent}>
-        <div className="face-list-image">
-          <Col xs={5}>
-            {photoView}
-          </Col>
-        </div>
-        <Col xs={7} className="face-list-btn-name">
-          <h3 className='face-list-name'>{props.data.subjectName}</h3>
+      <div onClick={changeCurrent} className="face-list-row">
+        <Col md={6}>
+          <div className="face-list-image-container">
+            <div className="face-list-image-container-inner">
+              {photoView}
+            </div>
+          </div>
+        </Col>
+        <Col md={6}>
+          <div className="face-list-name-container">
+            <div className="face-list-name-container-inner">
+              <h3 className='face-list-name'>{props.data.subjectName}</h3>
+            </div>
+          </div>
         </Col>
       </div>
     </Row>
