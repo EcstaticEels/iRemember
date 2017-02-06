@@ -9,14 +9,20 @@ class ReminderList extends React.Component {
   }
 
   render() {
-    var styleObj = this.props.showForm ? {padding: '0px'} : {};
-
+    var that = this;
+    var styleObj = {backgroundColor: '#f5f5f5'};
     return (
-      <div className="reminder-list" style={styleObj}>
+      <div className="reminder-list">
         <ListGroup fill>
           {this.props.list.map((val, ind) => {
+            if (that.props.current.id === val.id) {
+              console.log(that.props.current.id, val.id)
+              styleObj = {backgroundColor: '#eaeaea'}
+            } else {
+              styleObj = {backgroundColor: '#f5f5f5'}
+            }
             return (
-              <ListGroupItem key={ind}><ReminderEntry data={val} updateCurrent={this.props.updateCurrent}/></ListGroupItem>
+              <ListGroupItem key={ind} style={styleObj}><ReminderEntry data={val} updateCurrent={this.props.updateCurrent} /></ListGroupItem>
             )
           })}
         </ListGroup>
@@ -26,3 +32,4 @@ class ReminderList extends React.Component {
 }
 
 module.exports = ReminderList;
+

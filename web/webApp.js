@@ -5,7 +5,7 @@ import {Route, Router, browserHistory, IndexRoute, IndexRedirect} from 'react-ro
 import { Button, Grid} from 'react-bootstrap';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
-import {caregiverName, needsSetup, patientName} from './webMobxStore';
+import {caregiverName, needsSetup, patientName, patientImage} from './webMobxStore';
 
 import Nav from './webNav.js';
 import Tab from './webTab.js';
@@ -17,6 +17,7 @@ import Setup from './webSetup.js';
 import Signout from './webSignout.js';
 import Home from './webHome.js';
 import ServerError from './webError.js';
+import PatientProfile from './webPatientProfile.js';
 
 @observer
 class App extends React.Component {
@@ -50,12 +51,14 @@ class App extends React.Component {
         caregiverName.set(parsed.caregiver.name);
         if (parsed.patient) {
           patientName.set(parsed.patient.name);
+          patientImage.set(parsed.patient.photo);
         }
         if (!parsed.caregiver.patientId) {
           needsSetup.set(true);
           browserHistory.push('/setup');
         } else {
-          browserHistory.push('/reminders');;
+          console.log('hi')
+          browserHistory.push('/patient/reminders');;
         }
         console.log('logging in, caregiver name: ', caregiverName.get(), ' needssetup: ', needsSetup.get())
       } else {
@@ -118,23 +121,25 @@ const requireAuth = function(nextState, replace) {
 
 const redirectTo = function(nextState, replace) {
   if (caregiverName.get()) {
+    console.log('hi2')
     replace({
-      pathname: '/reminders',
+      pathname: '/patient',
       state: { nextPathname: nextState.location.pathname }
     });
   }
 }
 
-
 ReactDOM.render((
   <Router history={browserHistory}>
     <Route path="/" component={App}>
       <IndexRoute component={Home} onEnter={redirectTo}/>
-      <Route path="/signout" component={Signout}/>
-      <Route path="/500" component={ServerError} />
-      <Route path="/setup" component={Setup} onEnter={requireAuth}/>
-      <Route path="/reminders" component={Reminder} onEnter={requireAuth}/>
-      <Route path="/face" component={Face} onEnter={requireAuth}/>
+      <Route path="signout" component={Signout}/>
+      <Route path="500" component={ServerError} />
+      <Route path='patient' component={PatientProfile} onEnter={requireAuth}>
+        <Route path="reminders" component={Reminder} onEnter={requireAuth}/>
+        <Route path="setup" component={Setup} onEnter={requireAuth}/>
+        <Route path="face" component={Face} onEnter={requireAuth}/>
+      </Route>
       <Route path='*' component={NotFound} />
     </Route>
   </Router>

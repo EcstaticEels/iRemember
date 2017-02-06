@@ -14,13 +14,13 @@ class Tab extends React.Component {
   render() {
     var nav = !!caregiverName.get() && !needsSetup.get() ? 
       (<Nav bsStyle="tabs" className="tabNav">
-        <LinkContainer to="/reminders" className="link">
+        <LinkContainer to="/patient/reminders" className="link">
           <NavItem>Reminders</NavItem>
         </LinkContainer>
-        <LinkContainer to="/face" className="link">
+        <LinkContainer to="/patient/face" className="link">
           <NavItem>Face</NavItem>
         </LinkContainer>
-        <LinkContainer to="/setup" className="link">
+        <LinkContainer to="/patient/setup" className="link">
           <NavItem>Setup</NavItem>
         </LinkContainer>
       </Nav>) : null;

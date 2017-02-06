@@ -22,20 +22,16 @@ export default class FaceCurrent extends React.Component {
       currentView = (
       <Row>
         <div className="face-current">
-            <Col xs={5} className="face-current-patient-info">
-              <h1 className="face-current-name">{this.props.current.subjectName}
+            <Col md={6}>
+              {galleryView}
+            </Col>
+            <Col md={6} className="face-current-patient-info">
+              <h1 className="face-current-name">{this.props.current.subjectName + ' '}
+              <span className="current-edit-delete-btns">
                 <i className="edit fa fa-pencil-square-o" onClick={this.edit.bind(this)} aria-hidden="true"></i>
                 <i className="trash fa fa-trash-o" onClick={this.props.delete} aria-hidden="true"></i>
+              </span>
               </h1>
-              <h3 className="face-current-relationship">Aquaintence</h3>
-                <div className='face-age'>
-                  <h3 className='face-current-header'>Age </h3>
-                  <h5>24</h5>
-                </div>
-                <div className='face-occupation'>
-                  <h3 className='face-current-header'>Occupation </h3>
-                  <h5>Software Engineer</h5>
-                </div>
                 <div className='face-description'> 
                   <h3 className='face-current-header'>Description </h3>
                   <h5>{this.props.current.description}</h5>
@@ -44,9 +40,6 @@ export default class FaceCurrent extends React.Component {
                   <h3 className='face-current-header'>Audio Message </h3>
                   {audioView}
                 </div>
-            </Col>
-            <Col xs={5}>
-              {galleryView}
             </Col>
         </div>
       </Row>
@@ -61,4 +54,14 @@ export default class FaceCurrent extends React.Component {
     return currentView;
   }
 };
+
+              // <h3 className="face-current-relationship">Aquaintence</h3>
+              //   <div className='face-age'>
+              //     <h3 className='face-current-header'>Age </h3>
+              //     <h5>24</h5>
+              //   </div>
+              //   <div className='face-occupation'>
+              //     <h3 className='face-current-header'>Occupation </h3>
+              //     <h5>Software Engineer</h5>
+              //   </div>
 

@@ -1,14 +1,9 @@
 import React from 'react';
 import {Button, Row, Col, Grid, FormControl, FormGroup, InputGroup, ControlLabel, DropdownButton, MenuItem, Radio, Checkbox} from 'react-bootstrap';
-
-// Be sure to include styles at some point, probably during your bootstrapping
-// import 'react-select/dist/react-select.css';
 import AudioUpload from './webAudioUpload.js';
 import Moment from 'moment';
 import Datetime from 'react-datetime';
-
 import MSR from 'msr';
-
 import {observer} from 'mobx-react';
 import {reminderForm} from './webMobxStore';
 
@@ -173,6 +168,7 @@ export default class ReminderForm extends React.Component {
       <div className="reminder-form">
         <h3 className="reminder-form-heading">Add a New Reminder</h3>
         <FormGroup>
+          <div><ControlLabel> {'Reminder Type:'}</ControlLabel></div>
           <DropdownButton 
             className='reminder-type-btn'
             title={this.props.type.slice(0,1).toUpperCase() + this.props.type.slice(1)} 
@@ -197,7 +193,7 @@ export default class ReminderForm extends React.Component {
             onChange={this.props.getInput} />
         </FormGroup>
 
-        <FormGroup>
+        <FormGroup >
           <ControlLabel> {'Notes:'} </ControlLabel>
           <FormControl
             type="text" value={this.props.note} 

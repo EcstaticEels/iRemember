@@ -24,14 +24,17 @@ export default class Setup extends React.Component {
     $.ajax({
       method: 'GET',
       url: '/web/faces/patients',
-      success: function(res) {
-        var parsed = JSON.parse(res);
-        this.setState({
-          patientPhotos: parsed.patientPhotos,
-          patientName: parsed.patientName
-        }, () => {
-          console.log(this.state);
-        })
+      success: function(res, textStatus, xhr) {
+        console.log(xhr.status)
+        if (xhr.status === 201) { //if we are updating not creating a patient
+          var parsed = JSON.parse(res);
+          this.setState({
+            patientPhotos: parsed.patientPhotos,
+            patientName: parsed.patientName
+          }, () => {
+            console.log(this.state);
+          })
+        } 
       }.bind(this),
       error: function(err) {
         console.log('error', err);
@@ -78,23 +81,18 @@ export default class Setup extends React.Component {
       processData: false,
       contentType: false,
       success: function(res) {
-        if (caregiverName.get() && needsSetup.get()) {
-          var parsedData = JSON.parse(res);
+        var parsed = JSON.parse(res);
+        if (caregiverName.get() && !needsSetup.get()) { //if the account does not need setup
+          patientName.set(parsed.patient.name);
+        } else if (caregiverName.get() && needsSetup.get()) { //if the account just completed setup
           needsSetup.set(false);
-          this.props.getUserInfo(() => {
-            if (res) {
-              var parsed = JSON.parse(res);
-              caregiverName.set(parsed.caregiver.name);
-              if (parsed.patient) {
-                patientName.set(parsed.patient.name);
-              }
-            }
-          })
+          caregiverName.set(parsed.caregiver.name);
+          patientName.set(parsed.patient.name);
         }
         that.setState({
           loader: false
         }, () => {
-          browserHistory.push('/reminders');
+          browserHistory.push('/patient/reminders');
         });
       }.bind(this),
       error: function(err) {
@@ -126,14 +124,14 @@ export default class Setup extends React.Component {
             <h1>{patientHeader}</h1>
           </Row>
           <Row className="show-grid">
-            <Col xs={5}>
+            <Col md={5}>
               {patientPhotos}
             </Col>
-            <Col xs={7}>
+            <Col md={7}>
               <label>
                 Patient Name:
                 <br/>
-                <input type="text" value={this.state.patientName} className="patient-name-input" placeholder="Patient Name" onChange={this.getInput.bind(this)}/>
+                <input type="text" value={this.state.patientName} className="patientName" placeholder="Patient Name" onChange={this.getInput.bind(this)}/>
                 <br/>
               </label>
               <ImagesUpload uploadedPhotos={this.state.updatePatientPhotos} getPhotos={this.getPhotos.bind(this)}/>

@@ -19,7 +19,7 @@ class Reminder extends React.Component {
     super(props);
     this.state = {
       list: [],
-      current: {time: "", recurring: false, type: '', audio: "", note: "", title: ''},
+      current: {id: '', time: "", recurring: false, type: '', audio: "", note: "", title: ''},
       showForm: false,
       editMode: false,
       date: Moment().format(),
@@ -355,7 +355,7 @@ class Reminder extends React.Component {
     return (
       <Grid>
         <Row className="reminder-wrapper">
-          <Col xs={4}>
+          <Col md={4}>
             <div className="reminder">
               <div>
                 {
@@ -371,10 +371,11 @@ class Reminder extends React.Component {
                 getInput={this.getInput.bind(this)} 
                 updateCurrent={this.updateCurrent.bind(this)}
                 showForm={this.state.showForm}
+                current={this.state.current}
               />
             </div>
           </Col>
-          <Col xs={8}>
+          <Col md={8}>
             <div>
               <Loader show={this.state.loader} message={spinner} foregroundStyle={{color: 'white'}} backgroundStyle={{backgroundColor: 'white'}} className="spinner">
               {

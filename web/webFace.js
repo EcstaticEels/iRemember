@@ -17,7 +17,7 @@ class Face extends React.Component {
     super(props);
     this.state = {
       list: [],
-      current: {subjectName:"", photos:[{}], description:""},
+      current: {id: '', subjectName:"", photos:[{}], description:""},
       showForm: false,
       editMode: false,
       subjectName: '',
@@ -334,7 +334,7 @@ class Face extends React.Component {
     return (
       <Grid>
         <Row className="face-wrapper">
-          <Col xs={4}>
+          <Col md={4}>
             <div className="face">
               <div className="new-face-btn hvr-trim" onClick={ () => this.displayForm.call(this, true, false)}>
                 <h2>Add a new face</h2>
@@ -345,10 +345,11 @@ class Face extends React.Component {
                 getInput={this.getInput.bind(this)}
                 updateCurrent={this.updateCurrent.bind(this)}
                 handleCloudinaryUrl={this.props.handleCloudinaryUrl}
+                current={this.state.current}
               />
             </div>
           </Col>
-          <Col xs={8} className="face-right">
+          <Col md={8} className="face-right">
             <Loader show={this.state.loader} message={spinner} foregroundStyle={{color: 'white'}} backgroundStyle={{backgroundColor: 'white'}} className="spinner">
               {
                 this.state.showForm ? 
