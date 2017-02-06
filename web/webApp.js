@@ -92,7 +92,9 @@ class App extends React.Component {
         </Grid>
 
         <div className="app-grid">
-          <Tab changeView={this.changeView.bind(this)}/>
+          <Grid className="tab-wrapper" fluid>
+            <Tab changeView={this.changeView.bind(this)}/>
+          </Grid>
           {this.props.children && React.cloneElement(this.props.children, {
             handleLogout: this.handleLogout.bind(this),
             getUserInfo: this.getUserInfo.bind(this),

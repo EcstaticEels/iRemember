@@ -9,10 +9,6 @@ html, body, #app, .app-grid, .app-body, .app-window, .app-body, .app-grid-second
   height: 100%;
 }
 
-.app-grid {
-  margin-top: -82px; 
-}
-
 .app-window {
   display: flex;
   align-items: center;
@@ -55,8 +51,10 @@ body {
   /*background-color: rgba(139, 172, 189, 0.7);*/
   background-color: white;
   min-height: 60px;
-  border: 1px solid #D0D0D0;
+  /*border: 1px solid #D0D0D0;*/
   margin: 0px;
+  box-shadow: 0 3px 7px -5px grey;
+  border-radius: 0;
 }
 
 .navbar-brand {
@@ -73,11 +71,20 @@ body {
 }
 
 .tabNav {
-  margin-bottom: 30px;
+  margin: 25px 0 0 0;
+  width: 1170px;
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.tab-wrapper {
+  background-color: #eff2f4;
+  border-bottom: 1px solid #ddd;
 }
 
 .nav-tabs {
-  border-bottom: 1px solid #fff;
+  border: 0;
 }
 
 .navbar-default .navbar-nav>li>a {
@@ -88,16 +95,9 @@ body {
 
 .nav-tabs>li>a,
 .nav-tabs>li.active>a {
-  background-image: url('http://api.thumbr.it/whitenoise-361x370.png?background=eaeaeaff&noise=626262&density=5&opacity=7');
   font-size: 17px;
-  border: 1px solid #fff;
-  border-bottom-color: transparent;
 }
 
-.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
-  border: 1px solid #fff;
-  border-bottom-color: transparent;
-}
 .nav-tabs>li>a {
   border: none;
   border-radius: 5px 5px 0 0;
@@ -106,21 +106,51 @@ body {
 .caregiver-name {
   font-size: 17px;
 }
+
+/******************************************/
+/******************Setup*******************/
+/******************************************/
+
+.patient-header {
+  margin: 0 0 30px 0;
+}
+
+.patient-name-input {
+  margin: 8px 0 0 0;
+  padding: 8px;
+  font-weight: 300;
+}
+
+.save-btn {
+  font-family: Roboto;
+  font-size: 17px;
+  color: #ffffff;
+}
+
 /******************************************/
 /*********Face and Reminder-List***********/
 /******************************************/
+
+.face-wrapper, .reminder-wrapper {
+  margin-top: 30px;
+}
 
 .list-group-item:first-child,
 .list-group-item {
   border: none;
   border-radius: 0px;
-  margin: 20px 0;
-  box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.15), 0 6px 20px 0 rgba(0, 0, 0, 0.14);
+  /*box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.15), 0 6px 20px 0 rgba(0, 0, 0, 0.14);*/
   cursor: pointer;
 }
 
-.list-group-item:first-child {
-  margin: 0;
+.list-group-item {
+  height: 100px;
+  border-top: 1px solid #e2e2e2;
+  background-color: #f5f5f5;
+}
+
+.list-group-item:hover {
+  background-color: #eaeaea;
 }
 
 .new-reminder-btn,
@@ -129,12 +159,15 @@ body {
   font-size: 40px;
   color: white;
   text-align: center;
+  height: 60px;
+  border-radius: 6px !important;
   background-color: rgba(250, 149, 129, 0.7);
 }
 
 .new-reminder-btn h2,
 .new-face-btn h2 {
-  margin: 10px;
+  margin: 0px;
+  padding-top: 12px;
 }
 
 .reminder-list,
@@ -146,11 +179,44 @@ body {
   padding: 4px 6px;
 }
 
-.face-list-name {
+.face-list-btn-name {
+  height: 80px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: left;
   font-size: 25px;
+  margin-left: -20px;
+}
+
+.face-list-btn-name h3 {
+  margin-top: 10px;
+}
+
+.face-list-name {
+  font-size: 18px;
+}
+
+.face-current-relationship {
+  margin-top: 0;
+  font-size: 20px;
+}
+
+.face-current-name {
+  margin-bottom: 0;
+}
+
+.face-current-name .edit {
+  padding: 0 10px 0 20px; 
+}
+
+.face-current-name .fa {
+  font-size: 20px;
+  color: #c8c8c8;
+}
+
+.face-current-name .fa:hover {
+  cursor: pointer;
+  color: #9b8b8b;
 }
 
 .face-list-entry {
@@ -166,6 +232,10 @@ body {
 .reminder-entry {
   display: flex;
   align-items: center;
+}
+
+.image-gallery-thumbnail.active img {
+    border: 4px solid rgba(139, 172, 189, 0.7);
 }
 
 .reminder-list-time {
@@ -200,32 +270,45 @@ body {
 /******************************************/
 /****************Face-Current**************/
 /******************************************/
-.face-form,
 .reminder-form,
-.reminder-current,
-.face-current {
+.reminder-current {
   padding: 10px 20px;
   background-color: white;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.15), 0 6px 20px 0 rgba(0, 0, 0, 0.14);
   margin-bottom: 20px;
 }
 
 .reminder-current-header,
 .face-current-header {
   font-weight: 500;
+  font-size: 16px;
 }
 
-.reminder-current-heading,
+/*.reminder-current-heading,
 .face-current-heading {
   text-align: center;
   font-size: 48px;
-  margin-top: 40px;
   margin-bottom: 20px;
   font-weight: 500;
+}*/
+
+
+
+
+.face-right {
+  padding-left: 30px;
+}
+
+.face-current-name {
+  font-weight: 500;
+  margin-top: 0;
+}
+
+.face-current h1 {
+  margin-top: 0;
 }
 
 .image-gallery {
-  width: 562px;
+  width: 100%;
   margin-left: auto;
   margin-right: auto;
 }
@@ -234,7 +317,7 @@ body {
   padding-bottom: 10px;
 }
 
-.reminder-type,
+/*.reminder-type,
 .reminder-audio,
 .reminder-btns,
 .reminder-description,
@@ -246,7 +329,7 @@ body {
   width: 562px;
   margin-right: auto;
   margin-left: auto;
-}
+}*/
 
 .reminder-btns,
 .face-btns {
@@ -528,9 +611,8 @@ input[type=file]{
   color: #f7bba9;
 }
 
-.sign-up-button {
+.sign-up-button, .save-btn {
   width: 125px;
-  background-color: rgba(250, 149, 129, 0.8);
   color: white;
   border: none;
   padding: 14px 22px;

@@ -20,28 +20,36 @@ export default class FaceCurrent extends React.Component {
     var audioView = this.props.current.audio ? <ReactAudioPlayer src={this.props.current.audio} /> : <h5>No audio submitted yet for this face</h5>;
     if (!!this.props.current.subjectName) {
       currentView = (
+      <Row>
         <div className="face-current">
-          <h1 className="face-current-heading">{this.props.current.subjectName}</h1>
-          <Row className="show-grid">
-            {galleryView}
-          </Row>
-          <Row>
-            <div className='face-description'> 
-              <h3 className='face-current-header'>Description: </h3>
-              <h5>{this.props.current.description}</h5>
-            </div>
-          </Row>
-          <Row>
-            <div className='face-audio'>
-              <h3 className='face-current-header'>Audio Message: </h3>
-              {audioView}
-            </div>
-          </Row>
-            <div className='face-btns'>
-              <Button bsSize='small' className="btn-edit" onClick={this.edit.bind(this)}>Edit</Button>
-              <Button bsSize='small' className="btn-delete" onClick={this.props.delete}>Delete</Button>
-            </div>
+            <Col xs={5} className="face-current-patient-info">
+              <h1 className="face-current-name">{this.props.current.subjectName}
+                <i className="edit fa fa-pencil-square-o" onClick={this.edit.bind(this)} aria-hidden="true"></i>
+                <i className="trash fa fa-trash-o" onClick={this.props.delete} aria-hidden="true"></i>
+              </h1>
+              <h3 className="face-current-relationship">Aquaintence</h3>
+                <div className='face-age'>
+                  <h3 className='face-current-header'>Age </h3>
+                  <h5>24</h5>
+                </div>
+                <div className='face-occupation'>
+                  <h3 className='face-current-header'>Occupation </h3>
+                  <h5>Software Engineer</h5>
+                </div>
+                <div className='face-description'> 
+                  <h3 className='face-current-header'>Description </h3>
+                  <h5>{this.props.current.description}</h5>
+                </div>
+                <div className='face-audio'>
+                  <h3 className='face-current-header'>Audio Message </h3>
+                  {audioView}
+                </div>
+            </Col>
+            <Col xs={5}>
+              {galleryView}
+            </Col>
         </div>
+      </Row>
       );
     } else {
       currentView = (

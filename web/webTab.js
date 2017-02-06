@@ -12,8 +12,8 @@ class Tab extends React.Component {
   }
 
   render() {
-    var nav = !!caregiverName.get() || !!needsSetup.get() ? 
-      (<Nav bsStyle="tabs" className="tabNav container">
+    var nav = !!caregiverName.get() && !needsSetup.get() ? 
+      (<Nav bsStyle="tabs" className="tabNav">
         <LinkContainer to="/reminders" className="link">
           <NavItem>Reminders</NavItem>
         </LinkContainer>

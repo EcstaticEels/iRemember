@@ -8,7 +8,7 @@ export default class Home extends React.Component {
 
   render() {
     return (
-    <Grid className="landing" fluid>
+    <Grid style={{marginTop: '-82px'}} className="landing" fluid>
       <div className="home-box">
         <div className="home-logo">iRemember</div>
         <p className="home-description">Designed to help caregivers support patients struggling with Alzheimer’s Disease and other forms of dementia.</p>

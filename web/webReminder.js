@@ -353,16 +353,16 @@ class Reminder extends React.Component {
   render() {
     const spinner = <span><img src={'/default.svg'} /></span>
     return (
-      <div>
-        <Row className="show-grid">
-          <Col xs={6} md={4}>
+      <Grid>
+        <Row className="reminder-wrapper">
+          <Col xs={4}>
             <div className="reminder">
               <div>
                 {
                   this.state.showForm ? null :  
-                  <div className="list-group-item new-reminder-btn hvr-trim" 
+                  <div className="new-reminder-btn hvr-trim" 
                   onClick={ () => this.displayForm.call(this, true, false)}>
-                    <h2>Add a New Reminder</h2>
+                    <h2>Add a new reminder</h2>
                   </div>
                 }
               </div>
@@ -374,7 +374,7 @@ class Reminder extends React.Component {
               />
             </div>
           </Col>
-          <Col xs={12} md={8}>
+          <Col xs={8}>
             <div>
               <Loader show={this.state.loader} message={spinner} foregroundStyle={{color: 'white'}} backgroundStyle={{backgroundColor: 'white'}} className="spinner">
               {
@@ -402,7 +402,7 @@ class Reminder extends React.Component {
             </div>
           </Col>
         </Row>
-      </div>
+      </Grid>
     )
   }
 }

@@ -332,18 +332,12 @@ class Face extends React.Component {
   render() {
     const spinner = <span><img src={'/default.svg'} /></span>
     return (
-      <div>
-        <Row className="show-grid">
-          <Col xs={6} md={4}>
+      <Grid>
+        <Row className="face-wrapper">
+          <Col xs={4}>
             <div className="face">
-              <div>
-              {
-                this.state.showForm ? null :  
-
-                  <div className="list-group-item new-face-btn hvr-trim" onClick={ () => this.displayForm.call(this, true, false)}>
-                    <h2>Add a New Face</h2>
-                  </div>
-              }
+              <div className="new-face-btn hvr-trim" onClick={ () => this.displayForm.call(this, true, false)}>
+                <h2>Add a new face</h2>
               </div>
               <FaceList 
                 showForm={this.state.showForm}
@@ -354,8 +348,7 @@ class Face extends React.Component {
               />
             </div>
           </Col>
-          <Col xs={12} md={8}>
-            <div>
+          <Col xs={8} className="face-right">
             <Loader show={this.state.loader} message={spinner} foregroundStyle={{color: 'white'}} backgroundStyle={{backgroundColor: 'white'}} className="spinner">
               {
                 this.state.showForm ? 
@@ -388,10 +381,9 @@ class Face extends React.Component {
                     />
               }
             </Loader>
-            </div>
           </Col>
         </Row>
-      </div>
+      </Grid>
     )
   }
 }
