@@ -637,15 +637,16 @@ input[type=file]{
 
 .home-bullet {
   font-family: Roboto;
-  font-size: 17px;
+  font-size: 16px;
   font-weight: normal;
   font-style: normal;
   font-stretch: normal;
   line-height: normal;
   letter-spacing: normal;
   color: #9b9b9b;
-  margin-top: 16px;
-  margin-bottom: 5px;
+  margin-top: 13px;
+  line-height: 1.6;
+  margin-bottom: 3px;
 }
 
 .home-bullet .bold-text {
