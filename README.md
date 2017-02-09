@@ -8,8 +8,8 @@ Assistive technology for patients with early stage Alzheimers
   3. [Setup ip.js file](#setup-ip.js-file)
   4. [Setup MySQL database](#setup-mysql-database)
   5. [Build & Start](#build&start)
-* [Requirements](#requirements)
-* [Documentation](#documentation)
+* [Tech Stack](#requirements)
+* [Screenshots](#screenshots)
 * [Team](#team)
 * [Contributing](#contributing)
 * [License](#license)
@@ -37,6 +37,8 @@ $ npm install
 | Cloudinary | CLOUDINARY_API_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET |
 | Microsoft Cognitive Services | MICROSOFT_API_KEY |
 | Google API Client | GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET |
+
+
 
 | Microsoft Face API Person Groups for Face Recognition | Variables |
 | ------------- | ------------- |
@@ -73,49 +75,42 @@ $ grunt build
 $ grunt start-dev
 ```
 
-## Requirements
+## Tech Stack
 
+- React
+- React-Native
 - Node
+- Express
 - MySQL
-- Xcode
 - Exponent
 
 ##Screenshots
 [Web Client] Home and Login Screen
-![Web Client Home]
-(https://image.ibb.co/dEKE5a/web_client_home.png)
+<a href="https://ibb.co/dN2CrF"><img src="https://preview.ibb.co/jm7dWF/web_client_home.png" alt="web client home" border="0" /></a>
 
 [Web Client] Reminder List
-![Web Client Reminders]
-(https://image.ibb.co/jFRu5a/web_client_post_reminderadd.png)
+<img src="https://image.ibb.co/jFRu5a/web_client_post_reminderadd.png" alt="web client post reminderadd" border="0" />
 
 [Web Client] Face Profiles for Face Recognition
-![Web Client Face Recognition]
-(https://image.ibb.co/f67Z5a/web_client_post_faceadd.png)
+<img src="https://image.ibb.co/f67Z5a/web_client_post_faceadd.png" alt="web client post faceadd" border="0" />
 
 [Web Client] Face Detection Component
-![Web Client Face Detection]
-(https://image.ibb.co/kkWSQa/web_client_detect_faces.png)
+<img src="https://image.ibb.co/kkWSQa/web_client_detect_faces.png" alt="web client detect faces" border="0" />
 
 [Mobile Client] Login Screen
-![Mobile Client Login Screen]
-(https://image.ibb.co/byfAdv/IMG_4859.png)
+<img src="https://image.ibb.co/byfAdv/IMG_4859.png" alt="IMG 4859" border="0" />
 
 [Mobile Client] Home Screen
-![Mobile Client Home Screen]
-(https://image.ibb.co/d7JwJv/IMG_4863.png)
+<img src="https://image.ibb.co/d7JwJv/IMG_4863.png" alt="IMG 4863" border="0" />
 
 [Mobile Client] Reminder Screen
-![Mobile Client Reminder Screen]
-(https://image.ibb.co/dMBGJv/IMG_4865.png)
+<img src="https://image.ibb.co/dMBGJv/IMG_4865.png" alt="IMG 4865" border="0" />
 
 [Mobile Client] Face Lookup Success Screen
-![Mobile Client Face Lookup Success]
-(https://image.ibb.co/iBE3yv/IMG_4872.png)
+<img src="https://image.ibb.co/iBE3yv/IMG_4872.png" alt="IMG 4872" border="0" />
 
 [Mobile Client] Failed Face Lookup Screen
-![Mobile Client Failed Face Lookup]
-(https://image.ibb.co/jrR5BF/IMG_4870.png)
+<img src="https://image.ibb.co/jrR5BF/IMG_4870.png" alt="IMG 4870" border="0" />
 
 ## Team
 
