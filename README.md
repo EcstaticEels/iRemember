@@ -8,7 +8,7 @@ Assistive technology for patients with early stage Alzheimers
   3. [Setup ip.js file](#setup-ip.js-file)
   4. [Setup MySQL database](#setup-mysql-database)
   5. [Build & Start](#build&start)
-* [Requirements](#requirements)
+* [Tech Stack](#requirements)
 * [Screenshots](#screenshots)
 * [Team](#team)
 * [Contributing](#contributing)
