@@ -30,7 +30,11 @@ var dataSource = new ListView.DataSource({rowHasChanged: function (r1, r2) {
 
 var images = {
   Medication: 'ios-medkit',
-  Appointment: 'ios-calendar',
+  Event: 'ios-calendar',
+  'Social Engagement': 'ios-contacts',
+  'Doctor Appointment': 'ios-medical',
+  'Groceries': 'ios-cart',
+  'Exercise': 'ios-bicycle',
   Chores: 'ios-home',
   Other: 'ios-alarm'
 }

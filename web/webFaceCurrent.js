@@ -17,7 +17,7 @@ export default class FaceCurrent extends React.Component {
   render() {
     var galleryView = this.props.current.photos.length > 0 ? <Gallery photos={this.props.current.photos} handleCloudinaryUrl={this.props.handleCloudinaryUrl}/> : null;
     var currentView;
-    var audioView = this.props.current.audio ? <ReactAudioPlayer src={this.props.current.audio} /> : <h5>No audio submitted yet for this face</h5>;
+    var audioView = this.props.current.audio ? <ReactAudioPlayer src={this.props.current.audio} /> : <h5 className="face-current-field">No audio submitted yet for this face</h5>;
     if (!!this.props.current.subjectName) {
       currentView = (
       <Row>
@@ -34,7 +34,7 @@ export default class FaceCurrent extends React.Component {
               </h1>
                 <div className='face-description'> 
                   <h3 className='face-current-header'>Description </h3>
-                  <h5>{this.props.current.description}</h5>
+                  <h5 className="face-current-field">{this.props.current.description}</h5>
                 </div>
                 <div className='face-audio'>
                   <h3 className='face-current-header'>Audio Message </h3>

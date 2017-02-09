@@ -354,7 +354,7 @@ export default class FaceForm extends React.Component {
             uploadedPhotos={this.props.updatePhotos}/>
         </FormGroup>
 
-        <ControlLabel> {'Previously Uploaded Audio Message:'} </ControlLabel>
+        <ControlLabel> {'Audio Message:'} </ControlLabel>
         <FormGroup>{this.audioPart()}</FormGroup>
 
         <FormGroup>{

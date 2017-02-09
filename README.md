@@ -17,8 +17,6 @@ Assistive technology for patients with early stage Alzheimers
 ## Getting started
 
 * Clone the repo with `https://github.com/EcstaticEels/iRemember.git`
-* [Read the docs](http://iremember.co) to learn about the components and how to get a prototype on your phone
-* [DEMO](http://demo.iremember.co/)
 
 ### Installation
 
@@ -34,11 +32,16 @@ $ npm install
 
 | Services | Variables |
 | ------------- | ------------- |
-| [MySQL] (https://github.com/mysqljs/mysql) | MYSQL_USERNAME, MYSQL_PASSWORD  |
-| [Amazon Web Service] (https://aws.amazon.com/start-now/) | AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_BUCKET  |
-| [Cloudinary] (http://cloudinary.com/) | CLOUDINARY_API_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET |
-| [Microsoft Cognitive Services] (https://www.microsoft.com/cognitive-services/en-us/face-api) | MICROSOFT_API_KEY, MICROSOFT_PATIENTS_GROUP_ID, MICROSOFT_PERSON_GROUP_ID  |
-| [Google API Client] (https://developers.google.com/api-client-library/javascript/start/start-js) | GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET |
+| MySQL | MYSQL_USERNAME, MYSQL_PASSWORD  |
+| Amazon Web Services | AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_BUCKET  |
+| Cloudinary | CLOUDINARY_API_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET |
+| Microsoft Cognitive Services | MICROSOFT_API_KEY |
+| Google API Client | GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET |
+
+| Microsoft Face API Person Groups for Face Recognition | Variables |
+| ------------- | ------------- |
+| Face Group ID for Microsoft Face API | FACE_GROUP_ID |
+| Patient Group ID for Microsoft Face API | PATIENT_GROUP_ID |
 
 
 ### Setup ip.js file
@@ -77,14 +80,49 @@ $ grunt start-dev
 - Xcode
 - Exponent
 
-## Documentation
+##Screenshots
+[Web Client] Home and Login Screen
+![Web Client Home]
+(https://ibb.co/dN2CrF)
+
+[Web Client] Reminder Component
+![Web Client Reminders]
+(https://ibb.co/mZKE5a)
+
+[Web Client] Face Recognition Component
+![Web Client Face Recognition]
+(https://ibb.co/c9eQBF)
+
+[Web Client] Face Detection Component
+![Web Client Face Detection]
+(https://ibb.co/gecdWF)
+
+[Mobile Client] Login Screen
+![Mobile Client Login Screen]
+(https://ibb.co/bMp3yv)
+
+[Mobile Client] Home Screen
+![Mobile Client Home Screen]
+(https://ibb.co/nOrGJv)
+
+[Mobile Client] Reminder Screen
+![Mobile Client Reminder Screen]
+(https://ibb.co/f1VnQa)
+
+[Mobile Client] Face Lookup Success Screen
+![Mobile Client Face Lookup Success]
+(https://ibb.co/iKx1ka)
+
+[Mobile Client] Failed Face Lookup Screen
+![Mobile Client Failed Face Lookup]
+(https://ibb.co/c2U3yv)
 
 ## Team
 
 | Name        | Github           | LinkedIn  |
 | ------------- |:-------------:| -----:|
-| **Jennifer Kao**      | https://github.com/ | https://www.linkedin.com/in/ |
-| **Ethan Harry**      | https://github.com/     | https://www.linkedin.com/in/ |
+| **Jennifer Kao**      | https://github.com/jennkao | https://www.linkedin.com/in/jenn-kao |
+| **Ethan Harry**      | https://github.com/   | https://www.linkedin.com/in/ |
 | **Lisa Nam** | https://github.com/lisanam      |   https://www.linkedin.com/in/lisanam-js  |
 
 ## Contributing

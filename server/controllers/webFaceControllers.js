@@ -557,8 +557,8 @@ module.exports = {
     });
   },
   setup: (req, res) => {
-    let newPersonGroupId = `ecstatic-eels-5-${req.user.id}`; 
-    let patientGroupId = `ecstatic-eels-patients-deploy-0`; 
+    let newPersonGroupId = `${process.env.FACE_GROUP_ID}-${req.user.id}`; 
+    let patientGroupId = process.env.PATIENT_GROUP_ID; 
     handleSetupForm(req, (patientPhotoArray, fields) => {
       request.post({
         headers: microsoftHeaders,

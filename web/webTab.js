@@ -18,10 +18,10 @@ class Tab extends React.Component {
           <NavItem>Reminders</NavItem>
         </LinkContainer>
         <LinkContainer to="/patient/face" className="link">
-          <NavItem>Face</NavItem>
+          <NavItem>Faces</NavItem>
         </LinkContainer>
         <LinkContainer to="/patient/setup" className="link">
-          <NavItem>Setup</NavItem>
+          <NavItem>Patient Settings</NavItem>
         </LinkContainer>
       </Nav>) : null;
 
