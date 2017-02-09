@@ -83,39 +83,39 @@ $ grunt start-dev
 ##Screenshots
 [Web Client] Home and Login Screen
 ![Web Client Home]
-(https://ibb.co/dN2CrF)
+(https://image.ibb.co/dEKE5a/web_client_home.png)
 
-[Web Client] Reminder Component
+[Web Client] Reminder List
 ![Web Client Reminders]
-(https://ibb.co/mZKE5a)
+(https://image.ibb.co/jFRu5a/web_client_post_reminderadd.png)
 
-[Web Client] Face Recognition Component
+[Web Client] Face Profiles for Face Recognition
 ![Web Client Face Recognition]
-(https://ibb.co/c9eQBF)
+(https://image.ibb.co/f67Z5a/web_client_post_faceadd.png)
 
 [Web Client] Face Detection Component
 ![Web Client Face Detection]
-(https://ibb.co/gecdWF)
+(https://image.ibb.co/kkWSQa/web_client_detect_faces.png)
 
 [Mobile Client] Login Screen
 ![Mobile Client Login Screen]
-(https://ibb.co/bMp3yv)
+(https://image.ibb.co/byfAdv/IMG_4859.png)
 
 [Mobile Client] Home Screen
 ![Mobile Client Home Screen]
-(https://ibb.co/nOrGJv)
+(https://image.ibb.co/d7JwJv/IMG_4863.png)
 
 [Mobile Client] Reminder Screen
 ![Mobile Client Reminder Screen]
-(https://ibb.co/f1VnQa)
+(https://image.ibb.co/dMBGJv/IMG_4865.png)
 
 [Mobile Client] Face Lookup Success Screen
 ![Mobile Client Face Lookup Success]
-(https://ibb.co/iKx1ka)
+(https://image.ibb.co/iBE3yv/IMG_4872.png)
 
 [Mobile Client] Failed Face Lookup Screen
 ![Mobile Client Failed Face Lookup]
-(https://ibb.co/c2U3yv)
+(https://image.ibb.co/jrR5BF/IMG_4870.png)
 
 ## Team
 
