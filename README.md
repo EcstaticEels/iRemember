@@ -1,5 +1,5 @@
 # iRemember
-
+Designed to help family caregivers support loved ones with Alzheimer's or dementia. Composed of a web and mobile client, iRememer is a full-stack application built with modern technologies such as React, React-Native, Exponent, and AWS S3 and EC2.
 
 ## Table of contents
 * [Getting started](#getting-started)
