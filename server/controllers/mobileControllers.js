@@ -139,7 +139,7 @@ module.exports = {
       }
       const parsedDetectBody = JSON.parse(body);
       console.log('detection results', parsedDetectBody);
-      const personGroupId = 'ecstatic-eels-patients-deploy-0' //CHANGE TO PATIENT
+      const personGroupId = process.env.PATIENT_GROUP_ID; 
       if (parsedDetectBody.length === 1) { 
         var bodyForIdentification = {    
           "personGroupId": personGroupId, 
@@ -211,7 +211,8 @@ module.exports = {
     db.Reminder.findAll({
       where: {
         patientId: patientId
-      }
+      }, 
+      order: [['date']]
     })
     .then(reminders => {
       res.status(200).send(JSON.stringify({reminders: reminders}));

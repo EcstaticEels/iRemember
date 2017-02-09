@@ -136,7 +136,6 @@ module.exports = {
         })
       })
       .then(updatedReminder => {
-        console.log('are we getting an updatedReminder', updatedReminder);
         res.status(200).send(JSON.stringify(updatedReminder));
       })
       .catch(err => {
