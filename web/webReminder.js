@@ -113,7 +113,17 @@ class Reminder extends React.Component {
             type: '', 
             audio: '', 
             note: '', 
-            title: ''}
+            title: '',
+            selectedDays: {
+              Monday: false,
+              Tuesday: false,
+              Wednesday: false,
+              Thursday: false,
+              Friday: false,
+              Saturday: false,
+              Sunday: false
+            }
+          }
         });
       }
     });
@@ -140,7 +150,16 @@ class Reminder extends React.Component {
         img: '',
         title: '',
         updateAudio: '',
-        audio: ''
+        audio: '',
+        selectedDays: {
+          Monday: false,
+          Tuesday: false,
+          Wednesday: false,
+          Thursday: false,
+          Friday: false,
+          Saturday: false,
+          Sunday: false
+        }
       });
     }
   }
@@ -265,28 +284,11 @@ class Reminder extends React.Component {
     })
   }
 
-  // validForm() {
-  //   if(this.state.date.length !== 16){
-  //     return false;
-  //   }
-  //   if(this.state.title.length < 1) {
-  //     return false;
-  //   }
-  //    if(this.state.recurring && (!this.state.recurringDays || !this.state.recurringDays[0])) {
-  //     return false;
-  //   }
-  //   return true;
-  // }
-
   submitForm(event) {
     event.preventDefault();
     this.setState({
       loader: true
     });
-    // var valid = this.validForm();
-    // if(!valid){
-    //   return window.alert("Invalid Form");
-    // }
     if (this.state.recurring){
       var recurringDays = this.selectedDaysToArray(this.state.selectedDays);
       if (recurringDays.length === 0 || !recurringDays[0]) {

@@ -256,6 +256,11 @@ body {
   font-size: 23px;
 }
 
+.face-current-field,
+.reminder-field {
+  line-height: 1.5;
+}
+
 .face-current-relationship {
   margin-top: 0;
   font-size: 20px;
@@ -417,6 +422,7 @@ input[type=file]{
   text-align: center;
 }
 
+.reminder-recurring,
 .reminder-type, 
 .reminder-time, 
 .reminder-description,

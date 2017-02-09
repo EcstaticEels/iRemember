@@ -13,12 +13,12 @@ export default class ReminderCurrent extends React.Component {
   }
 
   render() {
-    var audioView = this.props.current.audio ? <ReactAudioPlayer src={this.props.current.audio} /> : <h5>No audio submitted yet for this face</h5>;
-    var descriptionView = this.props.current.description ? <h5>{this.props.current.note}</h5> : <h5>No description submitted yet for this face</h5>;
+    var audioView = this.props.current.audio ? <ReactAudioPlayer src={this.props.current.audio} /> : <h5 className='reminder-field'>No audio submitted yet for this reminder</h5>;
+    var descriptionView = this.props.current.note ? <h5 className='reminder-field'>{this.props.current.note}</h5> : <h5 className='reminder-field'>No description submitted yet for this reminder</h5>;
     var recurringView = !!this.props.current.recurring ? 
       (<div className="reminder-recurring">
         <h3 className='reminder-current-header'>Recurring Days:</h3>
-        <h5>{this.props.current.recurringDays.split(',').join(', ')}</h5>
+        <h5 className='reminder-field'>{this.props.current.recurringDays.split(',').join(', ')}</h5>
       </div>) : null;
     var reminderCurrentView;
     if (!!this.props.current.title) {
@@ -35,11 +35,11 @@ export default class ReminderCurrent extends React.Component {
               </h1>
               <div className="reminder-type">
                 <h3 className='reminder-current-header'>Type:</h3>
-                <h5>{this.props.current.type}</h5>
+                <h5 className='reminder-field'>{this.props.current.type}</h5>
               </div>
               <div className="reminder-time">
                 <h3 className='reminder-current-header'>Time:</h3>
-                <h5>{Moment(this.props.current.date).calendar(null, {sameElse: 'MM/DD/YYYY hh:mm a'}).toString()}</h5>
+                <h5 className="reminder-field">{Moment(this.props.current.date).calendar(null, {sameElse: 'MM/DD/YYYY hh:mm a'}).toString()}</h5>
               </div>
               {recurringView}
               <div className="reminder-description">

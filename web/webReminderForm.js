@@ -97,9 +97,8 @@ export default class ReminderForm extends React.Component {
     var timeInterval = 360 * 1000;
 
     mediaRecorder.start(timeInterval);
-
-    // $('#stop-recording').disabled = false;
   }
+
   onMediaError(e) {
     console.error('media error', e);
   }
@@ -137,31 +136,15 @@ export default class ReminderForm extends React.Component {
         </div>
       )
     } else {
-      return (<Row>
-        <Button className="record-button" onClick={this.startRecording.bind(this)}>
-          <i className="fa fa-circle text-danger"></i> Record</Button>
-        <Button className="upload-button" onClick={this.showUpload.bind(this)}>Upload a File</Button>
-      </Row>)
+      return (
+        <Row>
+          <Button className="record-button" onClick={this.startRecording.bind(this)}>
+            <i className="fa fa-circle text-danger"></i> Record</Button>
+          <Button className="upload-button" onClick={this.showUpload.bind(this)}>Upload a File</Button>
+        </Row>
+      )
     }
   }
-
-
-
-
-  // bytesToSize(bytes) {
-  //   var k = 1000;
-  //   var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-  //   if (bytes === 0) return '0 Bytes';
-  //   var i = parseInt(Math.floor(Math.log(bytes) / Math.log(k)), 10);
-  //   return (bytes / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
-  // }
-
-  // getTimeLength(milliseconds) {
-  //   var data = new Date(milliseconds);
-  //   return data.getUTCHours() + " hours, " + data.getUTCMinutes() + " minutes and " + data.getUTCSeconds() + " second(s)";
-  // }
-  // End of audio audio recorde'acl', 'public-read'r
- 
   
   render() {
     return (
@@ -266,7 +249,7 @@ export default class ReminderForm extends React.Component {
           </FormGroup> : null
         }</FormGroup>
 
-        <ControlLabel> {'Previously Uploaded Audio Message:'} </ControlLabel>
+        <ControlLabel> {'Audio Message:'} </ControlLabel>
         <FormGroup className="reminder-form-btns">{this.audioPart()}</FormGroup>
 
         <FormGroup>{
@@ -286,3 +269,22 @@ export default class ReminderForm extends React.Component {
 //               
 //               : <Button className="general-button" onClick={this.startRecording.bind(this)}><i className="fa fa-circle text-danger"></i> Record</Button>
 //           }</div>
+
+
+
+
+
+
+  // bytesToSize(bytes) {
+  //   var k = 1000;
+  //   var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+  //   if (bytes === 0) return '0 Bytes';
+  //   var i = parseInt(Math.floor(Math.log(bytes) / Math.log(k)), 10);
+  //   return (bytes / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
+  // }
+
+  // getTimeLength(milliseconds) {
+  //   var data = new Date(milliseconds);
+  //   return data.getUTCHours() + " hours, " + data.getUTCMinutes() + " minutes and " + data.getUTCSeconds() + " second(s)";
+  // }
+  // End of audio audio recorde'acl', 'public-read'r
