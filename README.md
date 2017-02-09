@@ -1,5 +1,5 @@
 # iRemember
-Assistive technology for patients with early stage Alzheimers
+
 
 ## Table of contents
 * [Getting started](#getting-started)
@@ -83,10 +83,12 @@ $ grunt start-dev
 - Express
 - MySQL
 - Exponent
+- AWS
 
 ##Screenshots
+
 [Web Client] Home and Login Screen
-<a href="https://ibb.co/dN2CrF"><img src="https://preview.ibb.co/jm7dWF/web_client_home.png" alt="web client home" border="0" /></a>
+<img src="https://image.ibb.co/fS4pMF/Screen_Shot_2017_02_09_at_11_42_33_AM.png" alt="Screen Shot 2017 02 09 at 11 42 33 AM" border="0" />
 
 [Web Client] Reminder List
 <img src="https://image.ibb.co/jFRu5a/web_client_post_reminderadd.png" alt="web client post reminderadd" border="0" />
