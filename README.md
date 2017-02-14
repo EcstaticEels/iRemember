@@ -116,11 +116,11 @@ $ grunt start-dev
 
 ## Team
 
-| Name        | Github           | LinkedIn  |
-| ------------- |:-------------:| -----:|
-| **Jennifer Kao**      | https://github.com/jennkao | https://www.linkedin.com/in/jenn-kao |
-| **Ethan Harry**      | https://github.com/   | https://www.linkedin.com/in/ |
-| **Lisa Nam** | https://github.com/lisanam      |   https://www.linkedin.com/in/lisanam-js  |
+| Name        | Github           | LinkedIn  | AngelList |
+| ------------- |:-------------:| -----:| -----:|  
+| **Jennifer Kao**      | https://github.com/jennkao | https://www.linkedin.com/in/jenn-kao | https://angel.co/ |
+| **Ethan Harry**      | https://github.com/   | https://www.linkedin.com/in/ | https://angel.co/ |
+| **Lisa Nam** | https://github.com/lisanam      |   https://www.linkedin.com/in/lisanam-js  | https://angel.co/lisa-nam |
 
 ## Contributing
 
